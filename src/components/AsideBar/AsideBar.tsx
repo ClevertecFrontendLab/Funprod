@@ -13,17 +13,17 @@ const socialPanel = [
 
 export const AsideBar = () => (
     <Flex
+        display={{ base: 'none', md: 'flex' }}
         direction='column'
         justifyContent='space-between'
-        position={{ base: 'fixed', md: 'static' }}
-        top='30px'
-        right='68px'
+        position='fixed'
+        top='0'
+        right='0'
         mt={{ md: '80px', base: '0' }}
-        zIndex='2'
+        zIndex='1'
     >
         <Flex
-            position={{ base: 'static', md: 'fixed' }}
-            direction={{ base: 'row', md: 'column' }}
+            direction='column'
             alignItems='center'
             justify='center'
             gap='24px'

@@ -1,27 +1,30 @@
 import {
     Accordion,
     AccordionButton,
-    AccordionIcon,
     AccordionItem,
     AccordionPanel,
     Box,
     Flex,
     Image,
-    Link,
     List,
     ListItem,
     Text,
 } from '@chakra-ui/react';
+import { Link as ChakraLink } from '@chakra-ui/react';
 import { useState } from 'react';
+import { Link, useLocation } from 'react-router';
 
+import arrowDown from './../../assets/sidebar/arrowDown.svg';
+import arrowUp from './../../assets/sidebar/arrowUp.svg';
 import exit from './../../assets/sidebar/exit.svg';
 import { sidebarMenu } from './data';
 
 export const Sidebar = () => {
-    const [hasScroll, setHasScroll] = useState<boolean>(false);
-
-    const handleAccordionButton = () => {
-        setHasScroll(!hasScroll);
+    const [openIndex, setOpenIndex] = useState<number | null>(null); // отслеживаем индекс открытого аккордеона
+    const location = useLocation();
+    const currentPath = location.pathname;
+    const handleAccordionButton = (index: number) => {
+        setOpenIndex(openIndex === index ? null : index);
     };
 
     return (
@@ -41,7 +44,9 @@ export const Sidebar = () => {
                         flex='1'
                         borderRadius='12px'
                         p='10px 16px 10px 10px'
+                        mt='24px'
                         minHeight='644px'
+                        maxHeight='872px'
                         overflowY='auto'
                         overflowX='hidden'
                         sx={{
@@ -63,12 +68,22 @@ export const Sidebar = () => {
                             },
                         }}
                         boxShadow={
-                            hasScroll
+                            openIndex !== null
                                 ? ' 0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 4px 6px -1px rgba(0, 0, 0, 0.1)'
                                 : 'none'
                         }
                     >
-                        <Accordion allowMultiple>
+                        <Accordion
+                            index={openIndex !== null ? [openIndex] : []}
+                            onChange={(index) => {
+                                if (Array.isArray(index)) {
+                                    setOpenIndex(index[0] ?? null);
+                                } else {
+                                    setOpenIndex(index);
+                                }
+                            }}
+                            allowMultiple
+                        >
                             {sidebarMenu.map((section, index) => (
                                 <AccordionItem
                                     key={index}
@@ -86,11 +101,13 @@ export const Sidebar = () => {
                                                     : undefined
                                             }
                                             onClick={() => {
-                                                handleAccordionButton();
+                                                handleAccordionButton(index);
                                             }}
+                                            display='flex'
+                                            justifyContent='space-between'
                                             margin='0'
                                             padding='0'
-                                            width='230px'
+                                            maxWidth='230px'
                                             height='48px'
                                             borderRadius='0'
                                             _expanded={{ bg: '#eaffc7', fontWeight: '700' }}
@@ -112,69 +129,80 @@ export const Sidebar = () => {
                                                 boxShadow: 'none',
                                             }}
                                         >
-                                            <Link
-                                                href='/vegan-cuisine'
-                                                _hover={{ textDecoration: 'none' }}
+                                            <Box
+                                                as='span'
+                                                display='flex'
+                                                alignItems='center'
+                                                flex='1'
+                                                textAlign='left'
+                                                ml='8px'
                                             >
-                                                <Box
-                                                    as='span'
-                                                    display='flex'
-                                                    alignItems='center'
-                                                    flex='1'
-                                                    textAlign='left'
-                                                    ml='8px'
-                                                >
-                                                    <Image
-                                                        src={section.IconUrl}
-                                                        alt={section.title}
-                                                        boxSize='24px'
-                                                    />
+                                                <Image
+                                                    src={section.IconUrl}
+                                                    alt={section.title}
+                                                    boxSize='24px'
+                                                />
+                                                <ChakraLink as={Link} to='/vegan-cuisine'>
                                                     <Text ml='8px'>{section.title}</Text>
-                                                </Box>
-                                            </Link>
-                                            <AccordionIcon mr='12px' />
+                                                </ChakraLink>
+                                            </Box>
+
+                                            {openIndex === index ? (
+                                                <Image src={arrowUp} mr='12px' />
+                                            ) : (
+                                                <Image src={arrowDown} mr='12px' />
+                                            )}
                                         </AccordionButton>
                                     </h2>
                                     <AccordionPanel padding={0} margin={0}>
                                         <List>
-                                            {section.items.map((item, i) => (
-                                                <ListItem key={i}>
-                                                    <Link
-                                                        href='/vegan-cuisine/second-courses'
-                                                        sx={{
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            width: '230px',
-                                                            height: '36px',
-                                                            marginLeft: '0',
-                                                            position: 'relative',
-                                                            _hover: {
-                                                                textDecoration: 'none',
-                                                                color: 'inherit',
-                                                                fontWeight: '700',
-                                                                '::before': {
-                                                                    width: '8px',
-                                                                    height: '28px',
-                                                                    marginLeft: '33px',
+                                            {section.items.map((item, i) => {
+                                                const isActive = currentPath === item.path;
+                                                return (
+                                                    <ListItem key={i}>
+                                                        <ChakraLink
+                                                            as={Link}
+                                                            to='/vegan-cuisine/second-courses'
+                                                            fontWeight={isActive ? '700' : '400'}
+                                                            sx={{
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                width: '230px',
+                                                                height: '36px',
+                                                                marginLeft: '0',
+                                                                position: 'relative',
+
+                                                                _hover: {
+                                                                    textDecoration: 'none',
+                                                                    color: 'inherit',
+                                                                    fontWeight: '700',
+                                                                    '::before': {
+                                                                        width: '8px',
+                                                                        height: '28px',
+                                                                        marginLeft: '33px',
+                                                                    },
                                                                 },
-                                                                transition: 'all 0.3s ease-in-out',
-                                                            },
-                                                            '::before': {
-                                                                content: '""',
-                                                                display: 'inline-block',
-                                                                width: '1px',
-                                                                height: '24px',
-                                                                backgroundColor: '#c4ff61',
-                                                                margin: '2px 11px 2px 40px',
-                                                                transition:
-                                                                    'width 0.3s ease-in-out, margin-left 0.3s ease-in-out',
-                                                            },
-                                                        }}
-                                                    >
-                                                        {item}
-                                                    </Link>
-                                                </ListItem>
-                                            ))}
+                                                                '::before': {
+                                                                    content: '""',
+                                                                    display: 'inline-block',
+                                                                    width: isActive ? '8px' : '1px',
+                                                                    height: isActive
+                                                                        ? '28px'
+                                                                        : '24px',
+                                                                    backgroundColor: '#c4ff61',
+                                                                    margin: isActive
+                                                                        ? '0 11px 0 33px'
+                                                                        : '2px 11px 2px 40px',
+                                                                    transition:
+                                                                        'width 0.3s ease-in-out, margin-left 0.3s ease-in-out',
+                                                                },
+                                                            }}
+                                                        >
+                                                            {item.name}
+                                                        </ChakraLink>
+                                                    </ListItem>
+                                                );
+                                            })}
                                         </List>
                                     </AccordionPanel>
                                 </AccordionItem>
@@ -205,7 +233,8 @@ export const Sidebar = () => {
                             ученический файл, <br />
                             ©Клевер Технолоджи, 2025
                         </Text>
-                        <Link
+                        <ChakraLink
+                            as={Link}
                             fontFamily='var(--font-family)'
                             fontWeight='600'
                             fontSize='12px'
@@ -221,7 +250,7 @@ export const Sidebar = () => {
                                 <Image src={exit} alt='exit' mr='6px' w='12px' h='12px' />
                                 Выйти
                             </Flex>
-                        </Link>
+                        </ChakraLink>
                     </Flex>
                 </Flex>
             </Box>

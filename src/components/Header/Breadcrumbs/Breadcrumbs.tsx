@@ -1,4 +1,5 @@
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink } from '@chakra-ui/react';
+import { ChevronRightIcon } from '@chakra-ui/icons';
+import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, Text } from '@chakra-ui/react';
 import { Link, useLocation } from 'react-router';
 
 const pageTitles: Record<string, string> = {
@@ -22,18 +23,27 @@ export const Breadcrumbs = () => {
     breadcrumbItems.unshift({ label: 'Главная', to: '/' });
 
     return (
-        <Breadcrumb separator='>'>
+        <Breadcrumb separator={<ChevronRightIcon w='22px' h='24px' />}>
             {breadcrumbItems.map((item, index) => (
-                <BreadcrumbItem key={item.to} isCurrentPage={index === breadcrumbItems.length - 1}>
-                    <BreadcrumbLink
-                        href='/'
-                        fontSize='16px'
-                        fontWeight='400'
-                        _hover={{ color: 'gray.600' }}
-                        as={Link}
-                        to={item.to}
-                    >
-                        {item.label}
+                <BreadcrumbItem
+                    key={item.to}
+                    isCurrentPage={index === breadcrumbItems.length - 1}
+                    sx={{}}
+                >
+                    <BreadcrumbLink as={Link} to={item.to}>
+                        <Text
+                            fontSize='16px'
+                            fontWeight='400'
+                            lineHeight='150$'
+                            textAlign='center'
+                            color={
+                                index === breadcrumbItems.length - 1
+                                    ? '#000'
+                                    : 'rgba(0, 0, 0, 0.64)'
+                            }
+                        >
+                            {item.label}
+                        </Text>
                     </BreadcrumbLink>
                 </BreadcrumbItem>
             ))}

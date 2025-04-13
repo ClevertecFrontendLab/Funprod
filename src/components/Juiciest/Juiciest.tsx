@@ -26,7 +26,7 @@ export const Juiciest = () => (
                     borderRadius='8px'
                     border='1px solid rgba(0, 0, 0, 0.08)'
                     maxWidth=''
-                    maxW={{ lg: '668px', md: '880px', sm: 'calc(50% - 12px)', base: '356px' }}
+                    maxW={{ lg: '668px', md: '880px', sm: 'calc(50% - 12px)', base: '328px' }}
                     w='100%'
                     maxH={{ md: '244px', base: '128px' }}
                     h='100%'
@@ -37,12 +37,12 @@ export const Juiciest = () => (
                         borderRadius='4px 0 0 4px'
                     />
                     <Flex
-                        p={{ md: '20px 24px', base: '8px 8px 4px 8px' }}
+                        p={{ md: '20px 24px', base: '8px 0px 4px 8px' }}
                         direction='column'
                         gap={{ md: '24px', base: '0' }}
-                        w='100%'
+                        w={{ base: '154px', sm: '182px', md: '100%' }}
                     >
-                        <Flex justify='space-between'>
+                        <Flex justify={{ md: 'space-between', base: 'flex-start' }}>
                             <Link>
                                 <Flex
                                     maxW={{ md: '100%', base: '140px' }}
@@ -118,7 +118,7 @@ export const Juiciest = () => (
                                 </Text>
                             </Box>
                         </Box>
-                        <Flex justify={{ md: 'flex-end', base: 'center' }} gap='8px'>
+                        <Flex justify='flex-end' gap='8px'>
                             <Button
                                 border='1px solid rgba(0, 0, 0, 0.48)'
                                 borderRadius='6px'

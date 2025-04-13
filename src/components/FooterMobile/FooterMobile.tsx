@@ -40,12 +40,20 @@ export const FooterMobile = () => (
                 maxW='192px'
                 w='100%'
                 h='100%'
-                bg='transparent'
-                _hover={{
-                    bg: 'radial-gradient(50% 50% at 50% 50%, rgba(196, 255, 97, 1) 0%, rgba(255, 255, 255, 0) 100%)',
-                }}
+                // bg='transparent'
+                bg={
+                    index === 0
+                        ? 'radial-gradient(50% 50% at 50% 50%, rgba(196, 255, 97, 1) 0%, rgba(255, 255, 255, 0) 100%)'
+                        : 'transparent'
+                }
+                // _hover={{
+                // }}
             >
-                <Flex direction='column' align='center'>
+                <Flex
+                    direction='column'
+                    align='center'
+                    // bg='radial-gradient(50% 50% at 50% 50%, rgba(196, 255, 97, 1) 0%, rgba(255, 255, 255, 0) 100%)'
+                >
                     <Image src={item.icon} alt={item.title} w='40px' h='40px' />
                     <Text fontWeight='500' fontSize='12px' lineHeight='133%' textAlign='center'>
                         {item.title}

@@ -10,11 +10,19 @@ type FooterProps = {
 };
 
 export const Footer = ({ title, description, card, list }: FooterProps) => (
-    <Flex direction='column' maxWidth='1360px' w='100%' mt='40px' gap='24px'>
+    <Flex
+        direction='column'
+        maxWidth='1360px'
+        w='100%'
+        mt='40px'
+        gap='24px'
+        borderTop='1px solid rgba(0, 0, 0, 0.08)'
+    >
         <Flex
             justify='space-between'
             gap={{ md: '24px', base: '12px' }}
             direction={{ md: 'row', base: 'column' }}
+            mt={{ base: '8px', md: '24px' }}
         >
             <Text
                 flex='1'
@@ -118,7 +126,7 @@ export const Footer = ({ title, description, card, list }: FooterProps) => (
                     </Flex>
                 </Flex>
             ))}
-            <Flex direction='column' gap='12px'>
+            <Flex direction='column' gap={{ md: '12px', sm: '6px', base: '12px' }}>
                 {list.map((list, index) => (
                     <Flex
                         key={index}
@@ -130,7 +138,7 @@ export const Footer = ({ title, description, card, list }: FooterProps) => (
                         justify='space-between'
                         gap={{ lg: '12px', md: '8px', base: '6px' }}
                     >
-                        <Flex gap={{ lg: '12px', base: '8px' }}>
+                        <Flex gap={{ lg: '12px', base: '6px' }}>
                             <Image src={list.Icon} ml={{ lg: '24px', base: '12px' }} />
                             <Text
                                 fontFamily='var(--font-family)'
@@ -146,16 +154,12 @@ export const Footer = ({ title, description, card, list }: FooterProps) => (
                             mr={{ lg: '24px', base: '12px' }}
                             maxW={{ lg: '87px', base: '70px' }}
                             w='100%'
+                            h='32px'
                             border='1px solid var(--lime-600)'
                             bg='transparent'
                             color='var(--lime-600)'
-                            _hover={{
-                                bg: 'var(--lime-600)',
-                                color: '#fff',
-                            }}
                         >
                             <Text
-                                fontFamily='var(--font-family)'
                                 fontWeight='600'
                                 fontSize={{ lg: '14px', base: '12px' }}
                                 lineHeight='143%'

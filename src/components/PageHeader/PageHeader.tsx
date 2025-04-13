@@ -29,7 +29,7 @@ export const PageHeader = ({ title, description }: PageHeaderProps) => {
             width='100%'
             align={{ sm: 'center', base: 'stretch' }}
             height='100%'
-            pt='32px'
+            mt={{ md: '32px', base: '16px' }}
         >
             <Text
                 textAlign='center'
@@ -41,7 +41,7 @@ export const PageHeader = ({ title, description }: PageHeaderProps) => {
                 {title}
             </Text>
             {description && (
-                <Box w={{ md: '700px', base: '328px' }}>
+                <Box w={{ sm: '700px', base: '328px' }} mt={{ md: '12px', base: '16px' }}>
                     <Text
                         fontWeight='500'
                         fontSize={{ md: '16px', base: '14px' }}
@@ -78,7 +78,12 @@ export const PageHeader = ({ title, description }: PageHeaderProps) => {
                             h='100%'
                             onChange={(e) => setText(e.target.value)}
                             border='1px solid rgba(0, 0, 0, 0.48)'
-                            border-radius='6px'
+                            borderRadius='6px'
+                            sx={{
+                                '::placeholder': {
+                                    color: '#134b00',
+                                },
+                            }}
                         />
                         <InputRightElement width='4.5rem'>
                             <Icon

@@ -115,7 +115,6 @@ export const JuiciestSection = () => (
         direction='column'
         justify='center'
         align='center'
-        maxWidth='1360px'
         width='100%'
         mt='40px'
         position={{ md: 'static', base: 'relative' }}
@@ -159,7 +158,7 @@ export const JuiciestSection = () => (
                     borderRadius='8px'
                     border='1px solid rgba(0, 0, 0, 0.08)'
                     maxWidth=''
-                    maxW={{ lg: '668px', md: '880px', sm: 'calc(50% - 12px)', base: '356px' }}
+                    maxW={{ lg: '668px', md: '880px', sm: 'calc(50% - 12px)', base: '328px' }}
                     w='100%'
                     maxH={{ md: '244px', base: '128px' }}
                     h='100%'
@@ -203,9 +202,11 @@ export const JuiciestSection = () => (
                         </Box>
                     )}
                     <Flex
-                        p={{ md: '20px 24px', base: '8px 8px 4px 8px' }}
+                        p={{ md: '20px 24px', base: '8px 0 4px 8px' }}
+                        // m={{ md: '20px 24px', base: '8px 8px 4px 8px' }}
                         direction='column'
                         gap={{ md: '24px', base: '0' }}
+                        maxW={{ md: '100%', base: '154px' }}
                         w='100%'
                     >
                         <Flex justify='space-between'>

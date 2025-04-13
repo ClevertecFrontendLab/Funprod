@@ -17,7 +17,7 @@ export const Main = () => (
         }}
         w='100%'
         direction='column'
-        m={{ base: '80px 16px 100px 16px', sm: '80px 72px 100px 24px', md: '80px 72px 0 24px' }}
+        m={{ base: '64px 16px 100px 16px', sm: '64px 72px 100px 24px', md: '80px 72px 0 24px' }}
     >
         <PageHeader title='Приятного аппетита!' />
         <NewRecipesSection />

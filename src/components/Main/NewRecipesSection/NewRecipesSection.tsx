@@ -1,11 +1,13 @@
-import { Box, Flex, Image, Link, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Image, Link, Text } from '@chakra-ui/react';
 
 import bookmarkHeart from './../../../assets/actionBar/BookmarkHeart.svg';
 import emojiHeartEyes from './../../../assets/actionBar/EmojiHeartEyes.svg';
+import leftSlider from './../../../assets/leftSlider.svg';
 import cutlets from './../../../assets/main/cutlets.jpg';
 import pancakes from './../../../assets/main/pancakes.jpg';
 import salad from './../../../assets/main/salad.jpg';
 import soup from './../../../assets/main/soup.jpg';
+import rightSlider from './../../../assets/rightSlider.svg';
 import firstCoursesIcon from './../../../assets/sidebar/FirstCourses.svg';
 import pastryIcon from './../../../assets/sidebar/pastry.svg';
 import saladIcon from './../../../assets/sidebar/salad.svg';
@@ -89,7 +91,7 @@ const recipeСards = [
 ];
 
 export const NewRecipesSection = () => (
-    <Flex direction='column' w='100%' maxHeight='486px' mt='32px'>
+    <Flex direction='column' w='100%' maxHeight='486px' mt='32px' position='relative'>
         <Text
             fontWeight='500'
             fontSize={{ lg: '48px', md: '36px', base: '24px' }}
@@ -207,6 +209,14 @@ export const NewRecipesSection = () => (
                     </Box>
                 </Box>
             ))}
+            <Box display={{ base: 'none', md: 'block' }}>
+                <Button position='absolute' bottom='219px' left='-8px' w='48px' h='48px' p='0'>
+                    <Image src={leftSlider} />
+                </Button>
+                <Button position='absolute' bottom='219px' right='-8px' w='48px' h='48px' p='0'>
+                    <Image src={rightSlider} />
+                </Button>
+            </Box>
         </Flex>
     </Flex>
 );

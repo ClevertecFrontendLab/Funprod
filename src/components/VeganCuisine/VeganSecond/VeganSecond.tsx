@@ -24,12 +24,13 @@ export const SecondCourses = () => (
                         borderRadius='4px 0 0 4px'
                     />
                     <Flex
-                        p={{ md: '20px 24px', base: '8px 8px 4px 8px' }}
+                        p={{ md: '20px 24px', base: '0' }}
+                        m={{ md: '0', base: '8px 8px 4px 8px' }}
                         direction='column'
                         gap={{ md: '24px', base: '0' }}
-                        w='100%'
+                        w={{ base: '154px', sm: '182px', md: '100%' }}
                     >
-                        <Flex justify='space-between'>
+                        <Flex justify={{ md: 'space-between', base: 'flex-start' }}>
                             <Link>
                                 <Flex
                                     maxW={{ md: '100%', base: '140px' }}
@@ -63,7 +64,7 @@ export const SecondCourses = () => (
                                 mr={{ base: '85px', md: '0' }}
                             >
                                 {card.icons.map((icon, index) => (
-                                    <Flex key={index} align='center' justify='center' gap='6px'>
+                                    <Flex key={index} align='center' gap='6px'>
                                         <Box w='12px' h='12px'>
                                             <Image src={icon.icon} />
                                         </Box>
@@ -86,7 +87,7 @@ export const SecondCourses = () => (
                                 fontWeight='500'
                                 fontSize={{ md: '20px', base: '16px' }}
                                 lineHeight='140%'
-                                noOfLines={{ lg: 1, base: 0 }}
+                                noOfLines={{ md: 1, base: 2 }}
                                 overflow='hidden'
                                 textOverflow='ellipsis'
                             >
