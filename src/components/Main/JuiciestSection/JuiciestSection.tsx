@@ -160,7 +160,6 @@ export const JuiciestSection = () => (
                     maxWidth=''
                     maxW={{ lg: '668px', md: '880px', sm: 'calc(50% - 12px)', base: '328px' }}
                     maxH={{ md: '244px', base: '128px' }}
-                    p='8px 8px 4px 8px'
                     h='100%'
                 >
                     <Image
@@ -202,8 +201,7 @@ export const JuiciestSection = () => (
                         </Box>
                     )}
                     <Flex
-                        p={{ md: '20px 24px', base: '8px 0 4px 8px' }}
-                        // m={{ md: '20px 24px', base: '8px 8px 4px 8px' }}
+                        p={{ md: '20px 24px', base: '8px 8px 4px 8px' }}
                         direction='column'
                         gap={{ md: '24px', base: '0' }}
                         maxW={{ md: '100%', base: '154px' }}
