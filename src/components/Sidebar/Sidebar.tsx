@@ -162,7 +162,7 @@ export const Sidebar = () => {
                                                     <ListItem key={i}>
                                                         <ChakraLink
                                                             as={Link}
-                                                            to='/vegan-cuisine/second-courses'
+                                                            to={item.path}
                                                             fontWeight={isActive ? '700' : '400'}
                                                             sx={{
                                                                 display: 'flex',

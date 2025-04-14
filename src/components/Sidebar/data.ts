@@ -113,7 +113,7 @@ export const sidebarMenu: SidebarSection[] = [
         items: [
             { name: 'Закуски', path: '' },
             { name: 'Первые блюда', path: '' },
-            { name: 'Вторые блюда', path: '/vegan-cuisine/second-courses' },
+            { name: 'Вторые блюда', path: '/vegan-cuisine' },
             { name: 'Гарниры', path: '' },
             { name: 'Десерты', path: '' },
             { name: 'Выпечка', path: '' },
