@@ -58,12 +58,18 @@ export const PageHeader = ({ title, description }: PageHeaderProps) => {
                 <Button
                     bg='transparent'
                     w={{ md: '48px', base: '32px' }}
+                    minW='0'
                     h={{ md: '48px', base: '32px' }}
                     border='1px solid rgba(0, 0, 0, 0.48)'
                     borderRadius='6px'
-                    p='0 12px'
+                    p={{ md: '0 12px', base: '0' }}
                 >
-                    <Image src={filterIcon} alt='filter' w='24px' h='24px' />
+                    <Image
+                        src={filterIcon}
+                        alt='filter'
+                        w={{ md: '24px', base: '14px' }}
+                        h={{ md: '24px', base: '14px' }}
+                    />
                 </Button>
                 <Box
                     position='relative'
@@ -79,6 +85,8 @@ export const PageHeader = ({ title, description }: PageHeaderProps) => {
                             onChange={(e) => setText(e.target.value)}
                             border='1px solid rgba(0, 0, 0, 0.48)'
                             borderRadius='6px'
+                            fontSize={{ base: '14px', md: '18px' }}
+                            fontWeight='400'
                             sx={{
                                 '::placeholder': {
                                     color: '#134b00',

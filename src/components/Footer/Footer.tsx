@@ -154,7 +154,7 @@ export const Footer = ({ title, description, card, list }: FooterProps) => (
                             mr={{ lg: '24px', base: '12px' }}
                             maxW={{ lg: '87px', base: '70px' }}
                             w='100%'
-                            h='32px'
+                            h={{ md: '32px', base: '24px' }}
                             border='1px solid var(--lime-600)'
                             bg='transparent'
                             color='var(--lime-600)'

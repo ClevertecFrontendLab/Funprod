@@ -159,8 +159,8 @@ export const JuiciestSection = () => (
                     border='1px solid rgba(0, 0, 0, 0.08)'
                     maxWidth=''
                     maxW={{ lg: '668px', md: '880px', sm: 'calc(50% - 12px)', base: '328px' }}
-                    w='100%'
                     maxH={{ md: '244px', base: '128px' }}
+                    p='8px 8px 4px 8px'
                     h='100%'
                 >
                     <Image
