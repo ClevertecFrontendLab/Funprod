@@ -11,12 +11,6 @@ import { footerMainCard, footerMainList } from './FooterMainData';
 import { JuiciestSection } from './JuiciestSection/JuiciestSection';
 import { NewRecipesSection } from './NewRecipesSection/NewRecipesSection';
 
-export const allergenKeywords: Record<string, string[]> = {
-    'Томат (помидор)': ['томат', 'томатный', 'помидор'],
-    грибы: ['гриб', 'грибы', 'шампиньоны', 'лисички', 'вешенки'],
-    'Молочные продукты': ['молоко', 'сыр', 'сливки', 'кефир', 'творог'],
-};
-
 export const Main = () => {
     const {
         filteredRecipes,

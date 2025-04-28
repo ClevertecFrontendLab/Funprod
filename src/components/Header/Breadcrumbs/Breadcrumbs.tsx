@@ -23,7 +23,9 @@ const pageTitles: Record<string, string> = {
     '/salads/warm-salads': 'Теплые салаты',
 };
 
-export const Breadcrumbs = ({ onClose = () => {} }: { onClose?: () => void }) => {
+type Breadcrumbs = { onClose?: () => void };
+
+export const Breadcrumbs = ({ onClose = () => {} }: Breadcrumbs) => {
     const location = useLocation();
 
     const pathnames = location.pathname.split('/').filter(Boolean);

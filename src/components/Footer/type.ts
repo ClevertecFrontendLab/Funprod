@@ -19,3 +19,10 @@ export type FooterCardItem = {
     labels: FooterCardLabel;
     icons: FooterCardIcon[];
 };
+
+export type FooterProps = {
+    title: string;
+    description: string;
+    card: FooterCardItem[];
+    list: FooterListItem[];
+};

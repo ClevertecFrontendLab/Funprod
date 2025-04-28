@@ -2,13 +2,15 @@ import { Flex, IconButton, Image, Input } from '@chakra-ui/react';
 import { useState } from 'react';
 
 import addAllerg from './../../../assets/addAllerg.svg';
+
+type AddOtherAllergenProps = {
+    selectedOptions?: string[];
+    onChange?: (val: string[]) => void;
+};
 export const AddOtherAllergen = ({
     selectedOptions = [],
     onChange = () => {},
-}: {
-    selectedOptions?: string[];
-    onChange?: (val: string[]) => void;
-}) => {
+}: AddOtherAllergenProps) => {
     const [newAllergen, setNewAllergen] = useState<string>('');
     const addNewAllergen = () => {
         if (newAllergen && !selectedOptions.includes(newAllergen)) {

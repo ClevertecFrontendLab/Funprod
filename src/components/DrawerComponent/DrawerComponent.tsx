@@ -1,5 +1,6 @@
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import {
+    Box,
     Button,
     Checkbox,
     CheckboxGroup,
@@ -19,7 +20,7 @@ import {
 } from '@chakra-ui/react';
 import { useState } from 'react';
 
-import { CustomSelectDrawer } from '../CustomSelect/CustomSelectDrawer';
+import { CustomSelect } from '../CustomSelect/CustomSelect';
 import { mockData } from '../mockData';
 import drawerClose from './../../assets/drawerClose.svg';
 
@@ -46,14 +47,7 @@ const sideDish = [
     'Другие овощи',
 ];
 
-export const DrawerComponent = ({
-    isOpen,
-    onClose,
-    onChange = () => {},
-    setSelectedCategory,
-    setSelectedSide,
-    setSelectedMeat,
-}: {
+type DrawerComponentProps = {
     isOpen: boolean;
     onClose: () => void;
     selectedOptions?: string[];
@@ -64,7 +58,16 @@ export const DrawerComponent = ({
     selectedCategory?: string;
     selectedMeat: string[];
     selectedSide: string[];
-}) => {
+};
+
+export const DrawerComponent = ({
+    isOpen,
+    onClose,
+    onChange = () => {},
+    setSelectedCategory,
+    setSelectedSide,
+    setSelectedMeat,
+}: DrawerComponentProps) => {
     const [isActive, setIsActive] = useState(true);
     const [localCategory, setLocalCategory] = useState('');
     const [localMeat, setLocalMeat] = useState<string[]>([]);
@@ -98,6 +101,13 @@ export const DrawerComponent = ({
     const isFindRecipeDisabled =
         !localSide.length && !localAllergens.length && !localCategory.length;
 
+    const allFilters = [
+        ...(localCategory ? [categoryTranslations[localCategory] || localCategory] : []),
+        ...localMeat,
+        ...localSide,
+        ...localAllergens,
+    ];
+
     return (
         <Drawer data-test-id='filter-drawer' placement='right' onClose={onClose} isOpen={isOpen}>
             <DrawerOverlay bg='rgba(255, 255, 255, 0.1)' backdropFilter='blur(2px)' />
@@ -121,7 +131,29 @@ export const DrawerComponent = ({
                         h='24px'
                     />
                 </Flex>
-                <DrawerBody display='flex' flexDirection='column' gap='24px'>
+                <DrawerBody
+                    display='flex'
+                    flexDirection='column'
+                    gap='24px'
+                    sx={{
+                        '&::-webkit-scrollbar': {
+                            width: '8px',
+                            borderRadius: '8px',
+                        },
+                        '&::-webkit-scrollbar-track': {
+                            background: 'rgba(0, 0, 0, 0.04)',
+                            borderRadius: '4px',
+                            m: '10px 0',
+                        },
+                        '&::-webkit-scrollbar-thumb': {
+                            background: 'rgba(0, 0, 0, 0.16)',
+                            borderRadius: '4px',
+                        },
+                        '&::-webkit-scrollbar-thumb:hover': {
+                            background: 'rgba(0, 0, 0, 0.2)',
+                        },
+                    }}
+                >
                     <Menu>
                         <MenuButton
                             textAlign='start'
@@ -151,6 +183,16 @@ export const DrawerComponent = ({
                                                 ? 'checkbox-веганская кухня'
                                                 : undefined
                                         }
+                                        isChecked={localCategory === category}
+                                        borderColor='#b1ff2e'
+                                        iconColor='black'
+                                        colorScheme='green'
+                                        _checked={{
+                                            '& .chakra-checkbox__control': {
+                                                bg: '#b1ff2e',
+                                            },
+                                        }}
+                                        mr='10px'
                                     >
                                         {categoryTranslations[category] || category}
                                     </Checkbox>
@@ -238,22 +280,35 @@ export const DrawerComponent = ({
                         />
                     </Flex>
                     <Flex>
-                        <CustomSelectDrawer
+                        <CustomSelect
                             isActive={isActive}
                             selectedOptions={localAllergens}
                             onChange={(newSelectedOptions) => {
                                 setLocalAllergens(newSelectedOptions);
                             }}
-                            allFilters={[
-                                ...(localCategory
-                                    ? [categoryTranslations[localCategory] || localCategory]
-                                    : []),
-                                ...localMeat,
-                                ...localSide,
-                                ...localAllergens,
-                            ]}
+                            allFilters={[...localAllergens]}
                             isOpenDrawer={isOpen}
                         />
+                    </Flex>
+                    <Flex w='100%' wrap='wrap' p='12px 16px' gap='4px'>
+                        {allFilters.map((item) => {
+                            const cleanLabel = item.replace(/\s*\(.*?\)\s*/g, '').trim();
+                            return (
+                                <Box
+                                    data-test-id='filter-tag'
+                                    as='span'
+                                    key={item}
+                                    border='1px solid #c4ff61'
+                                    bg='#d7ff94'
+                                    color=' #2db100'
+                                    padding='0 8px'
+                                    borderRadius='4px'
+                                    mr='6px'
+                                >
+                                    {cleanLabel}
+                                </Box>
+                            );
+                        })}
                     </Flex>
                     <Flex m='14px 0 32px  32px' gap='8px'>
                         <Button

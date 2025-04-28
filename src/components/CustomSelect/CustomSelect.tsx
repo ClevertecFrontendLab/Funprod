@@ -29,19 +29,21 @@ const options = [
     'Шоколад',
 ];
 
-export const CustomSelectDrawer = ({
-    isActive,
-    selectedOptions = [],
-    onChange = () => {},
-    allFilters = [],
-    isOpenDrawer,
-}: {
+type CustomSelectDrawerProps = {
     isActive: boolean;
     selectedOptions?: string[];
     onChange?: (val: string[]) => void;
     allFilters?: string[];
     isOpenDrawer?: boolean;
-}) => {
+};
+
+export const CustomSelect = ({
+    isActive,
+    selectedOptions = [],
+    onChange = () => {},
+    allFilters = [],
+    isOpenDrawer,
+}: CustomSelectDrawerProps) => {
     const [newAllergen, setNewAllergen] = useState<string>('');
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -112,7 +114,6 @@ export const CustomSelectDrawer = ({
                                             .trim();
                                         return (
                                             <Box
-                                                data-test-id='filter-tag'
                                                 as='span'
                                                 key={item}
                                                 border='1px solid #c4ff61'
@@ -134,7 +135,7 @@ export const CustomSelectDrawer = ({
                             data-test-id='allergens-menu'
                             maxH='336px'
                             overflowY='hidden'
-                            maxW='400px'
+                            maxW={{ md: '400px', base: '200px' }}
                             w='100%'
                             minW='284px'
                             p='0'

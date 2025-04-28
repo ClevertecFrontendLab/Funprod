@@ -15,8 +15,8 @@ import {
 } from '@chakra-ui/react';
 import { useState } from 'react';
 
-import { CustomSelectDrawer } from '../CustomSelect/CustomSelectDrawer';
-import { DrawerComponent } from '../Drawer/Drawer';
+import { CustomSelect } from '../CustomSelect/CustomSelect';
+import { DrawerComponent } from '../DrawerComponent/DrawerComponent';
 import { Recipe } from '../mockData';
 import filterIcon from './../../assets/main/icon/filter.svg';
 
@@ -49,17 +49,26 @@ export const PageHeader = ({
     selectedMeat = [],
     selectedSide = [],
     setSearchQuery,
+    filteredData,
 }: PageHeaderProps) => {
     const [text, setText] = useState('');
     const [isActive, setIsActive] = useState(true);
     const { isOpen, onOpen, onClose } = useDisclosure();
+    const [isFound, setIsFound] = useState<boolean | null>(null);
 
     const handleSearch = () => {
         setSearchQuery?.(text);
+
+        const resultFound = filteredData?.some((item) =>
+            item.title.toLowerCase().includes(text.toLowerCase()),
+        );
+        setIsFound(resultFound || text === '');
     };
+
     const handleClear = () => {
         setSearchQuery?.('');
         setText('');
+        setIsFound(null);
     };
 
     const handleToggle = () => {
@@ -132,7 +141,7 @@ export const PageHeader = ({
                             w='100%'
                             h='100%'
                             onChange={(e) => setText(e.target.value)}
-                            border='1px solid rgba(0, 0, 0, 0.48)'
+                            border={`1px solid ${isFound === null ? 'rgba(0, 0, 0, 0.48)' : isFound ? 'green' : 'red'}`}
                             borderRadius='6px'
                             fontSize={{ base: '14px', md: '18px' }}
                             fontWeight='400'
@@ -205,7 +214,7 @@ export const PageHeader = ({
                     />
                 </Flex>
                 {!isOpen ? (
-                    <CustomSelectDrawer
+                    <CustomSelect
                         isActive={isActive}
                         selectedOptions={selectedOptions}
                         onChange={onChange}

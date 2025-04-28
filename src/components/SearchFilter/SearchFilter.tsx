@@ -8,13 +8,12 @@ import { mockData, Recipe } from '../mockData';
 import bookmarkHeart from './../../assets/actionBar/BookmarkHeart.svg';
 import emojiHeartEyes from './../../assets/actionBar/EmojiHeartEyes.svg';
 
-export const SearchFilter = ({
-    filteredData = mockData,
-    searchQuery,
-}: {
+type SearchFilterProps = {
     filteredData?: Recipe[];
     searchQuery: string;
-}) => {
+};
+
+export const SearchFilter = ({ filteredData = mockData, searchQuery }: SearchFilterProps) => {
     const getRecipeUrl = (recipe: Recipe) => {
         const mainCategory = recipe.category[0];
         const subCategory = recipe.subcategory[0];

@@ -15,7 +15,9 @@ import leftSlider from './../../../assets/leftSlider.svg';
 import rightSlider from './../../../assets/rightSlider.svg';
 import { categoryIcon } from './../../categoryIcon';
 
-export const NewRecipesSection = ({ filteredData = mockData }: { filteredData?: Recipe[] }) => {
+type NewRecipesSectionProps = { filteredData?: Recipe[] };
+
+export const NewRecipesSection = ({ filteredData = mockData }: NewRecipesSectionProps) => {
     const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null);
     const swiperRef = useRef(null);
 

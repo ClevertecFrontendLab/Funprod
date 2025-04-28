@@ -8,15 +8,17 @@ import { mockData, Recipe } from '../../mockData';
 import bookmarkHeart from './../../../assets/actionBar/BookmarkHeart.svg';
 import emojiHeartEyes from './../../../assets/actionBar/EmojiHeartEyes.svg';
 
+type TabComponentProps = {
+    filteredData?: Recipe[];
+    searchQuery?: string;
+    categories?: string;
+};
+
 export const TabComponent = ({
     filteredData = mockData,
     searchQuery = '',
     categories = '',
-}: {
-    filteredData?: Recipe[];
-    searchQuery?: string;
-    categories?: string;
-}) => {
+}: TabComponentProps) => {
     const getRecipeUrl = (recipe: Recipe) => {
         const mainCategory = recipe.category[0];
         const subCategory = recipe.subcategory[0];

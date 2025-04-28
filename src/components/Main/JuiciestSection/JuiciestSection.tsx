@@ -3,6 +3,7 @@ import { Link as Links } from 'react-router';
 
 import { categoryIcon } from '~/components/categoryIcon';
 
+import { getRecipeUrl } from '../../Header/Breadcrumbs/getRecipeUrl';
 import spaghetti from './../../../assets//main/juiciest/spaghetti.jpg';
 import bookmarkHeart from './../../../assets/actionBar/BookmarkHeart.svg';
 import emojiHeartEyes from './../../../assets/actionBar/EmojiHeartEyes.svg';
@@ -14,14 +15,6 @@ import ham from './../../../assets/main/juiciest/ham.jpg';
 import noodles from './../../../assets/main/juiciest/noodles.jpg';
 import tomYm from './../../../assets/main/juiciest/tom-ym.jpg';
 import readyMeal from './../../../assets/readyMeal.jpg';
-import { Recipe } from './../../mockData';
-
-const getRecipeUrl = (recipe: Recipe) => {
-    const mainCategory = recipe.category[0];
-    const subCategory = recipe.subcategory[0];
-
-    return `/${mainCategory}/${subCategory}/${recipe.id}`;
-};
 
 const juiciestCard = [
     {
