@@ -8,7 +8,7 @@ import { Footer } from '../Footer/Footer';
 import { Recipe } from '../mockData';
 import { PageHeader } from '../PageHeader/PageHeader';
 import { footerVeganCuisineCard, footerVeganCuisineList } from './FooterVeganCuisineData';
-import { Snacks } from './Snacks/Snacks';
+import { TabComponent } from './TabComponent/TabComponent';
 
 const categories = [
     { label: 'Закуски', path: 'snacks' },
@@ -116,7 +116,7 @@ export const VeganCuisine = () => {
                         return (
                             <TabPanel key={i} p='0'>
                                 {tabIndex === i && (
-                                    <Snacks
+                                    <TabComponent
                                         filteredData={data}
                                         searchQuery={searchQuery}
                                         categories={item.path}

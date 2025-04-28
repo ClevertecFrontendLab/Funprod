@@ -3,7 +3,7 @@ import { Route, Routes } from 'react-router';
 
 import { Juiciest } from '~/components/Juiciest/Juiciest';
 import { Main } from '~/components/Main/Main';
-import { Snacks } from '~/components/VeganCuisine/Snacks/Snacks';
+import { TabComponent } from '~/components/VeganCuisine/TabComponent/TabComponent';
 import { VeganCuisine } from '~/components/VeganCuisine/VeganCuisine';
 import RootLayout from '~/layouts/RootLayout';
 
@@ -17,9 +17,9 @@ function App() {
                 <Route path='/' element={<RootLayout />}>
                     <Route index element={<Main />} />
                     <Route path='vegan' element={<VeganCuisine />}>
-                        <Route path='snacks' element={<Snacks />} />
+                        <Route path='snacks' element={<TabComponent />} />
                         <Route path='first-dish' element={<div>first-dish</div>} />
-                        <Route path='second-dish' element={<Snacks />} />
+                        <Route path='second-dish' element={<TabComponent />} />
                         <Route path='side-dishes' element={<div>Гарниры</div>} />
                         <Route path='desserts' element={<div>desserts</div>} />
                         <Route path='baked-goods' element={<div>baked-goods</div>} />

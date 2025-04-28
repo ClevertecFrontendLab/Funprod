@@ -8,7 +8,7 @@ import { mockData, Recipe } from '../../mockData';
 import bookmarkHeart from './../../../assets/actionBar/BookmarkHeart.svg';
 import emojiHeartEyes from './../../../assets/actionBar/EmojiHeartEyes.svg';
 
-export const Snacks = ({
+export const TabComponent = ({
     filteredData = mockData,
     searchQuery = '',
     categories = '',
