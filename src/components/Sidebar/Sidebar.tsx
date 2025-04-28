@@ -26,7 +26,7 @@ type SidebarProps = {
 };
 
 export const Sidebar = ({ openBurger, onClose }: SidebarProps) => {
-    const [openIndex, setOpenIndex] = useState<number | null>(null); // отслеживаем индекс открытого аккордеона
+    const [openIndex, setOpenIndex] = useState<number | null>(null);
     const location = useLocation();
     const currentPath = location.pathname;
     const handleAccordionButton = (index: number) => {
@@ -219,7 +219,6 @@ export const Sidebar = ({ openBurger, onClose }: SidebarProps) => {
                                                                 width: '230px',
                                                                 height: '36px',
                                                                 marginLeft: '0',
-                                                                // position: 'relative',
 
                                                                 _hover: {
                                                                     textDecoration: 'none',
@@ -251,56 +250,6 @@ export const Sidebar = ({ openBurger, onClose }: SidebarProps) => {
                                                         </ChakraLink>
                                                     </ListItem>
                                                 );
-                                                // const isActive = currentPath === item.path;
-                                                // return isActive ? ( // ← Рендерить только если активно!
-                                                //     <ListItem key={i}>
-                                                //         <ChakraLink
-                                                //             data-test-id={
-                                                //                 isActive
-                                                //                     ? `${item.title}-active`
-                                                //                     : ''
-                                                //             }
-                                                //             as={Link}
-                                                //             to={item.path}
-                                                //             fontWeight={isActive ? '700' : '400'}
-                                                //             sx={{
-                                                //                 display: 'flex',
-                                                //                 alignItems: 'center',
-                                                //                 width: '230px',
-                                                //                 height: '36px',
-                                                //                 marginLeft: '0',
-                                                //                 // position: 'relative',
-
-                                                //                 _hover: {
-                                                //                     textDecoration: 'none',
-                                                //                     color: 'inherit',
-                                                //                     fontWeight: '700',
-                                                //                     '::before': {
-                                                //                         width: '8px',
-                                                //                         height: '28px',
-                                                //                         marginLeft: '33px',
-                                                //                     },
-                                                //                 },
-                                                //                 '::before': {
-                                                //                     content: '""',
-                                                //                     display: 'inline-block',
-                                                //                     width: isActive ? '8px' : '1px',
-                                                //                     height: isActive
-                                                //                         ? '28px'
-                                                //                         : '24px',
-                                                //                     backgroundColor: '#c4ff61',
-                                                //                     margin: isActive
-                                                //                         ? '0 11px 0 33px'
-                                                //                         : '2px 11px 2px 40px',
-                                                //                     transition:
-                                                //                         'width 0.3s ease-in-out, margin-left 0.3s ease-in-out',
-                                                //                 },
-                                                //             }}
-                                                //         >
-                                                //             {item.name}
-                                                //         </ChakraLink>
-                                                //     </ListItem>
-                                                // ) : null;
                                             })}
                                         </List>
                                     </AccordionPanel>

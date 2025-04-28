@@ -139,12 +139,7 @@ export const TabComponent = ({
                                         </Flex>
                                     </Flex>
                                 </Flex>
-                                <Box
-                                    w={{ lg: '274px', base: '100%' }}
-                                    // h='100px'
-                                    textAlign='start'
-                                    mt='10px'
-                                >
+                                <Box w={{ lg: '274px', base: '100%' }} textAlign='start' mt='10px'>
                                     <Text
                                         fontFamily='var(--font-family)'
                                         fontWeight='500'

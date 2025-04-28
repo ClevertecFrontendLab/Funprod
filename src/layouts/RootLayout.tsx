@@ -31,9 +31,7 @@ export default function RootLayout() {
                     filter={openBurger ? 'blur(4px)' : 'none'}
                     transition='filter 0.2s ease-out'
                     bg={openBurger ? 'rgba(0,0,0,0.1)' : 'transparent'}
-                    // paddingBottom='60px'
                     position='relative'
-                    // pointerEvents={openBurger ? 'none' : 'auto'}
                     onClick={() => onClose()}
                 >
                     <Outlet />

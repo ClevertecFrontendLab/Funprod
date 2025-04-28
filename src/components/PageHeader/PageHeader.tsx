@@ -214,9 +214,9 @@ export const PageHeader = ({
                     />
                 ) : (
                     <Select
-                        color='rgba(0, 0, 0, 0.64)' // Цвет текста
+                        color='rgba(0, 0, 0, 0.64)'
                         placeholder='Выберите из списка...'
-                        _placeholder={{ color: 'rgba(0, 0, 0, 0.64)' }} // Цвет плейсхолдера
+                        _placeholder={{ color: 'rgba(0, 0, 0, 0.64)' }}
                     />
                 )}
             </Flex>

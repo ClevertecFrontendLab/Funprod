@@ -525,7 +525,6 @@ export const RecipePage = () => {
             </Flex>
             <Flex mt='40px' direction='column' align='center'>
                 <Flex
-                    // direction='column'
                     justify='space-between'
                     align='flex-start'
                     w={{ lg: '668px', md: '578px', sm: '604px', base: '328px' }}

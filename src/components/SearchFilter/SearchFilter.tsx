@@ -41,7 +41,6 @@ export const SearchFilter = ({
                         }}
                         w='100%'
                         maxH={{ md: '300px', base: '128px' }}
-                        // h={{ md: '500px' }}
                     >
                         <Image
                             src={card.image}

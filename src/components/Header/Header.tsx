@@ -116,7 +116,6 @@ export const Header = ({ openBurger, onToggle }: HeaderProps) => (
                         h='48px'
                         bg='transparent'
                         _hover={{ bg: 'transparent' }}
-                        // mt='16px'
                         onClick={onToggle}
                         aria-label='Open menu'
                     >
@@ -133,7 +132,6 @@ export const Header = ({ openBurger, onToggle }: HeaderProps) => (
                         h='48px'
                         bg='transparent'
                         _hover={{ bg: 'transparent' }}
-                        // mt='16px'
                         onClick={onToggle}
                         aria-label='Close menu'
                     >

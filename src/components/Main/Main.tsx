@@ -42,7 +42,6 @@ export const Main = () => {
             selectedSide.length > 0 ||
             searchQuery.length > 0;
 
-        // Обновляем состояние isFilterApplied
         setIsFilterApplied(!!isApplied);
     }, [excludedIngredients, selectedCategory, selectedMeat, selectedSide, searchQuery]);
 

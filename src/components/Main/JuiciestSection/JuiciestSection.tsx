@@ -14,7 +14,6 @@ import ham from './../../../assets/main/juiciest/ham.jpg';
 import noodles from './../../../assets/main/juiciest/noodles.jpg';
 import tomYm from './../../../assets/main/juiciest/tom-ym.jpg';
 import readyMeal from './../../../assets/readyMeal.jpg';
-// import secondCourses from './../../../assets/sidebar/SecondCourses.svg';
 import { Recipe } from './../../mockData';
 
 const getRecipeUrl = (recipe: Recipe) => {

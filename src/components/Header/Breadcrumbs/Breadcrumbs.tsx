@@ -38,7 +38,7 @@ export const Breadcrumbs = ({ onClose = () => {} }: { onClose?: () => void }) =>
                 return [
                     ...acc,
                     {
-                        label: recipe?.title || 'Загрузка...', // <-- безопасная заглушка
+                        label: recipe?.title || 'Загрузка...',
                         to: fullPath,
                     },
                 ];

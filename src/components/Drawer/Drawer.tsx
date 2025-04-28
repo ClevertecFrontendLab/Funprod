@@ -65,7 +65,6 @@ export const DrawerComponent = ({
     selectedMeat: string[];
     selectedSide: string[];
 }) => {
-    // const [selectIsOpen, setSelectIsOpen] = useState(false);
     const [isActive, setIsActive] = useState(true);
     const [localCategory, setLocalCategory] = useState('');
     const [localMeat, setLocalMeat] = useState<string[]>([]);

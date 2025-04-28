@@ -4,7 +4,6 @@ import { Link, useLocation } from 'react-router';
 import useRecipeFilters from '~/hooks/useRecipeFilters';
 
 import { Footer } from '../Footer/Footer';
-// import { SecondCourses } from './VeganSecond/VeganSecond';
 import { Recipe } from '../mockData';
 import { PageHeader } from '../PageHeader/PageHeader';
 import { footerVeganCuisineCard, footerVeganCuisineList } from './FooterVeganCuisineData';
