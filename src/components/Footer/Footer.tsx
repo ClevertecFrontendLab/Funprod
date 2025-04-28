@@ -1,13 +1,6 @@
 import { Box, Button, Flex, Image, Link, Text } from '@chakra-ui/react';
 
-import { FooterCardItem, FooterListItem } from './type';
-
-type FooterProps = {
-    title: string;
-    description: string;
-    card: FooterCardItem[];
-    list: FooterListItem[];
-};
+import { FooterProps } from './type';
 
 export const Footer = ({ title, description, card, list }: FooterProps) => (
     <Flex

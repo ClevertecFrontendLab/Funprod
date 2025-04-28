@@ -10,7 +10,6 @@ const socialPanel = [
     { count: 589, icon: peopleFill },
     { count: 587, icon: emojiHeartEyes },
 ];
-
 export const AsideBar = () => (
     <Flex
         display={{ base: 'none', md: 'flex' }}

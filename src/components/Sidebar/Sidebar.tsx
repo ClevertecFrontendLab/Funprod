@@ -14,13 +14,19 @@ import { Link as ChakraLink } from '@chakra-ui/react';
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router';
 
+import { Breadcrumbs } from '../Header/Breadcrumbs/Breadcrumbs';
 import arrowDown from './../../assets/sidebar/arrowDown.svg';
 import arrowUp from './../../assets/sidebar/arrowUp.svg';
 import exit from './../../assets/sidebar/exit.svg';
 import { sidebarMenu } from './data';
 
-export const Sidebar = () => {
-    const [openIndex, setOpenIndex] = useState<number | null>(null); // отслеживаем индекс открытого аккордеона
+type SidebarProps = {
+    openBurger?: boolean;
+    onClose?: () => void;
+};
+
+export const Sidebar = ({ openBurger, onClose }: SidebarProps) => {
+    const [openIndex, setOpenIndex] = useState<number | null>(null);
     const location = useLocation();
     const currentPath = location.pathname;
     const handleAccordionButton = (index: number) => {
@@ -28,27 +34,60 @@ export const Sidebar = () => {
     };
 
     return (
-        <Flex display={{ base: 'none', md: 'flex' }} p='14px 4px 0 0' w='256px'>
+        <Flex
+            data-test-id='nav'
+            display={{ base: openBurger ? 'flex' : 'none', md: 'flex' }}
+            p={openBurger ? '0' : '14px 4px 0 0'}
+            w={{ md: '256px', base: '344px' }}
+        >
             <Box
+                borderRadius={{ base: '0 0 12px 12px', md: 'none' }}
                 background='#fff'
                 position='fixed'
-                top='80px'
-                h='100vh'
-                w='256px'
-                boxShadow='0 2px 1px -1px rgba(0, 0, 0, 0.2),
-            0 1px 1px 0 rgba(0, 0, 0, 0.14),
-            0 1px 3px 0 rgba(0, 0, 0, 0.12)'
+                top={{ md: '80px', base: '64px' }}
+                right={openBurger ? '5px' : 'unset'}
+                h={{ md: '100vh', sm: '868px', base: '652px' }}
+                w={{ md: '256px', sm: '344px', base: '336px' }}
+                boxShadow={{
+                    md: '0 2px 1px -1px rgba(0, 0, 0, 0.2),0 1px 1px 0 rgba(0, 0, 0, 0.14),0 1px 3px 0 rgba(0, 0, 0, 0.12)',
+                    base: '0 4px 6px -2px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.1)background: #fff',
+                }}
+                overflowY={{ sm: 'hidden', base: 'auto' }}
+                overflowX='hidden'
+                sx={{
+                    '&::-webkit-scrollbar': {
+                        width: '8px',
+                        borderRadius: '8px',
+                    },
+                    '&::-webkit-scrollbar-track': {
+                        background: 'rgba(0, 0, 0, 0.04)',
+                        borderRadius: '4px',
+                        m: '10px 0',
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                        background: 'rgba(0, 0, 0, 0.16)',
+                        borderRadius: '4px',
+                    },
+                    '&::-webkit-scrollbar-thumb:hover': {
+                        background: 'rgba(0, 0, 0, 0.2)',
+                    },
+                }}
+                zIndex='1'
             >
-                <Flex direction='column' height='calc(100vh - 80px)'>
+                {openBurger && <Breadcrumbs onClose={onClose} />}
+                <Flex
+                    direction='column'
+                    height={{ md: 'calc(100vh - 64px)', sm: '868px', base: '652px' }}
+                >
                     <Flex
                         flex='1'
                         borderRadius='12px'
                         p='10px 16px 10px 10px'
-                        mt='24px'
-                        minHeight='644px'
-                        maxHeight='872px'
-                        overflowY='auto'
-                        overflowX='hidden'
+                        mt={{ sm: '24px', base: '12px' }}
+                        minHeight={{ md: '644px', sm: '660px', base: 'auto' }}
+                        maxHeight={{ md: '872px', sm: '660px', base: 'none' }}
+                        overflowY={{ sm: 'auto' }}
+                        overflowX={{ sm: 'hidden' }}
                         sx={{
                             '&::-webkit-scrollbar': {
                                 width: '8px',
@@ -69,7 +108,10 @@ export const Sidebar = () => {
                         }}
                         boxShadow={
                             openIndex !== null
-                                ? ' 0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                                ? {
+                                      md: ' 0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+                                      base: 'none',
+                                  }
                                 : 'none'
                         }
                     >
@@ -82,12 +124,12 @@ export const Sidebar = () => {
                                     setOpenIndex(index);
                                 }
                             }}
-                            allowMultiple
+                            allowMultiple={false}
                         >
                             {sidebarMenu.map((section, index) => (
                                 <AccordionItem
                                     key={index}
-                                    w='230px'
+                                    w={{ md: '230px', sm: '314px', base: '302px' }}
                                     minHeight='48px'
                                     border='none'
                                     margin='0'
@@ -107,7 +149,7 @@ export const Sidebar = () => {
                                             justifyContent='space-between'
                                             margin='0'
                                             padding='0'
-                                            maxWidth='230px'
+                                            maxWidth={{ md: '230px', base: '314px' }}
                                             height='48px'
                                             borderRadius='0'
                                             _expanded={{ bg: '#eaffc7', fontWeight: '700' }}
@@ -142,8 +184,10 @@ export const Sidebar = () => {
                                                     alt={section.title}
                                                     boxSize='24px'
                                                 />
-                                                <ChakraLink as={Link} to='/vegan-cuisine'>
-                                                    <Text ml='8px'>{section.title}</Text>
+                                                <ChakraLink as={Link} to={section.path}>
+                                                    <Text ml='8px' fontSize='16px'>
+                                                        {section.title}
+                                                    </Text>
                                                 </ChakraLink>
                                             </Box>
 
@@ -161,6 +205,11 @@ export const Sidebar = () => {
                                                 return (
                                                     <ListItem key={i}>
                                                         <ChakraLink
+                                                            data-test-id={
+                                                                isActive
+                                                                    ? `${item.title}-active`
+                                                                    : ''
+                                                            }
                                                             as={Link}
                                                             to={item.path}
                                                             fontWeight={isActive ? '700' : '400'}
@@ -170,7 +219,6 @@ export const Sidebar = () => {
                                                                 width: '230px',
                                                                 height: '36px',
                                                                 marginLeft: '0',
-                                                                position: 'relative',
 
                                                                 _hover: {
                                                                     textDecoration: 'none',
@@ -209,7 +257,11 @@ export const Sidebar = () => {
                             ))}
                         </Accordion>
                     </Flex>
-                    <Flex flexDirection='column' mt='auto' p='0px 24px 32px 24px'>
+                    <Flex
+                        flexDirection='column'
+                        mt={{ md: 'auto', base: '12px' }}
+                        p='0px 24px 32px 24px'
+                    >
                         <Text
                             fontFamily='var(--font-family)'
                             fontWeight='500'
@@ -227,11 +279,11 @@ export const Sidebar = () => {
                             lineHeight='133%'
                             color='rgba(0, 0, 0, 0.64)'
                             mb='16px'
+                            noOfLines={3}
+                            whiteSpace='wrap'
                         >
-                            Все права защищены,
-                            <br />
-                            ученический файл, <br />
-                            ©Клевер Технолоджи, 2025
+                            Все права защищены, ученический файл,
+                            <br /> ©Клевер Технолоджи, 2025
                         </Text>
                         <ChakraLink
                             as={Link}

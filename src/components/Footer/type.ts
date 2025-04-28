@@ -1,10 +1,10 @@
 export type FooterListItem = {
-    Icon: string; // путь к иконке (скорее всего string)
+    Icon: string;
     title: string;
 };
 
 type FooterCardIcon = {
-    icon: string; // путь к иконке
+    icon: string;
     count: number;
 };
 
@@ -18,4 +18,11 @@ export type FooterCardItem = {
     description: string;
     labels: FooterCardLabel;
     icons: FooterCardIcon[];
+};
+
+export type FooterProps = {
+    title: string;
+    description: string;
+    card: FooterCardItem[];
+    list: FooterListItem[];
 };

@@ -78,7 +78,6 @@ export const CookingBlogsSection = () => (
                         maxW={{ lg: '426px', md: '266px', sm: '226px', base: '304px' }}
                         w='100%'
                         h={{ lg: '184px', md: '160px', base: '152px' }}
-                        // h='100%'
                         bg='#fff'
                         borderRadius='8px'
                         border='1px solid rgba(0, 0, 0, 0.08)'

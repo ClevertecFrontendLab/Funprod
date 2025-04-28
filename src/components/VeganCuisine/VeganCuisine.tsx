@@ -1,14 +1,44 @@
 import { Flex, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/icons';
-import { useState } from 'react';
-import { Link } from 'react-router';
+import { Link, useLocation } from 'react-router';
+
+import useRecipeFilters from '~/hooks/useRecipeFilters';
 
 import { Footer } from '../Footer/Footer';
+import { Recipe } from '../mockData';
 import { PageHeader } from '../PageHeader/PageHeader';
 import { footerVeganCuisineCard, footerVeganCuisineList } from './FooterVeganCuisineData';
-import { SecondCourses } from './VeganSecond/VeganSecond';
+import { TabComponent } from './TabComponent/TabComponent';
+
+const categories = [
+    { label: 'Закуски', path: 'snacks' },
+    { label: 'Первые блюда', path: 'first-dish' },
+    { label: 'Вторые блюда', path: 'second-dish' },
+    { label: 'Гарниры', path: 'side-dishes' },
+    { label: 'Десерты', path: 'desserts' },
+    { label: 'Выпечка', path: 'baked-goods' },
+    { label: 'Сыроедческие блюда', path: 'raw-dishes' },
+    { label: 'Напитки', path: 'drinks' },
+];
 
 export const VeganCuisine = () => {
-    const [tabIndex, setTabIndex] = useState(2);
+    const location = useLocation();
+    const currentPath = location.pathname.split('/').pop();
+    const tabIndex = categories.findIndex((cat) => cat.path === currentPath);
+
+    const {
+        filteredRecipes,
+        excludedIngredients,
+        setExcludedIngredients,
+        selectedCategory,
+        setSelectedCategory,
+        setSelectedMeat,
+        setSelectedSide,
+        selectedSide,
+        selectedMeat,
+        searchQuery,
+        setSearchQuery,
+    } = useRecipeFilters();
+
     return (
         <Flex
             w={{
@@ -18,14 +48,25 @@ export const VeganCuisine = () => {
                 lg: '1360px',
             }}
             direction='column'
-            m={{ base: '80px 16px 100px 16px', sm: '80px 72px 100px 24px', md: '80px 72px 0 24px' }}
+            m={{ base: '64px 16px 100px 16px', sm: '64px 16px 100px 24px', md: '80px 72px 0 24px' }}
         >
             <PageHeader
                 title='Веганская кухня'
                 description='Интересны не только убеждённым вегетарианцам, но и тем, кто хочет
               попробовать вегетарианскую диету и готовить вкусные вегетарианские блюда.'
+                selectedOptions={excludedIngredients}
+                onChange={setExcludedIngredients}
+                setSelectedCategory={setSelectedCategory}
+                setSelectedSide={setSelectedSide}
+                setSelectedMeat={setSelectedMeat}
+                selectedCategory={selectedCategory}
+                filteredData={filteredRecipes}
+                selectedMeat={selectedMeat}
+                selectedSide={selectedSide}
+                setSearchQuery={setSearchQuery}
+                searchQuery={searchQuery}
             />
-            <Tabs onChange={setTabIndex} index={tabIndex} align='center'>
+            <Tabs index={tabIndex === -1 ? 0 : tabIndex} align='start'>
                 <TabList
                     maxW={{ base: '328px', sm: '880px', lg: 'fit-content' }}
                     overflowX='auto'
@@ -43,20 +84,12 @@ export const VeganCuisine = () => {
                         },
                     }}
                 >
-                    {[
-                        'Закуски',
-                        'Первые блюда',
-                        'Вторые блюда',
-                        'Гарниры',
-                        'Десерты',
-                        'Выпечка',
-                        'Сыроедческие блюда',
-                        'Напитки',
-                    ].map((label) => (
+                    {categories.map((item, i) => (
                         <Tab
                             as={Link}
-                            to='/vegan-cuisine/second-courses'
-                            key={label}
+                            data-test-id={`tab-${item.path}-${i}`}
+                            to={`/vegan/${item.path}`}
+                            key={item.label}
                             _selected={{
                                 color: 'var(--lime-600)',
                                 borderBottom: '4px solid var(--lime-600)',
@@ -69,17 +102,28 @@ export const VeganCuisine = () => {
                                 lineHeight='150%'
                                 textAlign='center'
                             >
-                                {label}
+                                {item.label}
                             </Text>
                         </Tab>
                     ))}
                 </TabList>
                 <TabPanels>
-                    <TabPanel></TabPanel>
-                    <TabPanel></TabPanel>
-                    <TabPanel p='0'>
-                        <SecondCourses />
-                    </TabPanel>
+                    {categories.map((item, i) => {
+                        const data = filteredRecipes.filter((card: Recipe) =>
+                            card.subcategory.includes(item.path),
+                        );
+                        return (
+                            <TabPanel key={i} p='0'>
+                                {tabIndex === i && (
+                                    <TabComponent
+                                        filteredData={data}
+                                        searchQuery={searchQuery}
+                                        categories={item.path}
+                                    />
+                                )}
+                            </TabPanel>
+                        );
+                    })}
                 </TabPanels>
             </Tabs>
 

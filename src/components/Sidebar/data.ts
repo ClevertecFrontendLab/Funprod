@@ -15,6 +15,7 @@ import vegan from './../../assets/sidebar/vegan.svg';
 type SidebarItem = {
     name: string;
     path: string;
+    title?: string;
 };
 
 type SidebarSection = {
@@ -109,16 +110,16 @@ export const sidebarMenu: SidebarSection[] = [
     },
     {
         title: 'Веганская кухня',
-        path: '/vegan-cuisine',
+        path: '/vegan/snacks',
         items: [
-            { name: 'Закуски', path: '' },
-            { name: 'Первые блюда', path: '' },
-            { name: 'Вторые блюда', path: '/vegan-cuisine' },
-            { name: 'Гарниры', path: '' },
-            { name: 'Десерты', path: '' },
-            { name: 'Выпечка', path: '' },
-            { name: 'Сыроедческие блюда', path: '' },
-            { name: 'Напитки', path: '' },
+            { name: 'Закуски', path: '/vegan/snacks', title: 'snacks' },
+            { name: 'Первые блюда', path: '/vegan/first-dish' },
+            { name: 'Вторые блюда', path: '/vegan/second-dish', title: 'second-dish' },
+            { name: 'Гарниры', path: '/vegan/side-dishes' },
+            { name: 'Десерты', path: '/vegan/desserts' },
+            { name: 'Выпечка', path: '/vegan/baked-goods' },
+            { name: 'Сыроедческие блюда', path: '/vegan/raw-dishes' },
+            { name: 'Напитки', path: '/vegan/drinks' },
         ],
         IconUrl: vegan,
     },
