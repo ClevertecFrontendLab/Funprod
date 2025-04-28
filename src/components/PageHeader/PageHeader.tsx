@@ -1,9 +1,9 @@
-import { SearchIcon } from '@chakra-ui/icons';
+import { CloseIcon, SearchIcon } from '@chakra-ui/icons';
 import {
     Box,
     Button,
     Flex,
-    Icon,
+    IconButton,
     Image,
     Input,
     InputGroup,
@@ -11,18 +11,62 @@ import {
     Select,
     Switch,
     Text,
+    useDisclosure,
 } from '@chakra-ui/react';
 import { useState } from 'react';
 
+import { CustomSelectDrawer } from '../CustomSelect/CustomSelectDrawer';
+import { DrawerComponent } from '../Drawer/Drawer';
+import { Recipe } from '../mockData';
 import filterIcon from './../../assets/main/icon/filter.svg';
 
 type PageHeaderProps = {
     title: string;
     description?: string;
+    selectedOptions?: string[];
+    onChange?: (val: string[]) => void;
+    setSelectedCategory?: (val: string) => void;
+    setSelectedSide?: (val: string[]) => void;
+    setSelectedMeat?: (val: string[]) => void;
+    applyFilters?: () => void;
+    selectedCategory?: string;
+    filteredData?: Recipe[];
+    selectedMeat?: string[];
+    selectedSide?: string[];
+    setSearchQuery?: (val: string) => void;
+    searchQuery?: string;
 };
 
-export const PageHeader = ({ title, description }: PageHeaderProps) => {
+export const PageHeader = ({
+    title,
+    description,
+    selectedOptions,
+    onChange,
+    setSelectedCategory,
+    setSelectedSide,
+    setSelectedMeat,
+    selectedCategory,
+    selectedMeat = [],
+    selectedSide = [],
+    setSearchQuery,
+}: PageHeaderProps) => {
     const [text, setText] = useState('');
+    const [isActive, setIsActive] = useState(true);
+    const { isOpen, onOpen, onClose } = useDisclosure();
+
+    const handleSearch = () => {
+        setSearchQuery?.(text);
+    };
+    const handleClear = () => {
+        setSearchQuery?.('');
+        setText('');
+    };
+
+    const handleToggle = () => {
+        setIsActive(!isActive);
+        onChange?.([]);
+    };
+
     return (
         <Flex
             direction='column'
@@ -30,6 +74,8 @@ export const PageHeader = ({ title, description }: PageHeaderProps) => {
             align={{ sm: 'center', base: 'stretch' }}
             height='100%'
             mt={{ md: '32px', base: '16px' }}
+            zIndex='10'
+            bg='#fff'
         >
             <Text
                 textAlign='center'
@@ -56,6 +102,7 @@ export const PageHeader = ({ title, description }: PageHeaderProps) => {
             )}
             <Flex mt={{ md: '32px', base: '16px' }} gap={{ md: '12px', base: '8px' }}>
                 <Button
+                    data-test-id='filter-button'
                     bg='transparent'
                     w={{ md: '48px', base: '32px' }}
                     minW='0'
@@ -63,6 +110,7 @@ export const PageHeader = ({ title, description }: PageHeaderProps) => {
                     border='1px solid rgba(0, 0, 0, 0.48)'
                     borderRadius='6px'
                     p={{ md: '0 12px', base: '0' }}
+                    onClick={() => onOpen()}
                 >
                     <Image
                         src={filterIcon}
@@ -78,6 +126,7 @@ export const PageHeader = ({ title, description }: PageHeaderProps) => {
                 >
                     <InputGroup w='100%' h='100%'>
                         <Input
+                            data-test-id='search-input'
                             placeholder='Название или ингредиент...'
                             value={text}
                             w='100%'
@@ -94,31 +143,97 @@ export const PageHeader = ({ title, description }: PageHeaderProps) => {
                             }}
                         />
                         <InputRightElement width='4.5rem'>
-                            <Icon
-                                as={SearchIcon}
+                            <IconButton
+                                data-test-id='search-button'
+                                disabled={text.length < 3}
+                                onClick={() => handleSearch()}
                                 position='absolute'
-                                top={{ md: '15px', base: '9px' }}
-                                right={{ md: '15px', base: '9px' }}
-                                cursor='pointer'
+                                top={{ md: '5px', base: '-5px' }}
+                                right={{ md: '5px', base: '0' }}
+                                aria-label='Search database'
+                                icon={<SearchIcon />}
+                                bg='transparent'
+                                _hover={{ bg: 'transparent' }}
+                                _disabled={{ pointerEvents: 'none' }}
                             />
+                            {text.length > 0 && (
+                                <IconButton
+                                    onClick={() => handleClear()}
+                                    position='absolute'
+                                    top={{ md: '5px', base: '-5px' }}
+                                    right={{ md: '30px', base: '20px' }}
+                                    aria-label='Search database'
+                                    icon={<CloseIcon w='10px' h='10px' />}
+                                    bg='transparent'
+                                    _hover={{ bg: 'transparent' }}
+                                />
+                            )}
                         </InputRightElement>
                     </InputGroup>
                 </Box>
             </Flex>
-            <Flex display={{ base: 'none', md: 'flex' }} align='center' mt='16px'>
-                <Text
-                    fontFamily='var(--font-family)'
-                    fontWeight='500'
-                    fontSize='16px'
-                    lineHeight='150%'
-                    textAlign='center'
-                    mr='12px'
-                >
-                    Исключить мои аллергены
-                </Text>
-                <Switch mr='16px' w='34px' h='20px' />
-                <Select placeholder='Выберите из списка...' w='234px' h='40px' />
+            <Flex
+                display={{ base: 'none', md: 'flex' }}
+                align='flex-start'
+                mt='16px'
+                maxW='518px'
+                w='100%'
+            >
+                <Flex align='center' mt='6px' maxW='233px' w='100%'>
+                    <Text
+                        fontFamily='var(--font-family)'
+                        fontWeight='500'
+                        fontSize='16px'
+                        lineHeight='150%'
+                        textAlign='center'
+                        mr='12px'
+                        whiteSpace='nowrap'
+                    >
+                        Исключить аллергены
+                    </Text>
+                    <Switch
+                        data-test-id='allergens-switcher'
+                        mr='16px'
+                        w='34px'
+                        h='20px'
+                        onChange={() => handleToggle()}
+                        colorScheme='#b1ff2e'
+                        _checked={{
+                            bg: '#b1ff2e',
+                            borderRadius: '9999px',
+                        }}
+                    />
+                </Flex>
+                {!isOpen ? (
+                    <CustomSelectDrawer
+                        isActive={isActive}
+                        selectedOptions={selectedOptions}
+                        onChange={onChange}
+                        allFilters={[...(selectedOptions as string[])]}
+                        isOpenDrawer={isOpen}
+                    />
+                ) : (
+                    <Select
+                        color='rgba(0, 0, 0, 0.64)' // Цвет текста
+                        placeholder='Выберите из списка...'
+                        _placeholder={{ color: 'rgba(0, 0, 0, 0.64)' }} // Цвет плейсхолдера
+                    />
+                )}
             </Flex>
+            {isOpen && (
+                <DrawerComponent
+                    isOpen={isOpen}
+                    onClose={onClose}
+                    selectedOptions={selectedOptions}
+                    onChange={onChange}
+                    setSelectedCategory={setSelectedCategory}
+                    setSelectedSide={setSelectedSide}
+                    setSelectedMeat={setSelectedMeat}
+                    selectedCategory={selectedCategory}
+                    selectedMeat={selectedMeat}
+                    selectedSide={selectedSide}
+                />
+            )}
         </Flex>
     );
 };

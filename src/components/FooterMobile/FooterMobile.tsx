@@ -24,8 +24,14 @@ const buttonList = [
     },
 ];
 
-export const FooterMobile = () => (
+type FooterMobileProps = {
+    openBurger?: boolean;
+};
+
+export const FooterMobile = ({ openBurger }: FooterMobileProps) => (
     <Flex
+        filter={openBurger ? 'blur(4px)' : 'none'}
+        transition='filter 0.2s ease-out'
         data-test-id='footer'
         position='fixed'
         bottom='0'
@@ -33,6 +39,7 @@ export const FooterMobile = () => (
         h='100%'
         w='100%'
         bgColor='var(--lime-50)'
+        // zIndex='10'
     >
         {buttonList.map((item, index) => (
             <Button
@@ -40,20 +47,13 @@ export const FooterMobile = () => (
                 maxW='192px'
                 w='100%'
                 h='100%'
-                // bg='transparent'
                 bg={
                     index === 0
                         ? 'radial-gradient(50% 50% at 50% 50%, rgba(196, 255, 97, 1) 0%, rgba(255, 255, 255, 0) 100%)'
                         : 'transparent'
                 }
-                // _hover={{
-                // }}
             >
-                <Flex
-                    direction='column'
-                    align='center'
-                    // bg='radial-gradient(50% 50% at 50% 50%, rgba(196, 255, 97, 1) 0%, rgba(255, 255, 255, 0) 100%)'
-                >
+                <Flex direction='column' align='center'>
                     <Image src={item.icon} alt={item.title} w='40px' h='40px' />
                     <Text fontWeight='500' fontSize='12px' lineHeight='133%' textAlign='center'>
                         {item.title}

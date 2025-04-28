@@ -1,108 +1,190 @@
 import { Box, Button, Flex, Image, Link, Text } from '@chakra-ui/react';
+import { Link as Links } from 'react-router';
+
+import { categoryIcon } from '~/components/categoryIcon';
 
 import spaghetti from './../../../assets//main/juiciest/spaghetti.jpg';
 import bookmarkHeart from './../../../assets/actionBar/BookmarkHeart.svg';
 import emojiHeartEyes from './../../../assets/actionBar/EmojiHeartEyes.svg';
+import frying from './../../../assets/frying.jpg';
 import arrowRight from './../../../assets/main/icon/arrowRight.svg';
 import alex from './../../../assets/main/juiciest/alex.jpg';
 import elena from './../../../assets/main/juiciest/elena.jpg';
 import ham from './../../../assets/main/juiciest/ham.jpg';
 import noodles from './../../../assets/main/juiciest/noodles.jpg';
 import tomYm from './../../../assets/main/juiciest/tom-ym.jpg';
-import secondCourses from './../../../assets/sidebar/SecondCourses.svg';
+import readyMeal from './../../../assets/readyMeal.jpg';
+// import secondCourses from './../../../assets/sidebar/SecondCourses.svg';
+import { Recipe } from './../../mockData';
+
+const getRecipeUrl = (recipe: Recipe) => {
+    const mainCategory = recipe.category[0];
+    const subCategory = recipe.subcategory[0];
+
+    return `/${mainCategory}/${subCategory}/${recipe.id}`;
+};
 
 const juiciestCard = [
     {
-        imgUrl: spaghetti,
-        labels: {
-            icon: secondCourses,
-            label: 'Вторые блюда',
-        },
-        icons: [
+        id: '7',
+        title: 'Лапша с курицей и шафраном',
+        description: 'Ароматная лапша с курицей и шафраном, идеальное сочетание для сытного обеда.',
+        category: ['second-dish'],
+        subcategory: ['poultry-dish'],
+        image: noodles,
+        bookmarks: 258,
+        likes: 342,
+        date: '2024-03-08T00:00:00Z',
+        time: '40 минут',
+        portions: 4,
+        nutritionValue: { calories: 400, proteins: 30, fats: 15, carbohydrates: 50 },
+        ingredients: [
+            { title: 'лапша', count: '200', measureUnit: 'г' },
+            { title: 'курица', count: '300', measureUnit: 'г' },
+            { title: 'шафран', count: '1', measureUnit: 'ч. л.' },
+            { title: 'лук', count: '1', measureUnit: 'шт.' },
+        ],
+        steps: [
             {
-                icon: bookmarkHeart,
-                count: 185,
+                stepNumber: 1,
+                description: 'Отварить лапшу.',
+                image: spaghetti,
             },
             {
-                icon: emojiHeartEyes,
-                count: 159,
+                stepNumber: 2,
+                description: 'Обжарить курицу с луком и шафраном.',
+                image: frying,
+            },
+            {
+                stepNumber: 3,
+                description: 'Смешать лапшу с курицей и подавать.',
+                image: readyMeal,
             },
         ],
-        title: 'Кнели со спагетти',
-        description:
-            'Как раз после праздников, когда мясные продукты еще остались, но никто их уже не хочет, время варить солянку.',
         recommendations: {
             userImg: null,
             userName: null,
         },
     },
     {
-        imgUrl: ham,
-        labels: {
-            icon: secondCourses,
-            label: 'Вторые блюда',
-        },
-        icons: [
-            {
-                icon: bookmarkHeart,
-                count: 159,
-            },
-            {
-                icon: emojiHeartEyes,
-                count: 257,
-            },
-        ],
+        id: '11',
         title: 'Пряная ветчина по итальянски',
         description:
             'Как раз после праздников, когда мясные продукты еще остались, но никто их уже не хочет, время варить солянку.',
+        category: ['second-dish'],
+        subcategory: ['poultry-dish'],
+        image: ham,
+        bookmarks: 159,
+        likes: 257,
+        date: '2024-03-08T00:00:00Z',
+        time: '30 минут',
+        portions: 4,
+        nutritionValue: { calories: 400, proteins: 30, fats: 15, carbohydrates: 50 },
+        ingredients: [
+            { title: 'лапша', count: '200', measureUnit: 'г' },
+            { title: 'курица', count: '300', measureUnit: 'г' },
+            { title: 'шафран', count: '1', measureUnit: 'ч. л.' },
+            { title: 'лук', count: '1', measureUnit: 'шт.' },
+        ],
+        steps: [
+            {
+                stepNumber: 1,
+                description: 'Отварить лапшу.',
+                image: spaghetti,
+            },
+            {
+                stepNumber: 2,
+                description: 'Обжарить курицу с луком и шафраном.',
+                image: frying,
+            },
+            {
+                stepNumber: 3,
+                description: 'Смешать лапшу с курицей и подавать.',
+                image: readyMeal,
+            },
+        ],
         recommendations: {
             userImg: elena,
             userName: 'Елена Высоцкая',
         },
     },
     {
-        imgUrl: noodles,
-        labels: {
-            icon: secondCourses,
-            label: 'Вторые блюда',
-        },
-        icons: [
+        id: '7',
+        title: 'Лапша с курицей и шафраном',
+        description: 'Ароматная лапша с курицей и шафраном, идеальное сочетание для сытного обеда.',
+        category: ['second-dish'],
+        subcategory: ['poultry-dish'],
+        image: noodles,
+        bookmarks: 258,
+        likes: 342,
+        date: '2024-03-08T00:00:00Z',
+        time: '40 минут',
+        portions: 4,
+        nutritionValue: { calories: 400, proteins: 30, fats: 15, carbohydrates: 50 },
+        ingredients: [
+            { title: 'лапша', count: '200', measureUnit: 'г' },
+            { title: 'курица', count: '300', measureUnit: 'г' },
+            { title: 'шафран', count: '1', measureUnit: 'ч. л.' },
+            { title: 'лук', count: '1', measureUnit: 'шт.' },
+        ],
+        steps: [
             {
-                icon: bookmarkHeart,
-                count: 258,
+                stepNumber: 1,
+                description: 'Отварить лапшу.',
+                image: spaghetti,
             },
             {
-                icon: emojiHeartEyes,
-                count: 342,
+                stepNumber: 2,
+                description: 'Обжарить курицу с луком и шафраном.',
+                image: frying,
+            },
+            {
+                stepNumber: 3,
+                description: 'Смешать лапшу с курицей и подавать.',
+                image: readyMeal,
             },
         ],
-        title: 'Лапша с курицей и шафраном',
-        description:
-            'Как раз после праздников, когда мясные продукты еще остались, но никто их уже не хочет, время варить солянку.',
         recommendations: {
             userImg: alex,
             userName: ' Alex Cook',
         },
     },
     {
-        imgUrl: tomYm,
-        labels: {
-            icon: secondCourses,
-            label: 'Вторые блюда',
-        },
-        icons: [
+        id: '12',
+        title: 'Том-ям с капустой кимчи',
+        description: 'Ароматная лапша с курицей и шафраном, идеальное сочетание для сытного обеда.',
+        category: ['second-dish'],
+        subcategory: ['poultry-dish'],
+        image: tomYm,
+        bookmarks: 258,
+        likes: 342,
+        date: '2024-03-08T00:00:00Z',
+        time: '40 минут',
+        portions: 4,
+        nutritionValue: { calories: 400, proteins: 30, fats: 15, carbohydrates: 50 },
+        ingredients: [
+            { title: 'лапша', count: '200', measureUnit: 'г' },
+            { title: 'курица', count: '300', measureUnit: 'г' },
+            { title: 'шафран', count: '1', measureUnit: 'ч. л.' },
+            { title: 'лук', count: '1', measureUnit: 'шт.' },
+        ],
+        steps: [
             {
-                icon: bookmarkHeart,
-                count: 124,
+                stepNumber: 1,
+                description: 'Отварить лапшу.',
+                image: spaghetti,
             },
             {
-                icon: emojiHeartEyes,
-                count: 324,
+                stepNumber: 2,
+                description: 'Обжарить курицу с луком и шафраном.',
+                image: frying,
+            },
+            {
+                stepNumber: 3,
+                description: 'Смешать лапшу с курицей и подавать.',
+                image: readyMeal,
             },
         ],
-        title: 'Том-ям с капустой кимчи',
-        description:
-            'Как раз после праздников, когда мясные продукты еще остались, но никто их уже не хочет, время варить солянку.',
         recommendations: {
             userImg: null,
             userName: null,
@@ -136,8 +218,8 @@ export const JuiciestSection = () => (
                 padding='0 24px'
                 maxW={{ lg: '197px', base: '167px' }}
                 w='100%'
-                maxH={{ lg: '48px', base: '40px' }}
-                h='100%'
+                h={{ lg: '48px', base: '40px' }}
+                maxH='100%'
                 background=' #b1ff2e'
                 _hover={{
                     background: 'rgba(177, 255, 46, 0.6)',
@@ -151,10 +233,10 @@ export const JuiciestSection = () => (
             </Button>
         </Flex>
         <Flex wrap='wrap' gap={{ md: '24px', base: '16px' }} justify='space-between'>
-            {juiciestCard.map((card, index) => (
+            {juiciestCard.map((card, i) => (
                 <Flex
                     position='relative'
-                    key={index}
+                    key={i}
                     borderRadius='8px'
                     border='1px solid rgba(0, 0, 0, 0.08)'
                     maxWidth=''
@@ -163,7 +245,7 @@ export const JuiciestSection = () => (
                     h='100%'
                 >
                     <Image
-                        src={card.imgUrl}
+                        src={card.image}
                         maxW={{ md: '346px', base: '158px' }}
                         borderRadius='4px 0 0 4px'
                     />
@@ -207,7 +289,7 @@ export const JuiciestSection = () => (
                         maxW={{ md: '100%', base: '154px' }}
                         w='100%'
                     >
-                        <Flex justify='space-between'>
+                        <Flex justify='space-between' align='center'>
                             <Link>
                                 <Flex
                                     maxW={{ md: '100%', base: '127px' }}
@@ -222,26 +304,45 @@ export const JuiciestSection = () => (
                                     top='8px'
                                     left='8px'
                                 >
-                                    <Image src={card.labels.icon} w='16px' h='16px' />
-                                    <Text
-                                        fontFamily='var(--font-family)'
-                                        fontWeight='400'
-                                        fontSize='14px'
-                                        lineHeight='143%'
-                                    >
-                                        {card.labels.label}
-                                    </Text>
+                                    {categoryIcon
+                                        .filter((item) => card.category.includes(item.label))
+                                        .map((item, index) => (
+                                            <Link key={index}>
+                                                <Flex
+                                                    w='141px'
+                                                    h='24px'
+                                                    p={{
+                                                        md: '2px 8px',
+                                                        base: '2px 4px',
+                                                    }}
+                                                    borderRadius='4px'
+                                                    background='var(--lime-50)'
+                                                    gap={{ md: '8px', base: '2px' }}
+                                                >
+                                                    <Image src={item.icon} />
+                                                    <Text
+                                                        fontFamily='var(--font-family)'
+                                                        fontWeight='400'
+                                                        fontSize='14px'
+                                                        lineHeight='143%'
+                                                        whiteSpace='nowrap'
+                                                    >
+                                                        {item.title}
+                                                    </Text>
+                                                </Flex>
+                                            </Link>
+                                        ))}
                                 </Flex>
                             </Link>
                             <Flex
                                 gap='8px'
-                                ml={{ md: '36px', base: '0' }}
+                                ml={{ md: '16px', base: '0' }}
                                 mr={{ base: '85px', md: '0' }}
                             >
-                                {card.icons.map((icon, index) => (
-                                    <Flex key={index} align='center' justify='center' gap='6px'>
+                                <Flex gap='8px' align='flex-end'>
+                                    <Flex align='center' justify='center' gap='7px' p='0 4px'>
                                         <Box w='12px' h='12px'>
-                                            <Image src={icon.icon} />
+                                            <Image src={bookmarkHeart} />
                                         </Box>
                                         <Text
                                             fontFamily='var(--font-family)'
@@ -250,10 +351,24 @@ export const JuiciestSection = () => (
                                             lineHeight='133%'
                                             color='var(--lime-600)'
                                         >
-                                            {icon.count}
+                                            {card.bookmarks}
                                         </Text>
                                     </Flex>
-                                ))}
+                                    <Flex align='center' justify='center' gap='7px' p='0 4px'>
+                                        <Box w='12px' h='12px'>
+                                            <Image src={emojiHeartEyes} />
+                                        </Box>
+                                        <Text
+                                            fontFamily='var(--font-family)'
+                                            fontWeight='600'
+                                            fontSize='12px'
+                                            lineHeight='133%'
+                                            color='var(--lime-600)'
+                                        >
+                                            {card.likes}
+                                        </Text>
+                                    </Flex>
+                                </Flex>
                             </Flex>
                         </Flex>
                         <Box w={{ lg: '274px', base: '100%' }} h='100px'>
@@ -311,25 +426,28 @@ export const JuiciestSection = () => (
                                     </Text>
                                 </Box>
                             </Button>
-                            <Button
-                                border='1px solid rgba(0, 0, 0, 0.08)'
-                                borderRadius='6px'
-                                p={{ md: '0 12px', base: '0 6px' }}
-                                w='87px'
-                                h={{ md: '32px', base: '24px' }}
-                                backgroundColor='rgba(0, 0, 0, 0.92)'
-                                _hover={{ backgroundColor: 'rgba(0, 0, 0, 0.52)' }}
-                            >
-                                <Text
-                                    fontFamily='var(--font-family)'
-                                    fontWeight='600'
-                                    fontSize='14px'
-                                    lineHeight='143%'
-                                    color='#fff'
+                            <Links to={getRecipeUrl(card)}>
+                                <Button
+                                    data-test-id={`card-link-${i}`}
+                                    border='1px solid rgba(0, 0, 0, 0.08)'
+                                    borderRadius='6px'
+                                    p={{ md: '0 12px', base: '0 6px' }}
+                                    w='87px'
+                                    h={{ md: '32px', base: '24px' }}
+                                    backgroundColor='rgba(0, 0, 0, 0.92)'
+                                    _hover={{ backgroundColor: 'rgba(0, 0, 0, 0.52)' }}
                                 >
-                                    Готовить
-                                </Text>
-                            </Button>
+                                    <Text
+                                        fontFamily='var(--font-family)'
+                                        fontWeight='600'
+                                        fontSize='14px'
+                                        lineHeight='143%'
+                                        color='#fff'
+                                    >
+                                        Готовить
+                                    </Text>
+                                </Button>
+                            </Links>
                         </Flex>
                     </Flex>
                 </Flex>
