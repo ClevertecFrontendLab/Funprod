@@ -1,46 +1,72 @@
 import { ChevronRightIcon } from '@chakra-ui/icons';
 import { Box, Flex, Text } from '@chakra-ui/react';
-import { Link, useLocation } from 'react-router';
+import { Link, useLocation, useParams } from 'react-router';
 
-import { mockData, Recipe } from '~/components/mockData';
+import { Category, useGetCategoriesQuery } from '~/query/services/category-api';
+import { useGetRecipeByIdQuery } from '~/query/services/recipe-api';
 
-const pageTitles: Record<string, string> = {
-    '/': 'Главная',
-    '/vegan': 'Веганская кухня',
-    '/vegan/snacks': 'Закуски',
-    '/vegan/first-dish': 'Первые блюда',
-    '/vegan/second-dish': 'Вторые блюда',
-    '/vegan/side-dishes': 'Гарниры',
-    '/vegan/desserts': 'Десерты',
-    '/vegan/baked-goods': 'Выпечка',
-    '/vegan/raw-dishes': 'Сыроедческие блюда',
-    '/vegan/drinks': 'Напитки',
-    '/the-juiciest': 'Самое сочное',
-    '/juiciest': 'Самое сочное',
-    '/second-dish': 'Вторые блюда',
-    '/second-dish/poultry-dish': 'Из птицы',
-    '/salads': 'Салаты',
-    '/salads/warm-salads': 'Теплые салаты',
+const generatePageTitles = (
+    dataCategories: Category[] | undefined,
+    dataSubCategories: Category[] | undefined,
+): Record<string, string> => {
+    const pageTitles: Record<string, string> = {};
+    dataCategories?.forEach((category) => {
+        pageTitles[`/${category.category}`] = category.title;
+        const categorySubcategories = dataSubCategories?.filter(
+            (sub) => sub.rootCategoryId === category._id,
+        );
+        categorySubcategories?.forEach((subcategory) => {
+            pageTitles[`/${category.category}/${subcategory.category}`] = `${subcategory.title}`;
+        });
+    });
+
+    return pageTitles;
 };
 
 type Breadcrumbs = { onClose?: () => void };
 
 export const Breadcrumbs = ({ onClose = () => {} }: Breadcrumbs) => {
     const location = useLocation();
+    const { id } = useParams();
+    console.log(id);
+    const { data: recipeData } = useGetRecipeByIdQuery({ id: id! });
+    const { data: categoryData } = useGetCategoriesQuery();
 
     const pathnames = location.pathname.split('/').filter(Boolean);
 
+    const dataCategories = categoryData?.filter((item) => item.subCategories);
+    const dataSubCategories = categoryData?.filter((item) => !item.subCategories);
+
+    const pageTitles = generatePageTitles(dataCategories, dataSubCategories);
     const breadcrumbItems = pathnames.reduce<Array<{ label: string; to: string }>>(
         (acc, path, index) => {
             const fullPath = `/${pathnames.slice(0, index + 1).join('/')}`;
             const isLast = index === pathnames.length - 1;
-            const isNumber = !isNaN(Number(path));
-            if (isLast && isNumber) {
-                const recipe = mockData.find((card: Recipe) => card.id === path);
+
+            if (fullPath === '/the-juiciest') {
                 return [
                     ...acc,
                     {
-                        label: recipe?.title || 'Загрузка...',
+                        label: 'Самое сочное',
+                        to: fullPath,
+                    },
+                ];
+            }
+
+            if (isLast) {
+                if (id && recipeData && recipeData._id === id) {
+                    return [
+                        ...acc,
+                        {
+                            label: recipeData.title,
+                            to: fullPath,
+                        },
+                    ];
+                }
+                return [
+                    ...acc,
+                    {
+                        label: pageTitles[fullPath] || path,
                         to: fullPath,
                     },
                 ];

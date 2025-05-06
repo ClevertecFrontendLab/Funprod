@@ -18,22 +18,13 @@ import {
     Switch,
     Text,
 } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useLocation } from 'react-router';
+
+import { Category } from '~/query/services/category-api';
 
 import { CustomSelect } from '../CustomSelect/CustomSelect';
-import { mockData } from '../mockData';
 import drawerClose from './../../assets/drawerClose.svg';
-
-const categoryTranslations: Record<string, string> = {
-    vegan: 'Веганская кухня',
-    'second-dish': 'Вторые блюда',
-    snacks: 'Закуски',
-    vegetables: 'Овощные блюда',
-    italian: 'Итальянская кухня',
-    national: 'Национальное',
-    'side-dishes': 'Гарниры',
-    salads: 'Салаты',
-};
 
 const meat = ['Курица', 'Свинина', 'Говядина', 'Индейка', 'Утка'];
 const sideDish = [
@@ -58,6 +49,11 @@ type DrawerComponentProps = {
     selectedCategory?: string;
     selectedMeat: string[];
     selectedSide: string[];
+    filterCategory?: Category[];
+    categoriesIds: string[];
+    setCategoriesIds: (val: string[]) => void;
+    allergens: string[];
+    handleAllergens: (val: string[]) => void;
 };
 
 export const DrawerComponent = ({
@@ -67,25 +63,50 @@ export const DrawerComponent = ({
     setSelectedCategory,
     setSelectedSide,
     setSelectedMeat,
+    selectedCategory,
+    selectedMeat,
+    selectedSide,
+    selectedOptions,
+    filterCategory,
+    setCategoriesIds,
+    allergens,
+    handleAllergens,
 }: DrawerComponentProps) => {
+    console.log('Rendered DrawerComponent');
     const [isActive, setIsActive] = useState(true);
-    const [localCategory, setLocalCategory] = useState('');
-    const [localMeat, setLocalMeat] = useState<string[]>([]);
-    const [localSide, setLocalSide] = useState<string[]>([]);
-    const [localAllergens, setLocalAllergens] = useState<string[]>([]);
+    const [localCategory, setLocalCategory] = useState(selectedCategory);
+    const [localMeat, setLocalMeat] = useState<string[]>(selectedMeat);
+    const [localSide, setLocalSide] = useState<string[]>(selectedSide);
+    const [localAllergens, setLocalAllergens] = useState<string[]>(selectedOptions!);
+    const [categoryDisabled, setCategoryDisabled] = useState(false);
+    const location = useLocation();
+    const categoryFromUrl = location.pathname.split('/')[1];
+    console.log(categoryFromUrl);
 
-    const categories = Array.from(new Set(mockData.flatMap((item) => item.category)));
+    const categories = useMemo(
+        () => Array.from(new Set(filterCategory?.map((item) => item.category))),
+        [filterCategory],
+    );
 
+    useEffect(() => {
+        if (categoryFromUrl.length > 0) setCategoryDisabled(true);
+        const matchedCategory = filterCategory?.find((cat) => cat.category === categoryFromUrl);
+        setLocalCategory(matchedCategory?.category);
+    }, [categoryFromUrl, filterCategory]);
+
+    const handleSetCategory = (category: string) => {
+        console.log(category);
+        setLocalCategory(category);
+    };
     const handleSearch = () => {
-        setSelectedCategory?.(localCategory);
         setSelectedMeat?.(localMeat);
         setSelectedSide?.(localSide);
+        setSelectedCategory?.(localCategory!);
         onChange?.(localAllergens);
-        setLocalAllergens([]);
-        setLocalMeat([]);
-        setLocalSide([]);
-        setLocalCategory('');
         onClose();
+        const matched = filterCategory?.find((item) => item.category === localCategory);
+        const ids = matched?.subCategories?.map((item) => item._id) || [];
+        setCategoriesIds(ids);
     };
 
     const handleReset = () => {
@@ -93,19 +114,23 @@ export const DrawerComponent = ({
         setSelectedMeat?.([]);
         setSelectedSide?.([]);
         setLocalAllergens([]);
+        handleAllergens([]);
         setLocalMeat([]);
         setLocalSide([]);
         setLocalCategory('');
         onChange?.([]);
     };
     const isFindRecipeDisabled =
-        !localSide.length && !localAllergens.length && !localCategory.length;
+        !localSide.length && !localAllergens.length && !localCategory?.length && !localMeat?.length;
+
+    const matchedCategoryName =
+        filterCategory?.find((item) => item.category === localCategory)?.title || localCategory;
 
     const allFilters = [
-        ...(localCategory ? [categoryTranslations[localCategory] || localCategory] : []),
+        ...(localCategory ? [matchedCategoryName] : []),
         ...localMeat,
         ...localSide,
-        ...localAllergens,
+        ...allergens,
     ];
 
     return (
@@ -156,6 +181,7 @@ export const DrawerComponent = ({
                 >
                     <Menu>
                         <MenuButton
+                            disabled={categoryDisabled}
                             textAlign='start'
                             as={Button}
                             data-test-id='filter-menu-button-категория'
@@ -167,14 +193,15 @@ export const DrawerComponent = ({
                             minH='40px'
                         >
                             <Text fontWeight='400' fontSize='16px' lineHeight='150%'>
-                                {categoryTranslations[localCategory] || 'Категория'}
+                                {filterCategory?.find((item) => item.category === localCategory)
+                                    ?.title || 'Категория'}
                             </Text>
                         </MenuButton>
                         <MenuList mt='0'>
                             {categories.map((category) => (
                                 <MenuItem
                                     key={category}
-                                    onClick={() => setLocalCategory(category)}
+                                    onClick={() => handleSetCategory(category)}
                                     minW='100%'
                                 >
                                     <Checkbox
@@ -194,7 +221,8 @@ export const DrawerComponent = ({
                                         }}
                                         mr='10px'
                                     >
-                                        {categoryTranslations[category] || category}
+                                        {filterCategory?.find((item) => item.category === category)
+                                            ?.title || category}
                                     </Checkbox>
                                 </MenuItem>
                             ))}
@@ -283,16 +311,15 @@ export const DrawerComponent = ({
                         <CustomSelect
                             isActive={isActive}
                             selectedOptions={localAllergens}
-                            onChange={(newSelectedOptions) => {
-                                setLocalAllergens(newSelectedOptions);
-                            }}
                             allFilters={[...localAllergens]}
                             isOpenDrawer={isOpen}
+                            allergens={allergens}
+                            handleAllergens={handleAllergens}
                         />
                     </Flex>
                     <Flex w='100%' wrap='wrap' p='12px 16px' gap='4px'>
                         {allFilters.map((item) => {
-                            const cleanLabel = item.replace(/\s*\(.*?\)\s*/g, '').trim();
+                            const cleanLabel = item?.replace(/\s*\(.*?\)\s*/g, '').trim();
                             return (
                                 <Box
                                     data-test-id='filter-tag'

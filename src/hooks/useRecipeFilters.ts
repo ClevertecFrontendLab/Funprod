@@ -26,6 +26,18 @@ const useRecipeFilters = () => {
     const [selectedMeat, setSelectedMeat] = useState<string[]>([]);
     const [selectedSide, setSelectedSide] = useState<string[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
+    const [categoriesIds, setCategoriesIds] = useState<string[]>([]);
+
+    const allergens = excludedIngredients.flatMap((item) => {
+        const match = item.match(/^(.+?)\s*\((.+?)\)/);
+        if (match) {
+            const [, first, second] = match;
+            return [first.trim().toLowerCase(), second.trim().toLowerCase()];
+        }
+        return [item.trim().toLowerCase()];
+    });
+    const meat = selectedMeat.map((item) => item.split('(')[0].trim().toLowerCase());
+    const side = selectedSide.map((item) => item.split('(')[0].trim().toLowerCase());
 
     const selectedSideTranslations = (side: string) => sideDishTranslations[side] || side;
 
@@ -76,6 +88,11 @@ const useRecipeFilters = () => {
         setSelectedSide,
         searchQuery,
         setSearchQuery,
+        categoriesIds,
+        setCategoriesIds,
+        allergens,
+        meat,
+        side,
     };
 };
 

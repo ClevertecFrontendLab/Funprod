@@ -2,12 +2,12 @@ import { Flex } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 
 import useRecipeFilters from '~/hooks/useRecipeFilters';
+import { Category, useGetCategoriesQuery } from '~/query/services/category-api';
 
 import { Footer } from '../Footer/Footer';
 import { PageHeader } from '../PageHeader/PageHeader';
 import { SearchFilter } from '../SearchFilter/SearchFilter';
 import { CookingBlogsSection } from './CookingBlogsSection/CookingBlogsSection';
-import { footerMainCard, footerMainList } from './FooterMainData';
 import { JuiciestSection } from './JuiciestSection/JuiciestSection';
 import { NewRecipesSection } from './NewRecipesSection/NewRecipesSection';
 
@@ -24,10 +24,18 @@ export const Main = () => {
         setSelectedSide,
         searchQuery,
         setSearchQuery,
+        categoriesIds,
+        setCategoriesIds,
+        allergens,
+        meat,
+        side,
     } = useRecipeFilters();
 
     const [isFilterApplied, setIsFilterApplied] = useState<string | boolean>(false);
-
+    const { data: categoryData } = useGetCategoriesQuery();
+    const [randomCategory, setRandomCategory] = useState<Category | null>(null);
+    const filterCategory = categoryData?.filter((item) => item.subCategories);
+    const [isLoading, setIsLoading] = useState(false);
     useEffect(() => {
         const isApplied =
             excludedIngredients.length > 0 ||
@@ -39,6 +47,12 @@ export const Main = () => {
         setIsFilterApplied(!!isApplied);
     }, [excludedIngredients, selectedCategory, selectedMeat, selectedSide, searchQuery]);
 
+    useEffect(() => {
+        if (filterCategory?.length) {
+            const random = filterCategory[Math.floor(Math.random() * filterCategory.length)];
+            setRandomCategory(random);
+        }
+    }, [filterCategory]);
     return (
         <Flex
             maxW={{
@@ -64,20 +78,28 @@ export const Main = () => {
                 selectedSide={selectedSide}
                 searchQuery={searchQuery}
                 setSearchQuery={setSearchQuery}
+                filterCategory={filterCategory}
+                categoriesIds={categoriesIds}
+                setCategoriesIds={setCategoriesIds}
+                isLoading={isLoading}
             />
             {isFilterApplied ? (
-                <SearchFilter filteredData={filteredRecipes} searchQuery={searchQuery} />
+                <SearchFilter
+                    filteredData={filterCategory}
+                    categoryData={categoryData!}
+                    searchQuery={searchQuery}
+                    categoriesIds={categoriesIds}
+                    allergens={allergens}
+                    meat={meat}
+                    garnish={side}
+                    onLoadingChange={(val) => setIsLoading(val)}
+                />
             ) : (
-                <NewRecipesSection filteredData={filteredRecipes} />
+                <NewRecipesSection categoryData={categoryData!} />
             )}
-            <JuiciestSection />
+            <JuiciestSection categoryData={categoryData} />
             <CookingBlogsSection />
-            <Footer
-                title='Веганская кухня'
-                description='Интересны не только убеждённым вегетарианцам, но и тем, кто хочет  попробовать вегетарианскую диету и готовить вкусные  вегетарианские блюда.'
-                card={footerMainCard}
-                list={footerMainList}
-            />
+            <Footer footerData={randomCategory} />
         </Flex>
     );
 };

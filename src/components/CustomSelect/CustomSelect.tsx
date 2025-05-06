@@ -29,37 +29,36 @@ const options = [
     'Шоколад',
 ];
 
-type CustomSelectDrawerProps = {
+type CustomSelectProps = {
     isActive: boolean;
     selectedOptions?: string[];
-    onChange?: (val: string[]) => void;
     allFilters?: string[];
     isOpenDrawer?: boolean;
+    allergens: string[];
+    handleAllergens: (val: string[]) => void;
 };
 
 export const CustomSelect = ({
     isActive,
-    selectedOptions = [],
-    onChange = () => {},
-    allFilters = [],
     isOpenDrawer,
-}: CustomSelectDrawerProps) => {
+    allergens,
+    handleAllergens,
+}: CustomSelectProps) => {
     const [newAllergen, setNewAllergen] = useState<string>('');
     const inputRef = useRef<HTMLInputElement>(null);
-
     const handleToggle = useCallback(
         (option: string) => {
-            const updated = selectedOptions.includes(option)
-                ? selectedOptions.filter((item) => item !== option)
-                : [...selectedOptions, option];
-            onChange(updated);
-        },
-        [selectedOptions, onChange],
-    );
+            const updated = allergens.includes(option)
+                ? allergens.filter((item: string) => item !== option)
+                : [...allergens, option];
 
+            handleAllergens(updated);
+        },
+        [allergens, handleAllergens],
+    );
     const addNewAllergen = () => {
-        if (newAllergen.trim() && !selectedOptions.includes(newAllergen.trim())) {
-            onChange([...selectedOptions, newAllergen.trim()]);
+        if (newAllergen.trim() && !allergens.includes(newAllergen.trim())) {
+            handleAllergens([...allergens, newAllergen.trim()]);
             setNewAllergen('');
         }
     };
@@ -103,12 +102,12 @@ export const CustomSelect = ({
                                 as='span'
                                 p='12px 16px'
                                 gap='4px'
-                                color={selectedOptions.length > 0 ? 'green' : 'rgba(0, 0, 0, 0.64)'}
-                                fontSize={selectedOptions.length > 0 ? '12px' : '16px'}
-                                fontWeight={selectedOptions.length > 0 ? '500' : '400'}
+                                color={allergens.length > 0 ? 'green' : 'rgba(0, 0, 0, 0.64)'}
+                                fontSize={allergens.length > 0 ? '12px' : '16px'}
+                                fontWeight={allergens.length > 0 ? '500' : '400'}
                             >
-                                {allFilters.length > 0 ? (
-                                    allFilters.map((item) => {
+                                {allergens.length > 0 ? (
+                                    allergens.map((item) => {
                                         const cleanLabel = item
                                             .replace(/\s*\(.*?\)\s*/g, '')
                                             .trim();
@@ -140,47 +139,44 @@ export const CustomSelect = ({
                             minW='284px'
                             p='0'
                         >
-                            {options.map((option, i) => {
-                                console.log(option, i);
-                                return (
-                                    <MenuItem
-                                        key={option}
-                                        bg={i % 2 === 0 ? 'rgba(0, 0, 0, 0.06)' : 'transparent'}
-                                        height='32px'
-                                        p={0}
+                            {options.map((option, i) => (
+                                <MenuItem
+                                    key={option}
+                                    bg={i % 2 === 0 ? 'rgba(0, 0, 0, 0.06)' : 'transparent'}
+                                    height='32px'
+                                    p={0}
+                                >
+                                    <Box
+                                        display='flex'
+                                        alignItems='center'
+                                        w='100%'
+                                        p='8px 12px'
+                                        onClick={() => handleToggle(option)}
                                     >
-                                        <Box
-                                            display='flex'
-                                            alignItems='center'
-                                            w='100%'
-                                            p='8px 12px'
-                                            onClick={() => handleToggle(option)}
+                                        <Checkbox
+                                            isChecked={allergens.includes(option)}
+                                            onChange={() => handleToggle(option)}
+                                            borderColor='#b1ff2e'
+                                            iconColor='black'
+                                            colorScheme='green'
+                                            _checked={{
+                                                '& .chakra-checkbox__control': {
+                                                    bg: '#b1ff2e',
+                                                },
+                                            }}
+                                            mr='10px'
+                                        />
+                                        <Text
+                                            data-test-id={`allergen-${i}`}
+                                            fontWeight='400'
+                                            fontSize='12px'
+                                            lineHeight='143%'
                                         >
-                                            <Checkbox
-                                                isChecked={selectedOptions.includes(option)}
-                                                onChange={() => handleToggle(option)}
-                                                borderColor='#b1ff2e'
-                                                iconColor='black'
-                                                colorScheme='green'
-                                                _checked={{
-                                                    '& .chakra-checkbox__control': {
-                                                        bg: '#b1ff2e',
-                                                    },
-                                                }}
-                                                mr='10px'
-                                            />
-                                            <Text
-                                                data-test-id={`allergen-${i}`}
-                                                fontWeight='400'
-                                                fontSize='12px'
-                                                lineHeight='143%'
-                                            >
-                                                {option}
-                                            </Text>
-                                        </Box>
-                                    </MenuItem>
-                                );
-                            })}
+                                            {option}
+                                        </Text>
+                                    </Box>
+                                </MenuItem>
+                            ))}
 
                             <Flex p='8px 16px' align='center'>
                                 <Input

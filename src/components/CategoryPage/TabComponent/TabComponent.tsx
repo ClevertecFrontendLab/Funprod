@@ -1,44 +1,55 @@
-import { Box, Button, Flex, Image, Link, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Image, Text } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
 import { Link as Links } from 'react-router';
 
-import { highlightText } from '~/utilities/highlightText';
+import { Category } from '~/query/services/category-api';
+import { useGetRecipesCategoryQuery } from '~/query/services/recipe-api';
+import { getFullMediaUrl } from '~/utils/getFullMediaUrl';
+import { highlightText } from '~/utils/highlightText';
 
-import { categoryIcon } from '../../categoryIcon';
-import { mockData, Recipe } from '../../mockData';
 import bookmarkHeart from './../../../assets/actionBar/BookmarkHeart.svg';
 import emojiHeartEyes from './../../../assets/actionBar/EmojiHeartEyes.svg';
+import { CategoryTags } from './CategoryTags/CategoryTags';
 
 type TabComponentProps = {
-    filteredData?: Recipe[];
     searchQuery?: string;
-    categories?: string;
+    categoriesId?: string;
+    dataCategory?: Category;
 };
 
-export const TabComponent = ({
-    filteredData = mockData,
-    searchQuery = '',
-    categories = '',
-}: TabComponentProps) => {
-    const getRecipeUrl = (recipe: Recipe) => {
-        const mainCategory = recipe.category[0];
-        const subCategory = recipe.subcategory[0];
-
-        return `/${mainCategory}/${subCategory}/${recipe.id}`;
-    };
-
-    const filteredByCategory = filteredData.filter((card: Recipe) =>
-        card.subcategory.includes(categories),
+export const TabComponent = ({ searchQuery = '', categoriesId }: TabComponentProps) => {
+    const { data: dataTab, isError } = useGetRecipesCategoryQuery(
+        {
+            id: categoriesId!,
+        },
+        {
+            skip: !categoriesId,
+        },
     );
 
-    console.log(filteredData);
+    const [fallback, setFallback] = useState();
+
+    useEffect(() => {
+        if (isError && !dataTab) {
+            const cached = localStorage.getItem('cachedRecipeCategory');
+            if (cached) {
+                setFallback(JSON.parse(cached));
+            } else {
+                alert('Слишком много запросов. Попробуйте позже.');
+            }
+        }
+    }, [isError, dataTab]);
+
+    const data = dataTab ?? fallback;
+
     return (
         <Flex direction='column' align='center' gap='16px' mt='22px'>
             <Flex wrap='wrap' gap={{ md: '24px', base: '16px' }} justify='space-between'>
-                {filteredByCategory.map((card: Recipe, i) => (
+                {data?.data.map((card, i) => (
                     <Flex
                         data-test-id={`food-card-${i}`}
                         position='relative'
-                        key={card.id}
+                        key={card._id}
                         borderRadius='8px'
                         border='1px solid rgba(0, 0, 0, 0.08)'
                         maxWidth=''
@@ -52,7 +63,7 @@ export const TabComponent = ({
                         maxH={{ md: '300px', base: '128px' }}
                     >
                         <Image
-                            src={card.image}
+                            src={getFullMediaUrl(card.image)}
                             w={{ md: '346px', base: '158px' }}
                             borderRadius='4px 0 0 4px'
                         />
@@ -66,45 +77,7 @@ export const TabComponent = ({
                         >
                             <Flex direction='column'>
                                 <Flex justify={{ md: 'space-between', base: 'flex-start' }}>
-                                    <Flex
-                                        direction='column'
-                                        gap='6px'
-                                        top='8px'
-                                        left='8px'
-                                        position={{
-                                            md: 'static',
-                                            base: 'absolute',
-                                        }}
-                                    >
-                                        {categoryIcon
-                                            .filter((item) => card.category.includes(item.label))
-                                            .map((item, index) => (
-                                                <Link href='/' key={index}>
-                                                    <Flex
-                                                        w='100%'
-                                                        h='24px'
-                                                        p={{
-                                                            md: '2px 8px',
-                                                            base: '2px 4px',
-                                                        }}
-                                                        borderRadius='4px'
-                                                        background='var(--lime-150)'
-                                                        gap={{ md: '8px', base: '2px' }}
-                                                    >
-                                                        <Image src={item.icon} />
-                                                        <Text
-                                                            fontFamily='var(--font-family)'
-                                                            fontWeight='400'
-                                                            fontSize='14px'
-                                                            lineHeight='143%'
-                                                            whiteSpace='nowrap'
-                                                        >
-                                                            {item.title}
-                                                        </Text>
-                                                    </Flex>
-                                                </Link>
-                                            ))}
-                                    </Flex>
+                                    <CategoryTags tagsId={card.categoriesIds} />
                                     <Flex
                                         ml={{ md: '36px', base: '0' }}
                                         mr={{ base: '85px', md: '0' }}
@@ -198,7 +171,7 @@ export const TabComponent = ({
                                         </Text>
                                     </Box>
                                 </Button>
-                                <Links to={getRecipeUrl(card)}>
+                                <Links to='/'>
                                     <Button
                                         data-test-id={`card-link-${i}`}
                                         border='1px solid rgba(0, 0, 0, 0.08)'
