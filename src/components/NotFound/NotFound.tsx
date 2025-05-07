@@ -32,17 +32,24 @@ export const NotFound = () => (
             </Link>
         </Flex>
         <Flex w='100%' justify='center' h='100vh' align='center' direction='column' gap='32px'>
-            <Image src={breakfast} />
-            <Flex direction='column' gap='16px'>
-                <Flex fontWeight='700' fontSize='24px' lineHeight='133%'>
-                    <Text mr='6px'>Упс!</Text>
-                    <Text as='h1'>Такой страницы нет</Text>
+            <Image w={{ base: '108px', md: '206px' }} src={breakfast} />
+            <Flex direction='column' gap='16px' align='center'>
+                <Flex
+                    fontWeight='700'
+                    fontSize='24px'
+                    lineHeight='133%'
+                    w={{ base: '252px', md: '100%' }}
+                    textAlign='center'
+                >
+                    <Text as='h1'> Упс! Такой страницы нет</Text>
                 </Flex>
                 <Text
                     fontWeight='400'
                     fontSize='16px'
                     lineHeight='150%'
                     color='rgba(0, 0, 0, 0.64)'
+                    w={{ base: '252px', md: '100%' }}
+                    textAlign='center'
                 >
                     Можете поискать другой рецепт{' '}
                     <Link to='/' data-test-id='error-page-go-home'>

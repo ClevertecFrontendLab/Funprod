@@ -1,56 +1,39 @@
 import { Flex, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/icons';
-import { useEffect, useState } from 'react';
-import { Link, useLocation, useNavigate, useParams } from 'react-router';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { Link, useParams } from 'react-router';
 
+import { useFilterCheck } from '~/hooks/useFilterCheck';
 import { useLocalFallback } from '~/hooks/useLocalFallback';
 import useRecipeFilters from '~/hooks/useRecipeFilters';
-import { useGetCategoriesQuery, useGetCategoryQuery } from '~/query/services/category-api';
-import { Category } from '~/query/services/category-api.type';
+import { useRedirectToFirstSubcategory } from '~/hooks/useRedirectToFirstSubcategory';
+import { useResetFiltersOnCategoryChange } from '~/hooks/useResetFiltersOnCategoryChange';
+import { useTabIndex } from '~/hooks/useTabIndex';
+import { useValidateCategory } from '~/hooks/useValidateCategory';
+import { useGetCategoryQuery } from '~/query/services/category-api';
+import { categoriesSelector } from '~/store/app-slice';
 
-import { Footer } from '../Footer/Footer';
 import { PageHeader } from '../PageHeader/PageHeader';
 import { SearchFilter } from '../SearchFilter/SearchFilter';
 import { TabComponent } from './TabComponent/TabComponent';
 
 export const CategoryPage = () => {
-    const location = useLocation();
-    const currentPath = location.pathname.split('/').pop();
     const { category, subcategory } = useParams();
-    const { data: categoryData } = useGetCategoriesQuery();
-
+    const categoryData = useSelector(categoriesSelector);
     const foundCategory = categoryData?.find((cat) => cat.category === category);
     const categoryIdFromSlug = foundCategory?._id;
 
     const { data, isError } = useGetCategoryQuery(categoryIdFromSlug!);
 
-    const [tabIndex, setTabIndex] = useState<number>(0);
-    const [randomCategory, setRandomCategory] = useState<Category | null>(null);
-    const [isFilterApplied, setIsFilterApplied] = useState<string | boolean>(false);
     const [isLoading, setIsLoading] = useState(false);
-
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        if (!categoryData || !category) return;
-
-        const foundCategory = categoryData.find((cat) => cat.category === category);
-
-        const isCategoryValid = Boolean(foundCategory);
-        const isSubcategoryValid = subcategory
-            ? foundCategory?.subCategories?.some((sub) => sub.category === subcategory)
-            : true;
-
-        if (!isCategoryValid || !isSubcategoryValid) {
-            navigate('/not-found', { replace: true });
-        }
-    }, [categoryData, category, subcategory, navigate]);
 
     const fallback = useLocalFallback('cachedCategory', isError, data);
 
-    useEffect(() => {
-        const index = data?.subCategories.findIndex((cat) => cat.category === currentPath);
-        setTabIndex(index === -1 ? 0 : (index as number));
-    }, [currentPath, data?.subCategories]);
+    const dataCategoryPage = data ?? fallback;
+    const filterCategory = categoryData?.filter((item) => item.subCategories);
+
+    useValidateCategory({ categoryData, category, subcategory });
+    const { tabIndex, setTabIndex } = useTabIndex(data?.subCategories);
 
     const {
         filteredRecipes,
@@ -71,47 +54,24 @@ export const CategoryPage = () => {
         side,
     } = useRecipeFilters();
 
-    useEffect(() => {
-        const isApplied =
-            excludedIngredients.length > 0 ||
-            selectedCategory ||
-            selectedMeat.length > 0 ||
-            selectedSide.length > 0 ||
-            searchQuery.length > 0;
+    const isFilterApplied = useFilterCheck({
+        excludedIngredients,
+        searchQuery,
+        selectedCategory,
+        selectedMeat,
+        selectedSide,
+    });
 
-        setIsFilterApplied(!!isApplied);
-    }, [excludedIngredients, selectedCategory, selectedMeat, selectedSide, searchQuery]);
-
-    useEffect(() => {
-        setSelectedCategory?.('');
-        setSelectedMeat?.([]);
-        setSelectedSide?.([]);
-        setExcludedIngredients?.([]);
-    }, [
+    useResetFiltersOnCategoryChange({
         category,
         setExcludedIngredients,
         setSearchQuery,
         setSelectedCategory,
         setSelectedMeat,
         setSelectedSide,
-    ]);
+    });
 
-    const dataCategoryPage = data ?? fallback;
-    const filterCategory = categoryData?.filter((item) => item.subCategories);
-
-    useEffect(() => {
-        if (filterCategory?.length) {
-            const random = filterCategory[Math.floor(Math.random() * filterCategory.length)];
-            setRandomCategory(random);
-        }
-    }, [dataCategoryPage]);
-
-    useEffect(() => {
-        if (foundCategory && !subcategory && foundCategory.subCategories?.length > 0) {
-            const firstSub = foundCategory.subCategories[0];
-            navigate(`/${category}/${firstSub.category}`, { replace: true });
-        }
-    }, [foundCategory, subcategory, navigate, category]);
+    useRedirectToFirstSubcategory({ category, subcategory, foundCategory });
 
     return (
         <Flex
@@ -162,9 +122,9 @@ export const CategoryPage = () => {
                         overflowX='auto'
                         overflowY='hidden'
                         sx={{
-                            scrollbarWidth: 'none' /* Firefox */,
+                            scrollbarWidth: 'none',
                             '&::-webkit-scrollbar': {
-                                display: 'none' /* Chrome, Safari, Edge */,
+                                display: 'none',
                             },
                             '&::-webkit-scrollbar-thumb': {
                                 background: 'transparent',
@@ -212,8 +172,6 @@ export const CategoryPage = () => {
                     </TabPanels>
                 </Tabs>
             )}
-
-            <Footer footerData={randomCategory} />
         </Flex>
     );
 };

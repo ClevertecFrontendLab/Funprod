@@ -1,16 +1,15 @@
-import { Box, Button, Flex, Image, Link, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Image, Link, Spinner, Text } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 
-import { useGetCategoriesQuery } from '~/query/services/category-api';
-import { Category } from '~/query/services/category-api.type';
 import { useGetRecipesQuery } from '~/query/services/recipe-api';
 import { Data } from '~/query/services/recipe-api.type';
+import { categoriesSelector } from '~/store/app-slice';
 import { checkAndNavigate } from '~/utils/checkAndNavigate';
 import { getFullMediaUrl } from '~/utils/getFullMediaUrl';
 
 import { CategoryTags } from '../CategoryPage/TabComponent/CategoryTags/CategoryTags';
-import { Footer } from '../Footer/Footer';
 import { FullPageLoader } from '../FullPageLoader/FullPageLoader';
 import { PageHeader } from '../PageHeader/PageHeader';
 import { SearchFilter } from '../SearchFilter/SearchFilter';
@@ -45,18 +44,9 @@ export const Juiciest = () => {
         sortBy: 'likes',
         sortOrder: 'desc',
     });
-    const { data: categoryData } = useGetCategoriesQuery();
-    const [randomCategory, setRandomCategory] = useState<Category | null>(null);
-    const footerCategory = categoryData?.filter((item) => item.subCategories);
+    const categoryData = useSelector(categoriesSelector);
     const [isFilterApplied, setIsFilterApplied] = useState<string | boolean>(false);
     const [isLoadingSearch, setIsLoading] = useState(false);
-
-    useEffect(() => {
-        if (footerCategory?.length) {
-            const random = footerCategory[Math.floor(Math.random() * footerCategory.length)];
-            setRandomCategory(random);
-        }
-    }, []);
 
     useEffect(() => {
         if (data?.data) {
@@ -102,6 +92,8 @@ export const Juiciest = () => {
         }
         navigate(`/${matchedCategory?.category}/${matchedSubcategory?.category}/${recipeId}`);
     };
+
+    const isDisabledButton = page >= (data?.meta?.totalPages || 0) || isFetching;
 
     return (
         <Flex
@@ -344,7 +336,7 @@ export const Juiciest = () => {
                                         border: '1px solid #b1ff2e',
                                     }}
                                     onClick={handleLoadMore}
-                                    isDisabled={page >= (data?.meta?.totalPages || 0)}
+                                    isDisabled={isDisabledButton}
                                 >
                                     <Text
                                         fontWeight='600'
@@ -352,6 +344,7 @@ export const Juiciest = () => {
                                         lineHeight='150%'
                                     >
                                         {isFetching ? 'Загрузка' : 'Загрузить еще'}
+                                        {isFetching ? <Spinner size='sm' ml='12px' /> : ''}
                                     </Text>
                                 </Button>
                             )}
@@ -359,7 +352,6 @@ export const Juiciest = () => {
                     </Flex>
                 </>
             )}
-            <Footer footerData={randomCategory} />
         </Flex>
     );
 };

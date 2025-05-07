@@ -33,6 +33,7 @@ export const Footer = ({ footerData }: FooterProps) => {
             mt='40px'
             gap='24px'
             borderTop='1px solid rgba(0, 0, 0, 0.08)'
+            ml='24px'
         >
             <Flex
                 justify='space-between'

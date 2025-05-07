@@ -1,9 +1,10 @@
 import { ChevronRightIcon } from '@chakra-ui/icons';
 import { Box, Flex, Text } from '@chakra-ui/react';
+import { useSelector } from 'react-redux';
 import { Link, useLocation, useParams } from 'react-router';
 
-import { useGetCategoriesQuery } from '~/query/services/category-api';
 import { useGetRecipeByIdQuery } from '~/query/services/recipe-api';
+import { categoriesSelector } from '~/store/app-slice';
 import { getPageData } from '~/utils/categories';
 
 type Breadcrumbs = { onClose?: () => void };
@@ -12,7 +13,7 @@ export const Breadcrumbs = ({ onClose = () => {} }: Breadcrumbs) => {
     const location = useLocation();
     const { id } = useParams();
     const { data: recipeData } = useGetRecipeByIdQuery({ id: id! });
-    const { data: categoryData } = useGetCategoriesQuery();
+    const categoryData = useSelector(categoriesSelector);
     const pathnames = location.pathname.split('/').filter(Boolean);
 
     const { breadcrumbItems } = getPageData({

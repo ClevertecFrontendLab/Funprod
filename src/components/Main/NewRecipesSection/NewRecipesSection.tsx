@@ -74,7 +74,7 @@ export const NewRecipesSection = ({ categoryData }: NewRecipesSectionProps) => {
                     fontSize={{ lg: '48px', md: '36px', base: '24px' }}
                     lineHeight='100%'
                 >
-                    Новые рецепты
+                    {data && 'Новые рецепты'}
                 </Text>
                 <Flex
                     pt='24px'

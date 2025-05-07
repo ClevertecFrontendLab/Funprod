@@ -12,12 +12,12 @@ import {
     Text,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router';
 import { Link } from 'react-router';
 
-import { useGetCategoriesQuery } from '~/query/services/category-api';
 import { useGetRecipeByIdQuery } from '~/query/services/recipe-api';
+import { categoriesSelector } from '~/store/app-slice';
 import { getFullMediaUrl } from '~/utils/getFullMediaUrl';
 
 import { NewRecipesSection } from '../Main/NewRecipesSection/NewRecipesSection';
@@ -33,7 +33,7 @@ export const RecipePage = () => {
     const { data, error, isError, isLoading } = useGetRecipeByIdQuery({ id: id! });
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { data: categoryData } = useGetCategoriesQuery();
+    const categoryData = useSelector(categoriesSelector);
 
     const categoryFilter = categoryData?.filter((item) => !item.subCategories);
 

@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { Category, categoryApi } from './../query/services/category-api';
+import { Category } from '~/query/services/category-api.type';
+
+import { categoryApi } from './../query/services/category-api';
 import { ApplicationState } from './configure-store';
 
 export type AppState = typeof initialState;
@@ -28,6 +30,9 @@ export const appSlice = createSlice({
             } else {
                 localStorage.removeItem('selectedCategoryId');
             }
+        },
+        setCategories(state, { payload }: PayloadAction<Category[]>) {
+            state.categories = payload;
         },
     },
     extraReducers: (builder) => {
@@ -57,5 +62,5 @@ export const userErrorSelector = (state: ApplicationState) => state.app.error;
 export const selectedCategoryIdSelector = (state: ApplicationState) => state.app.selectedCategoryId;
 export const categoriesSelector = (state: ApplicationState) => state.app.categories;
 
-export const { setAppError, setAppLoader, setSelectedCategoryId } = appSlice.actions;
+export const { setAppError, setAppLoader, setSelectedCategoryId, setCategories } = appSlice.actions;
 export default appSlice.reducer;

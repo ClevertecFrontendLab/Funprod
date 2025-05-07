@@ -53,28 +53,34 @@ export const JuiciestSection = ({ categoryData }: JuiciestSectionProps) => {
                     fontSize={{ lg: '48px', md: '36px', base: '24px' }}
                     lineHeight='100%'
                 >
-                    Самое сочное
+                    {data && 'Самое сочное'}
                 </Text>
-                <Button
-                    display={{ sm: 'flex', base: 'none' }}
-                    data-test-id='juiciest-link'
-                    borderRadius='6px'
-                    padding='0 24px'
-                    maxW={{ lg: '197px', base: '167px' }}
-                    w='100%'
-                    h={{ lg: '48px', base: '40px' }}
-                    maxH='100%'
-                    background=' #b1ff2e'
-                    _hover={{
-                        background: 'rgba(177, 255, 46, 0.6)',
-                        border: '1px solid #b1ff2e',
-                    }}
-                >
-                    <Text fontWeight='600' fontSize={{ lg: '18x', base: '16px' }} lineHeight='150%'>
-                        <Link to='/the-juiciest'>Вся подборка</Link>
-                    </Text>
-                    <Image src={arrowRight} ml='8px' w='16px' h='16px' />
-                </Button>
+                {data && (
+                    <Button
+                        display={{ sm: 'flex', base: 'none' }}
+                        data-test-id='juiciest-link'
+                        borderRadius='6px'
+                        padding='0 24px'
+                        maxW={{ lg: '197px', base: '167px' }}
+                        w='100%'
+                        h={{ lg: '48px', base: '40px' }}
+                        maxH='100%'
+                        background=' #b1ff2e'
+                        _hover={{
+                            background: 'rgba(177, 255, 46, 0.6)',
+                            border: '1px solid #b1ff2e',
+                        }}
+                    >
+                        <Text
+                            fontWeight='600'
+                            fontSize={{ lg: '18x', base: '16px' }}
+                            lineHeight='150%'
+                        >
+                            <Link to='/the-juiciest'>Вся подборка</Link>
+                        </Text>
+                        <Image src={arrowRight} ml='8px' w='16px' h='16px' />
+                    </Button>
+                )}
             </Flex>
             <Flex wrap='wrap' gap={{ md: '24px', base: '16px' }} justify='space-between'>
                 {data?.data.map((card, i) => (
@@ -223,24 +229,26 @@ export const JuiciestSection = ({ categoryData }: JuiciestSectionProps) => {
                     </Flex>
                 ))}
             </Flex>
-            <Button
-                display={{ sm: 'none', base: 'Flex' }}
-                data-test-id='juiciest-link-mobile'
-                borderRadius='6px'
-                padding='0 24px'
-                maxW={{ lg: '197px', base: '167px' }}
-                maxH={{ lg: '48px', base: '40px' }}
-                background=' #b1ff2e'
-                _hover={{
-                    background: 'rgba(177, 255, 46, 0.6)',
-                    border: '1px solid #b1ff2e',
-                }}
-            >
-                <Text fontWeight='600' fontSize={{ lg: '18x', base: '16px' }} lineHeight='150%'>
-                    <Link to='/the-juiciest'>Вся подборка</Link>
-                </Text>
-                <Image src={arrowRight} ml='8px' w='16px' h='16px' />
-            </Button>
+            {data && (
+                <Button
+                    display={{ sm: 'none', base: 'Flex' }}
+                    data-test-id='juiciest-link-mobile'
+                    borderRadius='6px'
+                    padding='0 24px'
+                    maxW={{ lg: '197px', base: '167px' }}
+                    maxH={{ lg: '48px', base: '40px' }}
+                    background=' #b1ff2e'
+                    _hover={{
+                        background: 'rgba(177, 255, 46, 0.6)',
+                        border: '1px solid #b1ff2e',
+                    }}
+                >
+                    <Text fontWeight='600' fontSize={{ lg: '18x', base: '16px' }} lineHeight='150%'>
+                        <Link to='/the-juiciest'>Вся подборка</Link>
+                    </Text>
+                    <Image src={arrowRight} ml='8px' w='16px' h='16px' />
+                </Button>
+            )}
         </Flex>
     );
 };

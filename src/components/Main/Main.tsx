@@ -1,11 +1,10 @@
 import { Flex } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 import useRecipeFilters from '~/hooks/useRecipeFilters';
-import { useGetCategoriesQuery } from '~/query/services/category-api';
-import { Category } from '~/query/services/category-api.type';
+import { categoriesSelector } from '~/store/app-slice';
 
-import { Footer } from '../Footer/Footer';
 import { PageHeader } from '../PageHeader/PageHeader';
 import { SearchFilter } from '../SearchFilter/SearchFilter';
 import { CookingBlogsSection } from './CookingBlogsSection/CookingBlogsSection';
@@ -33,8 +32,7 @@ export const Main = () => {
     } = useRecipeFilters();
 
     const [isFilterApplied, setIsFilterApplied] = useState<string | boolean>(false);
-    const { data: categoryData } = useGetCategoriesQuery();
-    const [randomCategory, setRandomCategory] = useState<Category | null>(null);
+    const categoryData = useSelector(categoriesSelector);
     const filterCategory = categoryData?.filter((item) => item.subCategories);
     const [isLoading, setIsLoading] = useState(false);
     useEffect(() => {
@@ -48,12 +46,6 @@ export const Main = () => {
         setIsFilterApplied(!!isApplied);
     }, [excludedIngredients, selectedCategory, selectedMeat, selectedSide, searchQuery]);
 
-    useEffect(() => {
-        if (filterCategory?.length) {
-            const random = filterCategory[Math.floor(Math.random() * filterCategory.length)];
-            setRandomCategory(random);
-        }
-    }, [filterCategory]);
     return (
         <Flex
             maxW={{
@@ -100,7 +92,6 @@ export const Main = () => {
             )}
             <JuiciestSection categoryData={categoryData} />
             <CookingBlogsSection />
-            <Footer footerData={randomCategory} />
         </Flex>
     );
 };
