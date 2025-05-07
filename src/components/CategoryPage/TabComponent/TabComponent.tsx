@@ -1,8 +1,8 @@
 import { Box, Button, Flex, Image, Text } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
 import { Link as Links } from 'react-router';
 
-import { Category } from '~/query/services/category-api';
+import { useLocalFallback } from '~/hooks/useLocalFallback';
+import { Category } from '~/query/services/category-api.type';
 import { useGetRecipesCategoryQuery } from '~/query/services/recipe-api';
 import { getFullMediaUrl } from '~/utils/getFullMediaUrl';
 import { highlightText } from '~/utils/highlightText';
@@ -27,18 +27,7 @@ export const TabComponent = ({ searchQuery = '', categoriesId }: TabComponentPro
         },
     );
 
-    const [fallback, setFallback] = useState();
-
-    useEffect(() => {
-        if (isError && !dataTab) {
-            const cached = localStorage.getItem('cachedRecipeCategory');
-            if (cached) {
-                setFallback(JSON.parse(cached));
-            } else {
-                alert('Слишком много запросов. Попробуйте позже.');
-            }
-        }
-    }, [isError, dataTab]);
+    const fallback = useLocalFallback('cachedRecipeCategory', isError, dataTab);
 
     const data = dataTab ?? fallback;
 

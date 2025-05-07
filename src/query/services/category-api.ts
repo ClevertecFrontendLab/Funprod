@@ -1,23 +1,7 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 
 import { baseQuery } from '../base-query';
-
-export type Category = {
-    _id: string;
-    title: string;
-    category: string;
-    icon: string;
-    description: string;
-    subCategories: SubCategory[];
-    rootCategoryId: string;
-};
-
-export type SubCategory = {
-    _id: string;
-    title: string;
-    category: string;
-    rootCategoryId: string;
-};
+import { Category } from './category-api.type';
 
 export const categoryApi = createApi({
     reducerPath: 'categoryApi',

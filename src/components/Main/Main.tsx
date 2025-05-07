@@ -2,7 +2,8 @@ import { Flex } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 
 import useRecipeFilters from '~/hooks/useRecipeFilters';
-import { Category, useGetCategoriesQuery } from '~/query/services/category-api';
+import { useGetCategoriesQuery } from '~/query/services/category-api';
+import { Category } from '~/query/services/category-api.type';
 
 import { Footer } from '../Footer/Footer';
 import { PageHeader } from '../PageHeader/PageHeader';

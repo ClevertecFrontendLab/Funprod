@@ -1,6 +1,6 @@
 import { Box, Button, Flex, Image, Text } from '@chakra-ui/react';
 
-import { Category } from '~/query/services/category-api';
+import { Category } from '~/query/services/category-api.type';
 import { useGetRecipesCategoryQuery } from '~/query/services/recipe-api';
 
 import { CategoryTags } from '../CategoryPage/TabComponent/CategoryTags/CategoryTags';

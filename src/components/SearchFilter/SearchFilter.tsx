@@ -2,8 +2,9 @@ import { Box, Button, Flex, Image, Text } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 
-import { Category } from '~/query/services/category-api';
+import { Category } from '~/query/services/category-api.type';
 import { useGetRecipesQuery } from '~/query/services/recipe-api';
+import { checkAndNavigate } from '~/utils/checkAndNavigate';
 import { getFullMediaUrl } from '~/utils/getFullMediaUrl';
 import { highlightText } from '~/utils/highlightText';
 
@@ -12,7 +13,6 @@ import bookmarkHeart from './../../assets/actionBar/BookmarkHeart.svg';
 import emojiHeartEyes from './../../assets/actionBar/EmojiHeartEyes.svg';
 
 type SearchFilterProps = {
-    filteredData?: Category[];
     categoryData: Category[];
     searchQuery: string;
     categoriesIds: string[];
@@ -20,6 +20,7 @@ type SearchFilterProps = {
     meat: string[];
     garnish: string[];
     onLoadingChange: (val: boolean) => void;
+    filteredData?: Category[];
 };
 
 export const SearchFilter = ({
@@ -55,28 +56,18 @@ export const SearchFilter = ({
         limit: 20,
     });
 
-    const dataCategories = categoryData?.filter((item) => item.subCategories);
-
-    const dataSubCategories = categoryData?.filter((item) => !item.subCategories);
     const handleGetRecipe = (recipeId: string, categoriesIds: string[]) => {
-        if (!dataSubCategories || !dataCategories) {
+        const { condition, matchedCategory, matchedSubcategory } = checkAndNavigate({
+            categoriesIds,
+            categoryData,
+        });
+        if (condition) {
             navigate('/error-page');
             return;
         }
-        const matchedSubcategory = dataSubCategories.find((sub) => categoriesIds.includes(sub._id));
-        if (!matchedSubcategory) {
-            navigate('/error-page');
-            return;
-        }
-        const matchedCategory = dataCategories.find(
-            (cat) => cat._id === matchedSubcategory.rootCategoryId,
-        );
-        if (!matchedCategory) {
-            navigate('/error-page');
-            return;
-        }
-        navigate(`/${matchedCategory.category}/${matchedSubcategory.category}/${recipeId}`);
+        navigate(`/${matchedCategory?.category}/${matchedSubcategory?.category}/${recipeId}`);
     };
+
     useEffect(() => {
         onLoadingChange?.(isLoading);
     }, [isLoading, onLoadingChange]);

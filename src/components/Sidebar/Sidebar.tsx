@@ -11,11 +11,12 @@ import {
     Text,
 } from '@chakra-ui/react';
 import { Link as ChakraLink } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link, useLocation } from 'react-router';
 
-import { Category, useGetCategoriesQuery } from '~/query/services/category-api';
+import { useLocalFallback } from '~/hooks/useLocalFallback';
+import { useGetCategoriesQuery } from '~/query/services/category-api';
 import { setSelectedCategoryId } from '~/store/app-slice';
 import { getFullMediaUrl } from '~/utils/getFullMediaUrl';
 
@@ -37,17 +38,7 @@ export const Sidebar = ({ openBurger, onClose }: SidebarProps) => {
 
     const dispatch = useDispatch();
 
-    const [fallback, setFallback] = useState<Category[] | null>(null);
-    useEffect(() => {
-        if (isError && !data) {
-            const cached = localStorage.getItem('cachedCategories');
-            if (cached) {
-                setFallback(JSON.parse(cached));
-            } else {
-                alert('Слишком много запросов. Попробуйте позже.');
-            }
-        }
-    }, [isError, data]);
+    const fallback = useLocalFallback('cachedCategories', isError, data);
 
     const handleAccordionButton = (index: number) => {
         setOpenIndex(openIndex === index ? null : index);
@@ -153,6 +144,11 @@ export const Sidebar = ({ openBurger, onClose }: SidebarProps) => {
                         >
                             {sidebarCategory?.map((section, index) => (
                                 <AccordionItem
+                                    data-test-id={
+                                        section.title === 'Веганская кухня'
+                                            ? 'vegan-cuisine'
+                                            : undefined
+                                    }
                                     key={index}
                                     w={{ md: '230px', sm: '314px', base: '302px' }}
                                     minHeight='48px'
@@ -162,11 +158,6 @@ export const Sidebar = ({ openBurger, onClose }: SidebarProps) => {
                                 >
                                     <h2>
                                         <AccordionButton
-                                            data-test-id={
-                                                section.title === 'Веганская кухня'
-                                                    ? 'vegan-cuisine'
-                                                    : undefined
-                                            }
                                             onClick={() => {
                                                 handleAccordionButton(index);
                                             }}

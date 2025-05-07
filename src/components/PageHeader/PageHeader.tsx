@@ -17,7 +17,7 @@ import {
 } from '@chakra-ui/react';
 import { useState } from 'react';
 
-import { Category } from '~/query/services/category-api';
+import { Category } from '~/query/services/category-api.type';
 
 import { CustomSelect } from '../CustomSelect/CustomSelect';
 import { DrawerComponent } from '../DrawerComponent/DrawerComponent';

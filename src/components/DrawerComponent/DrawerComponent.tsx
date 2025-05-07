@@ -21,7 +21,8 @@ import {
 import { useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router';
 
-import { Category } from '~/query/services/category-api';
+import { TEST_IDS } from '~/constants/testIds';
+import { Category } from '~/query/services/category-api.type';
 
 import { CustomSelect } from '../CustomSelect/CustomSelect';
 import drawerClose from './../../assets/drawerClose.svg';
@@ -41,19 +42,19 @@ const sideDish = [
 type DrawerComponentProps = {
     isOpen: boolean;
     onClose: () => void;
+    selectedMeat: string[];
+    selectedSide: string[];
+    categoriesIds: string[];
+    setCategoriesIds: (val: string[]) => void;
+    allergens: string[];
+    handleAllergens: (val: string[]) => void;
     selectedOptions?: string[];
     onChange?: (val: string[]) => void;
     setSelectedCategory?: (val: string) => void;
     setSelectedSide?: (val: string[]) => void;
     setSelectedMeat?: (val: string[]) => void;
     selectedCategory?: string;
-    selectedMeat: string[];
-    selectedSide: string[];
     filterCategory?: Category[];
-    categoriesIds: string[];
-    setCategoriesIds: (val: string[]) => void;
-    allergens: string[];
-    handleAllergens: (val: string[]) => void;
 };
 
 export const DrawerComponent = ({
@@ -72,7 +73,6 @@ export const DrawerComponent = ({
     allergens,
     handleAllergens,
 }: DrawerComponentProps) => {
-    console.log('Rendered DrawerComponent');
     const [isActive, setIsActive] = useState(true);
     const [localCategory, setLocalCategory] = useState(selectedCategory);
     const [localMeat, setLocalMeat] = useState<string[]>(selectedMeat);
@@ -81,7 +81,6 @@ export const DrawerComponent = ({
     const [categoryDisabled, setCategoryDisabled] = useState(false);
     const location = useLocation();
     const categoryFromUrl = location.pathname.split('/')[1];
-    console.log(categoryFromUrl);
 
     const categories = useMemo(
         () => Array.from(new Set(filterCategory?.map((item) => item.category))),
@@ -95,7 +94,6 @@ export const DrawerComponent = ({
     }, [categoryFromUrl, filterCategory]);
 
     const handleSetCategory = (category: string) => {
-        console.log(category);
         setLocalCategory(category);
     };
     const handleSearch = () => {
@@ -184,7 +182,7 @@ export const DrawerComponent = ({
                             disabled={categoryDisabled}
                             textAlign='start'
                             as={Button}
-                            data-test-id='filter-menu-button-категория'
+                            data-test-id={TEST_IDS.filterMenuButtonCategory}
                             rightIcon={<ChevronDownIcon />}
                             bg='transparent'
                             _hover={{ bg: 'transparent' }}
@@ -198,34 +196,38 @@ export const DrawerComponent = ({
                             </Text>
                         </MenuButton>
                         <MenuList mt='0'>
-                            {categories.map((category) => (
-                                <MenuItem
-                                    key={category}
-                                    onClick={() => handleSetCategory(category)}
-                                    minW='100%'
-                                >
-                                    <Checkbox
-                                        data-test-id={
-                                            category === 'vegan'
-                                                ? 'checkbox-веганская кухня'
-                                                : undefined
-                                        }
-                                        isChecked={localCategory === category}
-                                        borderColor='#b1ff2e'
-                                        iconColor='black'
-                                        colorScheme='green'
-                                        _checked={{
-                                            '& .chakra-checkbox__control': {
-                                                bg: '#b1ff2e',
-                                            },
-                                        }}
-                                        mr='10px'
+                            {categories.map((category) => {
+                                const title =
+                                    filterCategory?.find((item) => item.category === category)
+                                        ?.title || category;
+                                return (
+                                    <MenuItem
+                                        key={category}
+                                        onClick={() => handleSetCategory(category)}
+                                        minW='100%'
                                     >
-                                        {filterCategory?.find((item) => item.category === category)
-                                            ?.title || category}
-                                    </Checkbox>
-                                </MenuItem>
-                            ))}
+                                        <Checkbox
+                                            data-test-id={
+                                                category === 'vegan'
+                                                    ? 'checkbox-веганская кухня'
+                                                    : undefined
+                                            }
+                                            isChecked={localCategory === category}
+                                            borderColor='#b1ff2e'
+                                            iconColor='black'
+                                            colorScheme='green'
+                                            _checked={{
+                                                '& .chakra-checkbox__control': {
+                                                    bg: '#b1ff2e',
+                                                },
+                                            }}
+                                            mr='10px'
+                                        >
+                                            {title}
+                                        </Checkbox>
+                                    </MenuItem>
+                                );
+                            })}
                         </MenuList>
                     </Menu>
                     <Menu>

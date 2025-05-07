@@ -2,12 +2,10 @@ import { Flex, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/
 import { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate, useParams } from 'react-router';
 
+import { useLocalFallback } from '~/hooks/useLocalFallback';
 import useRecipeFilters from '~/hooks/useRecipeFilters';
-import {
-    Category,
-    useGetCategoriesQuery,
-    useGetCategoryQuery,
-} from '~/query/services/category-api';
+import { useGetCategoriesQuery, useGetCategoryQuery } from '~/query/services/category-api';
+import { Category } from '~/query/services/category-api.type';
 
 import { Footer } from '../Footer/Footer';
 import { PageHeader } from '../PageHeader/PageHeader';
@@ -25,10 +23,7 @@ export const CategoryPage = () => {
 
     const { data, isError } = useGetCategoryQuery(categoryIdFromSlug!);
 
-    console.log(data);
-
     const [tabIndex, setTabIndex] = useState<number>(0);
-    const [fallback, setFallback] = useState<Category | null>(null);
     const [randomCategory, setRandomCategory] = useState<Category | null>(null);
     const [isFilterApplied, setIsFilterApplied] = useState<string | boolean>(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -50,14 +45,7 @@ export const CategoryPage = () => {
         }
     }, [categoryData, category, subcategory, navigate]);
 
-    useEffect(() => {
-        if (isError && !data) {
-            const cached = localStorage.getItem('cachedCategory');
-            if (cached) {
-                setFallback(JSON.parse(cached));
-            }
-        }
-    }, [isError, data]);
+    const fallback = useLocalFallback('cachedCategory', isError, data);
 
     useEffect(() => {
         const index = data?.subCategories.findIndex((cat) => cat.category === currentPath);

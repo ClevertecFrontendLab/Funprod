@@ -31,11 +31,11 @@ const options = [
 
 type CustomSelectProps = {
     isActive: boolean;
+    allergens: string[];
+    handleAllergens: (val: string[]) => void;
     selectedOptions?: string[];
     allFilters?: string[];
     isOpenDrawer?: boolean;
-    allergens: string[];
-    handleAllergens: (val: string[]) => void;
 };
 
 export const CustomSelect = ({

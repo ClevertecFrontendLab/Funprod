@@ -2,8 +2,11 @@ import { Box, Button, Flex, Image, Link, Text } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 
-import { Category, useGetCategoriesQuery } from '~/query/services/category-api';
-import { Data, useGetRecipesQuery } from '~/query/services/recipe-api';
+import { useGetCategoriesQuery } from '~/query/services/category-api';
+import { Category } from '~/query/services/category-api.type';
+import { useGetRecipesQuery } from '~/query/services/recipe-api';
+import { Data } from '~/query/services/recipe-api.type';
+import { checkAndNavigate } from '~/utils/checkAndNavigate';
 import { getFullMediaUrl } from '~/utils/getFullMediaUrl';
 
 import { CategoryTags } from '../CategoryPage/TabComponent/CategoryTags/CategoryTags';
@@ -88,27 +91,18 @@ export const Juiciest = () => {
     }, [excludedIngredients, selectedCategory, selectedMeat, selectedSide, searchQuery]);
     const dataCategories = categoryData?.filter((item) => item.subCategories);
 
-    const dataSubCategories = categoryData?.filter((item) => !item.subCategories);
-
     const handleGetRecipe = (recipeId: string, categoriesIds: string[]) => {
-        if (!dataSubCategories || !dataCategories) {
+        const { condition, matchedCategory, matchedSubcategory } = checkAndNavigate({
+            categoriesIds,
+            categoryData,
+        });
+        if (condition) {
             navigate('/error-page');
             return;
         }
-        const matchedSubcategory = dataSubCategories.find((sub) => categoriesIds.includes(sub._id));
-        if (!matchedSubcategory) {
-            navigate('/error-page');
-            return;
-        }
-        const matchedCategory = dataCategories.find(
-            (cat) => cat._id === matchedSubcategory.rootCategoryId,
-        );
-        if (!matchedCategory) {
-            navigate('/error-page');
-            return;
-        }
-        navigate(`/${matchedCategory.category}/${matchedSubcategory.category}/${recipeId}`);
+        navigate(`/${matchedCategory?.category}/${matchedSubcategory?.category}/${recipeId}`);
     };
+
     return (
         <Flex
             w={{

@@ -33,7 +33,6 @@ export const RecipePage = () => {
     const { data, error, isError, isLoading } = useGetRecipeByIdQuery({ id: id! });
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    console.log(data);
     const { data: categoryData } = useGetCategoriesQuery();
 
     const categoryFilter = categoryData?.filter((item) => !item.subCategories);

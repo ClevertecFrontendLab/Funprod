@@ -108,10 +108,7 @@ export default function RootLayout() {
                 </Box>
                 <AsideBar />
             </Flex>
-
-            <Box display={{ base: 'flex', md: 'none' }} position='fixed'>
-                <FooterMobile openBurger={openBurger} />
-            </Box>
+            <FooterMobile openBurger={openBurger} />
         </Box>
     );
 }

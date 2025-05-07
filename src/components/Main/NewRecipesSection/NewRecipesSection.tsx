@@ -1,14 +1,17 @@
 import 'swiper/swiper-bundle.css';
 
 import { Box, Button, Flex, Image, Text } from '@chakra-ui/react';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Swiper as SwiperType } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 import { CategoryTags } from '~/components/CategoryPage/TabComponent/CategoryTags/CategoryTags';
-import { Category } from '~/query/services/category-api';
-import { Recipe, useGetRecipesQuery } from '~/query/services/recipe-api';
+import { Recipe } from '~/components/mockData';
+import { useLocalFallback } from '~/hooks/useLocalFallback';
+import { Category } from '~/query/services/category-api.type';
+import { useGetRecipesQuery } from '~/query/services/recipe-api';
+import { checkAndNavigate } from '~/utils/checkAndNavigate';
 import { getFullMediaUrl } from '~/utils/getFullMediaUrl';
 
 import bookmarkHeart from './../../../assets/actionBar/BookmarkHeart.svg';
@@ -17,24 +20,20 @@ import leftSlider from './../../../assets/leftSlider.svg';
 import rightSlider from './../../../assets/rightSlider.svg';
 
 type NewRecipesSectionProps = {
-    filteredData?: Recipe[];
     categoryData: Category[];
+    filteredData?: Recipe[];
 };
 
 export const NewRecipesSection = ({ categoryData }: NewRecipesSectionProps) => {
     const navigate = useNavigate();
     const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null);
-    const [cachedData, setCachedData] = useState<Recipe | null>(null);
     const swiperRef = useRef(null);
-    const { data, isLoading, isFetching } = useGetRecipesQuery({
+    const { data, isError } = useGetRecipesQuery({
         page: 1,
         limit: 10,
         sortBy: 'createdAt',
         sortOrder: 'desc',
     });
-
-    const dataCategories = categoryData?.filter((item) => item.subCategories);
-    const dataSubCategories = categoryData?.filter((item) => !item.subCategories);
 
     const handlePrevClick = () => {
         if (swiperInstance) {
@@ -49,43 +48,23 @@ export const NewRecipesSection = ({ categoryData }: NewRecipesSectionProps) => {
     };
 
     const handleGetRecipe = (recipeId: string, categoriesIds: string[]) => {
-        if (!dataSubCategories || !dataCategories) {
+        const { condition, matchedCategory, matchedSubcategory } = checkAndNavigate({
+            categoriesIds,
+            categoryData,
+        });
+        if (condition) {
             navigate('/error-page');
             return;
         }
-        const matchedSubcategory = dataSubCategories.find((sub) => categoriesIds.includes(sub._id));
-        if (!matchedSubcategory) {
-            navigate('/error-page');
-            return;
-        }
-        const matchedCategory = dataCategories.find(
-            (cat) => cat._id === matchedSubcategory.rootCategoryId,
-        );
-        if (!matchedCategory) {
-            navigate('/error-page');
-            return;
-        }
-        navigate(`/${matchedCategory.category}/${matchedSubcategory.category}/${recipeId}`);
+        navigate(`/${matchedCategory?.category}/${matchedSubcategory?.category}/${recipeId}`);
     };
 
-    useEffect(() => {
-        if (!data && !isLoading && !isFetching) {
-            try {
-                const cached = localStorage.getItem('cachedRecipe');
-                if (cached) {
-                    setCachedData(JSON.parse(cached));
-                }
-            } catch (e) {
-                console.warn('Failed to retrieve cached recipe', e);
-            }
-        }
-    }, [data, isLoading, isFetching]);
+    const fallback = useLocalFallback('cachedRecipeCategory', isError, data);
 
-    const recipesToDisplay = data?.data || cachedData?.data || [];
+    const recipesToDisplay = data?.data || fallback?.data || [];
     const sortedRecipes = [...recipesToDisplay].sort(
         (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
     );
-    console.log(sortedRecipes);
 
     return (
         <Flex direction='column' w='100%' maxHeight='550px' mt='32px' position='relative'>
@@ -138,118 +117,113 @@ export const NewRecipesSection = ({ categoryData }: NewRecipesSectionProps) => {
                         }}
                         style={{ position: 'static', zIndex: 0 }}
                     >
-                        {sortedRecipes.map((card, i) => {
-                            console.log(data);
-                            return (
-                                <SwiperSlide key={card._id} data-test-id={`carousel-card-${i}`}>
-                                    <Box
-                                        onClick={() =>
-                                            handleGetRecipe(card._id, card.categoriesIds)
-                                        }
-                                        flex='0 0 auto'
-                                        w={{ lg: '322px', md: '277px', base: '158px' }}
-                                        h={{ lg: '475px', md: '460px', base: '220px' }}
-                                        borderRadius='8px'
-                                        border='1px solid rgba(0, 0, 0, 0.08);'
-                                        cursor='pointer'
+                        {sortedRecipes.map((card, i) => (
+                            <SwiperSlide key={card._id} data-test-id={`carousel-card-${i}`}>
+                                <Box
+                                    onClick={() => handleGetRecipe(card._id, card.categoriesIds)}
+                                    flex='0 0 auto'
+                                    w={{ lg: '322px', md: '277px', base: '158px' }}
+                                    h={{ lg: '475px', md: '460px', base: '220px' }}
+                                    borderRadius='8px'
+                                    border='1px solid rgba(0, 0, 0, 0.08);'
+                                    cursor='pointer'
+                                >
+                                    <Image
+                                        src={getFullMediaUrl(card.image)}
+                                        borderRadius='4px 4px 0 0'
+                                        w='100%'
+                                        h={{ md: '230px', base: '128px' }}
+                                        objectFit='cover'
+                                    />
+                                    <Flex
+                                        direction='column'
+                                        justify='space-between'
+                                        p={{
+                                            lg: '16px 24px 20px 24px',
+                                            md: '12px',
+                                            base: '8px',
+                                        }}
+                                        h={{ md: '50%', base: '92px' }}
                                     >
-                                        <Image
-                                            src={getFullMediaUrl(card.image)}
-                                            borderRadius='4px 4px 0 0'
-                                            w='100%'
-                                            h={{ md: '230px', base: '128px' }}
-                                            objectFit='cover'
-                                        />
-                                        <Flex
-                                            direction='column'
-                                            justify='space-between'
-                                            p={{
-                                                lg: '16px 24px 20px 24px',
-                                                md: '12px',
-                                                base: '8px',
-                                            }}
-                                            h={{ md: '50%', base: '92px' }}
-                                        >
-                                            <Flex direction='column'>
+                                        <Flex direction='column'>
+                                            <Text
+                                                fontWeight='500'
+                                                fontSize={{
+                                                    base: '16px',
+                                                    md: '18px',
+                                                    lg: '20px',
+                                                }}
+                                                lineHeight='150%'
+                                                noOfLines={{ md: 1, base: 2 }}
+                                                overflow='hidden'
+                                                textOverflow='ellipsis'
+                                            >
+                                                {card.title}
+                                            </Text>
+                                            <Box display={{ base: 'none', md: 'block' }}>
                                                 <Text
-                                                    fontWeight='500'
-                                                    fontSize={{
-                                                        base: '16px',
-                                                        md: '18px',
-                                                        lg: '20px',
-                                                    }}
-                                                    lineHeight='150%'
-                                                    noOfLines={{ md: 1, base: 2 }}
+                                                    mt='8px'
+                                                    fontWeight='400'
+                                                    fontSize='14px'
+                                                    lineHeight='143%'
+                                                    noOfLines={3}
                                                     overflow='hidden'
                                                     textOverflow='ellipsis'
                                                 >
-                                                    {card.title}
+                                                    {card.description}
                                                 </Text>
-                                                <Box display={{ base: 'none', md: 'block' }}>
+                                            </Box>
+                                        </Flex>
+                                        <Flex
+                                            justify='space-between'
+                                            mt={{ md: '24px', base: '8px' }}
+                                        >
+                                            <CategoryTags tagsId={card.categoriesIds} />
+                                            <Flex gap='8px' align='flex-end'>
+                                                <Flex
+                                                    align='center'
+                                                    justify='center'
+                                                    gap='7px'
+                                                    p='0 4px'
+                                                >
+                                                    <Box w='12px' h='12px'>
+                                                        <Image src={bookmarkHeart} />
+                                                    </Box>
                                                     <Text
-                                                        mt='8px'
-                                                        fontWeight='400'
-                                                        fontSize='14px'
-                                                        lineHeight='143%'
-                                                        noOfLines={3}
-                                                        overflow='hidden'
-                                                        textOverflow='ellipsis'
+                                                        fontFamily='var(--font-family)'
+                                                        fontWeight='600'
+                                                        fontSize='12px'
+                                                        lineHeight='133%'
+                                                        color='var(--lime-600)'
                                                     >
-                                                        {card.description}
+                                                        {card.bookmarks}
                                                     </Text>
-                                                </Box>
-                                            </Flex>
-                                            <Flex
-                                                justify='space-between'
-                                                mt={{ md: '24px', base: '8px' }}
-                                            >
-                                                <CategoryTags tagsId={card.categoriesIds} />
-                                                <Flex gap='8px' align='flex-end'>
-                                                    <Flex
-                                                        align='center'
-                                                        justify='center'
-                                                        gap='7px'
-                                                        p='0 4px'
+                                                </Flex>
+                                                <Flex
+                                                    align='center'
+                                                    justify='center'
+                                                    gap='7px'
+                                                    p='0 4px'
+                                                >
+                                                    <Box w='12px' h='12px'>
+                                                        <Image src={emojiHeartEyes} />
+                                                    </Box>
+                                                    <Text
+                                                        fontFamily='var(--font-family)'
+                                                        fontWeight='600'
+                                                        fontSize='12px'
+                                                        lineHeight='133%'
+                                                        color='var(--lime-600)'
                                                     >
-                                                        <Box w='12px' h='12px'>
-                                                            <Image src={bookmarkHeart} />
-                                                        </Box>
-                                                        <Text
-                                                            fontFamily='var(--font-family)'
-                                                            fontWeight='600'
-                                                            fontSize='12px'
-                                                            lineHeight='133%'
-                                                            color='var(--lime-600)'
-                                                        >
-                                                            {card.bookmarks}
-                                                        </Text>
-                                                    </Flex>
-                                                    <Flex
-                                                        align='center'
-                                                        justify='center'
-                                                        gap='7px'
-                                                        p='0 4px'
-                                                    >
-                                                        <Box w='12px' h='12px'>
-                                                            <Image src={emojiHeartEyes} />
-                                                        </Box>
-                                                        <Text
-                                                            fontFamily='var(--font-family)'
-                                                            fontWeight='600'
-                                                            fontSize='12px'
-                                                            lineHeight='133%'
-                                                            color='var(--lime-600)'
-                                                        >
-                                                            {card.likes}
-                                                        </Text>
-                                                    </Flex>
+                                                        {card.likes}
+                                                    </Text>
                                                 </Flex>
                                             </Flex>
                                         </Flex>
-                                    </Box>
-                                </SwiperSlide>
-                            );
-                        })}
+                                    </Flex>
+                                </Box>
+                            </SwiperSlide>
+                        ))}
                     </Swiper>
                     <Box display={{ base: 'none', md: 'block' }}>
                         <Button
