@@ -4,7 +4,7 @@ import { generatePageTitles } from './generatePageTitles';
 
 type BreadcrumbItem = { label: string; to: string };
 
-export function getPageData({
+export function getBreadcrumb({
     categoryData,
     pathnames,
     id,

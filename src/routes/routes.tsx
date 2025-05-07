@@ -1,5 +1,3 @@
-// src/routes/routes.tsx
-
 import { RouteObject } from 'react-router';
 
 import { CategoryPage } from '~/components/CategoryPage/CategoryPage';

@@ -5,7 +5,7 @@ import { Link, useLocation, useParams } from 'react-router';
 
 import { useGetRecipeByIdQuery } from '~/query/services/recipe-api';
 import { categoriesSelector } from '~/store/app-slice';
-import { getPageData } from '~/utils/categories';
+import { getBreadcrumb } from '~/utils/getBreadcrumb';
 
 type Breadcrumbs = { onClose?: () => void };
 
@@ -16,7 +16,7 @@ export const Breadcrumbs = ({ onClose = () => {} }: Breadcrumbs) => {
     const categoryData = useSelector(categoriesSelector);
     const pathnames = location.pathname.split('/').filter(Boolean);
 
-    const { breadcrumbItems } = getPageData({
+    const { breadcrumbItems } = getBreadcrumb({
         categoryData,
         pathnames,
         id,
