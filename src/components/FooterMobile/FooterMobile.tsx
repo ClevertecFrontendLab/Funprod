@@ -30,13 +30,13 @@ type FooterMobileProps = {
 
 export const FooterMobile = ({ openBurger }: FooterMobileProps) => (
     <Flex
+        display={{ base: 'flex', md: 'none' }}
         filter={openBurger ? 'blur(4px)' : 'none'}
         transition='filter 0.2s ease-out'
         data-test-id='footer'
         position='fixed'
         bottom='0'
-        maxH='84px'
-        h='100%'
+        h='84px'
         w='100%'
         bgColor='var(--lime-50)'
     >

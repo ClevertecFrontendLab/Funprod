@@ -1,62 +1,29 @@
 import { ChevronRightIcon } from '@chakra-ui/icons';
 import { Box, Flex, Text } from '@chakra-ui/react';
-import { Link, useLocation } from 'react-router';
+import { useSelector } from 'react-redux';
+import { Link, useLocation, useParams } from 'react-router';
 
-import { mockData, Recipe } from '~/components/mockData';
-
-const pageTitles: Record<string, string> = {
-    '/': 'Главная',
-    '/vegan': 'Веганская кухня',
-    '/vegan/snacks': 'Закуски',
-    '/vegan/first-dish': 'Первые блюда',
-    '/vegan/second-dish': 'Вторые блюда',
-    '/vegan/side-dishes': 'Гарниры',
-    '/vegan/desserts': 'Десерты',
-    '/vegan/baked-goods': 'Выпечка',
-    '/vegan/raw-dishes': 'Сыроедческие блюда',
-    '/vegan/drinks': 'Напитки',
-    '/the-juiciest': 'Самое сочное',
-    '/juiciest': 'Самое сочное',
-    '/second-dish': 'Вторые блюда',
-    '/second-dish/poultry-dish': 'Из птицы',
-    '/salads': 'Салаты',
-    '/salads/warm-salads': 'Теплые салаты',
-};
+import { useGetRecipeByIdQuery } from '~/query/services/recipe-api';
+import { categoriesSelector } from '~/store/app-slice';
+import { getBreadcrumb } from '~/utils/getBreadcrumb';
 
 type Breadcrumbs = { onClose?: () => void };
 
 export const Breadcrumbs = ({ onClose = () => {} }: Breadcrumbs) => {
     const location = useLocation();
-
+    const { id } = useParams();
+    const { data: recipeData } = useGetRecipeByIdQuery({ id: id! });
+    const categoryData = useSelector(categoriesSelector);
     const pathnames = location.pathname.split('/').filter(Boolean);
 
-    const breadcrumbItems = pathnames.reduce<Array<{ label: string; to: string }>>(
-        (acc, path, index) => {
-            const fullPath = `/${pathnames.slice(0, index + 1).join('/')}`;
-            const isLast = index === pathnames.length - 1;
-            const isNumber = !isNaN(Number(path));
-            if (isLast && isNumber) {
-                const recipe = mockData.find((card: Recipe) => card.id === path);
-                return [
-                    ...acc,
-                    {
-                        label: recipe?.title || 'Загрузка...',
-                        to: fullPath,
-                    },
-                ];
-            }
-            return [
-                ...acc,
-                {
-                    label: pageTitles[fullPath] || path,
-                    to: fullPath,
-                },
-            ];
-        },
-        [],
-    );
+    const { breadcrumbItems } = getBreadcrumb({
+        categoryData,
+        pathnames,
+        id,
+        recipeData,
+    });
 
-    breadcrumbItems.unshift({ label: 'Главная', to: '/' });
+    breadcrumbItems?.unshift({ label: 'Главная', to: '/' });
 
     return (
         <Box
@@ -66,7 +33,7 @@ export const Breadcrumbs = ({ onClose = () => {} }: Breadcrumbs) => {
             display={{ base: 'block', md: 'block' }}
         >
             <Flex wrap='wrap' gap='2px' maxWidth='100%'>
-                {breadcrumbItems.map((item, index) => (
+                {breadcrumbItems?.map((item, index) => (
                     <Flex key={`${item.to}-${index}`} align='center' justify='center'>
                         <Link to={item.to}>
                             <Text

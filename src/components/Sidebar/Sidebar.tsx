@@ -12,13 +12,16 @@ import {
 } from '@chakra-ui/react';
 import { Link as ChakraLink } from '@chakra-ui/react';
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router';
+
+import { categoriesSelector, setSelectedCategoryId } from '~/store/app-slice';
+import { getFullMediaUrl } from '~/utils/getFullMediaUrl';
 
 import { Breadcrumbs } from '../Header/Breadcrumbs/Breadcrumbs';
 import arrowDown from './../../assets/sidebar/arrowDown.svg';
 import arrowUp from './../../assets/sidebar/arrowUp.svg';
 import exit from './../../assets/sidebar/exit.svg';
-import { sidebarMenu } from './data';
 
 type SidebarProps = {
     openBurger?: boolean;
@@ -29,10 +32,18 @@ export const Sidebar = ({ openBurger, onClose }: SidebarProps) => {
     const [openIndex, setOpenIndex] = useState<number | null>(null);
     const location = useLocation();
     const currentPath = location.pathname;
+    const categoryData = useSelector(categoriesSelector);
+
+    const dispatch = useDispatch();
+
     const handleAccordionButton = (index: number) => {
         setOpenIndex(openIndex === index ? null : index);
     };
 
+    const handleCategoryClick = (categoryId: string) => {
+        dispatch(setSelectedCategoryId(categoryId));
+    };
+    const sidebarCategory = categoryData?.filter((item) => item.subCategories);
     return (
         <Flex
             data-test-id='nav'
@@ -126,8 +137,13 @@ export const Sidebar = ({ openBurger, onClose }: SidebarProps) => {
                             }}
                             allowMultiple={false}
                         >
-                            {sidebarMenu.map((section, index) => (
+                            {sidebarCategory?.map((section, index) => (
                                 <AccordionItem
+                                    data-test-id={
+                                        section.title === 'Веганская кухня'
+                                            ? 'vegan-cuisine'
+                                            : undefined
+                                    }
                                     key={index}
                                     w={{ md: '230px', sm: '314px', base: '302px' }}
                                     minHeight='48px'
@@ -137,11 +153,6 @@ export const Sidebar = ({ openBurger, onClose }: SidebarProps) => {
                                 >
                                     <h2>
                                         <AccordionButton
-                                            data-test-id={
-                                                section.title === 'Веганская кухня'
-                                                    ? 'vegan-cuisine'
-                                                    : undefined
-                                            }
                                             onClick={() => {
                                                 handleAccordionButton(index);
                                             }}
@@ -180,11 +191,15 @@ export const Sidebar = ({ openBurger, onClose }: SidebarProps) => {
                                                 ml='8px'
                                             >
                                                 <Image
-                                                    src={section.IconUrl}
+                                                    src={getFullMediaUrl(section.icon)}
                                                     alt={section.title}
                                                     boxSize='24px'
                                                 />
-                                                <ChakraLink as={Link} to={section.path}>
+                                                <ChakraLink
+                                                    as={Link}
+                                                    onClick={() => handleCategoryClick(section._id)}
+                                                    to={`${section.category}/${section.subCategories[0].category}`}
+                                                >
                                                     <Text ml='8px' fontSize='16px'>
                                                         {section.title}
                                                     </Text>
@@ -200,18 +215,23 @@ export const Sidebar = ({ openBurger, onClose }: SidebarProps) => {
                                     </h2>
                                     <AccordionPanel padding={0} margin={0}>
                                         <List>
-                                            {section.items.map((item, i) => {
-                                                const isActive = currentPath === item.path;
+                                            {section.subCategories.map((item, i) => {
+                                                const isActive =
+                                                    currentPath ===
+                                                    `/${section.category}/${item.category}`;
                                                 return (
                                                     <ListItem key={i}>
                                                         <ChakraLink
                                                             data-test-id={
                                                                 isActive
-                                                                    ? `${item.title}-active`
+                                                                    ? `${item.category}-active`
                                                                     : ''
                                                             }
                                                             as={Link}
-                                                            to={item.path}
+                                                            onClick={() =>
+                                                                handleCategoryClick(section._id)
+                                                            }
+                                                            to={`/${section.category}/${item.category}`}
                                                             fontWeight={isActive ? '700' : '400'}
                                                             sx={{
                                                                 display: 'flex',
@@ -246,7 +266,7 @@ export const Sidebar = ({ openBurger, onClose }: SidebarProps) => {
                                                                 },
                                                             }}
                                                         >
-                                                            {item.name}
+                                                            {item.title}
                                                         </ChakraLink>
                                                     </ListItem>
                                                 );

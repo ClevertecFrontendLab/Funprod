@@ -1,34 +1,91 @@
-import { Box, Button, Flex, Image, Link, Text } from '@chakra-ui/react';
-import { Link as Links } from 'react-router';
+import { Box, Button, Flex, Image, Text } from '@chakra-ui/react';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router';
 
-import { highlightText } from '~/utilities/highlightText';
+import { Category } from '~/query/services/category-api.type';
+import { useGetRecipesQuery } from '~/query/services/recipe-api';
+import { checkAndNavigate } from '~/utils/checkAndNavigate';
+import { getFullMediaUrl } from '~/utils/getFullMediaUrl';
+import { highlightText } from '~/utils/highlightText';
 
-import { categoryIcon } from '../categoryIcon';
-import { mockData, Recipe } from '../mockData';
+import { CategoryTags } from '../CategoryPage/TabComponent/CategoryTags/CategoryTags';
 import bookmarkHeart from './../../assets/actionBar/BookmarkHeart.svg';
 import emojiHeartEyes from './../../assets/actionBar/EmojiHeartEyes.svg';
 
 type SearchFilterProps = {
-    filteredData?: Recipe[];
+    categoryData: Category[];
     searchQuery: string;
+    categoriesIds: string[];
+    allergens: string[];
+    meat: string[];
+    garnish: string[];
+    onLoadingChange: (val: boolean) => void;
+    filteredData?: Category[];
 };
 
-export const SearchFilter = ({ filteredData = mockData, searchQuery }: SearchFilterProps) => {
-    const getRecipeUrl = (recipe: Recipe) => {
-        const mainCategory = recipe.category[0];
-        const subCategory = recipe.subcategory[0];
+export const SearchFilter = ({
+    filteredData,
+    searchQuery,
+    categoriesIds,
+    allergens,
+    meat,
+    garnish,
+    onLoadingChange,
+    categoryData,
+}: SearchFilterProps) => {
+    const { category } = useParams();
+    const navigate = useNavigate();
+    const [localCategoriesIds, setLocalCategoriesIds] = useState<string[]>([]);
+    useEffect(() => {
+        if (categoriesIds.length === 0) {
+            const matchedCategory = filteredData?.find((cat) => cat.category === category);
 
-        return `/${mainCategory}/${subCategory}/${recipe.id}`;
+            if (matchedCategory?.subCategories?.length) {
+                const subCategoryIds = matchedCategory.subCategories.map((sub) => sub._id);
+                setLocalCategoriesIds(subCategoryIds);
+            }
+        }
+    }, [categoriesIds.length, category, filteredData]);
+
+    const { data, isError, error, isLoading } = useGetRecipesQuery({
+        subcategoriesIds: categoriesIds.length ? categoriesIds : localCategoriesIds,
+        ...(allergens?.length ? { allergens } : {}),
+        ...(meat?.length ? { meat } : {}),
+        ...(garnish?.length ? { garnish } : {}),
+        searchString: searchQuery,
+        limit: 20,
+    });
+
+    const handleGetRecipe = (recipeId: string, categoriesIds: string[]) => {
+        const { condition, matchedCategory, matchedSubcategory } = checkAndNavigate({
+            categoriesIds,
+            categoryData,
+        });
+        if (condition) {
+            navigate('/error-page');
+            return;
+        }
+        navigate(`/${matchedCategory?.category}/${matchedSubcategory?.category}/${recipeId}`);
     };
+
+    useEffect(() => {
+        onLoadingChange?.(isLoading);
+    }, [isLoading, onLoadingChange]);
+
+    useEffect(() => {
+        if (isError && error) {
+            sessionStorage.setItem('error', 'Попробуйте немного позже');
+        }
+    }, [isError, error]);
 
     return (
         <Flex direction='column' align='center' gap='16px' mt='42px'>
             <Flex wrap='wrap' gap={{ md: '24px', base: '16px' }} justify='space-between'>
-                {filteredData.map((card: Recipe, i) => (
+                {data?.data.map((card, i) => (
                     <Flex
                         data-test-id={`food-card-${i}`}
                         position='relative'
-                        key={card.id}
+                        key={card._id}
                         borderRadius='8px'
                         border='1px solid rgba(0, 0, 0, 0.08)'
                         maxWidth=''
@@ -39,66 +96,28 @@ export const SearchFilter = ({ filteredData = mockData, searchQuery }: SearchFil
                             base: '356px',
                         }}
                         w='100%'
-                        maxH={{ md: '300px', base: '128px' }}
+                        h={{ lg: '324px', md: '400px', base: '128px' }}
                     >
-                        <Image
-                            src={card.image}
-                            w={{ md: '346px', base: '158px' }}
-                            borderRadius='4px 0 0 4px'
-                        />
+                        <Flex flex='1'>
+                            <Image
+                                src={getFullMediaUrl(card.image)}
+                                maxW={{ lg: '346px', md: '400px', base: '158px' }}
+                                borderRadius='4px 0 0 4px'
+                            />
+                        </Flex>
                         <Flex
+                            flex='1'
                             p={{ md: '20px 24px', base: '0' }}
                             m={{ md: '0', base: '8px 8px 4px 8px' }}
                             direction='column'
                             gap={{ md: '24px', base: '0' }}
-                            w={{ base: '154px', sm: '182px', md: '100%' }}
+                            maxW={{ base: '154px', sm: '182px', md: '334px' }}
+                            w='100%'
                             justify='space-between'
                         >
                             <Flex direction='column'>
                                 <Flex justify={{ md: 'space-between', base: 'flex-start' }}>
-                                    <Flex
-                                        direction='column'
-                                        gap='4px'
-                                        position={{ md: 'static', base: 'absolute' }}
-                                        top='8px'
-                                        left='8px'
-                                    >
-                                        {categoryIcon
-                                            .filter((item) => card.category.includes(item.label))
-                                            .map((item) => (
-                                                <Link
-                                                    position={{
-                                                        md: 'static',
-                                                        base: 'absolute',
-                                                    }}
-                                                    top='8px'
-                                                    left='2px'
-                                                >
-                                                    <Flex
-                                                        w='100%'
-                                                        h='24px'
-                                                        p={{
-                                                            md: '2px 8px',
-                                                            base: '2px 4px',
-                                                        }}
-                                                        borderRadius='4px'
-                                                        background='var(--lime-150)'
-                                                        gap={{ md: '8px', base: '2px' }}
-                                                    >
-                                                        <Image src={item.icon} />
-                                                        <Text
-                                                            fontFamily='var(--font-family)'
-                                                            fontWeight='400'
-                                                            fontSize='14px'
-                                                            lineHeight='143%'
-                                                            whiteSpace='nowrap'
-                                                        >
-                                                            {item.title}
-                                                        </Text>
-                                                    </Flex>
-                                                </Link>
-                                            ))}
-                                    </Flex>
+                                    <CategoryTags tagsId={card.categoriesIds} />
                                     <Flex
                                         ml={{ md: '36px', base: '0' }}
                                         mr={{ base: '85px', md: '0' }}
@@ -164,7 +183,12 @@ export const SearchFilter = ({ filteredData = mockData, searchQuery }: SearchFil
                                     </Box>
                                 </Box>
                             </Flex>
-                            <Flex justify='flex-end' gap='8px'>
+                            <Flex
+                                justify='flex-end'
+                                gap='8px'
+                                mt='auto'
+                                mr={{ base: '4px', md: '0' }}
+                            >
                                 <Button
                                     border='1px solid rgba(0, 0, 0, 0.48)'
                                     borderRadius='6px'
@@ -192,27 +216,26 @@ export const SearchFilter = ({ filteredData = mockData, searchQuery }: SearchFil
                                         </Text>
                                     </Box>
                                 </Button>
-                                <Links to={getRecipeUrl(card)}>
-                                    <Button
-                                        border='1px solid rgba(0, 0, 0, 0.08)'
-                                        borderRadius='6px'
-                                        p={{ md: '0 12px', base: '0 6px' }}
-                                        w='87px'
-                                        h={{ md: '32px', base: '24px' }}
-                                        backgroundColor='rgba(0, 0, 0, 0.92)'
-                                        _hover={{ backgroundColor: 'rgba(0, 0, 0, 0.52)' }}
+                                <Button
+                                    border='1px solid rgba(0, 0, 0, 0.08)'
+                                    borderRadius='6px'
+                                    p={{ md: '0 12px', base: '0 6px' }}
+                                    w='87px'
+                                    h={{ md: '32px', base: '24px' }}
+                                    backgroundColor='rgba(0, 0, 0, 0.92)'
+                                    _hover={{ backgroundColor: 'rgba(0, 0, 0, 0.52)' }}
+                                    onClick={() => handleGetRecipe(card._id, card.categoriesIds)}
+                                >
+                                    <Text
+                                        fontFamily='var(--font-family)'
+                                        fontWeight='600'
+                                        fontSize='14px'
+                                        lineHeight='143%'
+                                        color='#fff'
                                     >
-                                        <Text
-                                            fontFamily='var(--font-family)'
-                                            fontWeight='600'
-                                            fontSize='14px'
-                                            lineHeight='143%'
-                                            color='#fff'
-                                        >
-                                            Готовить
-                                        </Text>
-                                    </Button>
-                                </Links>
+                                        Готовить
+                                    </Text>
+                                </Button>
                             </Flex>
                         </Flex>
                     </Flex>

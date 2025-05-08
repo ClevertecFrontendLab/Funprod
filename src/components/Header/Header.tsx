@@ -31,7 +31,7 @@ export const Header = ({ openBurger, onToggle }: HeaderProps) => (
         bg={openBurger ? '#fff' : 'var(--lime-50)'}
         color='black'
         position='fixed'
-        zIndex='15'
+        zIndex='100'
         top='0'
         left='0'
         right='0'
