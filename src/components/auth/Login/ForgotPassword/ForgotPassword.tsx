@@ -22,7 +22,7 @@ import { useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
 
 import Forgot from '~/assets/Forgot.jpg';
-import Pin from '~/assets/pin.jpg';
+import Pin from '~/assets/pinImg.jpg';
 import { ErrorNotification } from '~/components/ErrorNotification/ErrorNotification';
 import { useForgotPasswordMutation } from '~/query/services/auth-api';
 import { ApplicationState } from '~/store/configure-store';
