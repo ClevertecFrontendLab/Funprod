@@ -1,7 +1,6 @@
 import { Box, Button, Flex, Image, Text } from '@chakra-ui/react';
 import { Link as Links } from 'react-router';
 
-import { useLocalFallback } from '~/hooks/useLocalFallback';
 import { Category } from '~/query/services/category-api.type';
 import { useGetRecipesCategoryQuery } from '~/query/services/recipe-api';
 import { getFullMediaUrl } from '~/utils/getFullMediaUrl';
@@ -18,23 +17,13 @@ type TabComponentProps = {
 };
 
 export const TabComponent = ({ searchQuery = '', categoriesId }: TabComponentProps) => {
-    const { data: dataTab, isError } = useGetRecipesCategoryQuery(
-        {
-            id: categoriesId!,
-        },
-        {
-            skip: !categoriesId,
-        },
-    );
-
-    const fallback = useLocalFallback('cachedRecipeCategory', isError, dataTab);
-
-    const data = dataTab ?? fallback;
-
+    const { data } = useGetRecipesCategoryQuery({
+        id: categoriesId!,
+    });
     return (
         <Flex direction='column' align='center' gap='16px' mt='22px'>
             <Flex wrap='wrap' gap={{ md: '24px', base: '16px' }} justify='space-between'>
-                {data?.data.map((card, i) => (
+                {(data?.data ?? []).map((card, i) => (
                     <Flex
                         data-test-id={`food-card-${i}`}
                         position='relative'

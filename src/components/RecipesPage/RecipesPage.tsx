@@ -35,7 +35,9 @@ export const RecipePage = () => {
     const dispatch = useDispatch();
     const categoryData = useSelector(categoriesSelector);
 
-    const categoryFilter = categoryData?.filter((item) => !item.subCategories);
+    const categoryFilter = Array.isArray(categoryData)
+        ? categoryData.filter((item) => item.subCategories)
+        : [];
 
     const [servings, setServings] = useState(data?.portions || 1);
 

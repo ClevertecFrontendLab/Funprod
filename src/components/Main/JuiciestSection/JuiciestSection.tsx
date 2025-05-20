@@ -57,7 +57,7 @@ export const JuiciestSection = ({ categoryData }: JuiciestSectionProps) => {
                 </Text>
                 {data && (
                     <Button
-                        display={{ sm: 'flex', base: 'none' }}
+                        display={{ md: 'flex', base: 'none' }}
                         data-test-id='juiciest-link'
                         borderRadius='6px'
                         padding='0 24px'
@@ -83,155 +83,177 @@ export const JuiciestSection = ({ categoryData }: JuiciestSectionProps) => {
                 )}
             </Flex>
             <Flex wrap='wrap' gap={{ md: '24px', base: '16px' }} justify='space-between'>
-                {data?.data.map((card, i) => (
-                    <Flex
-                        position='relative'
-                        key={i}
-                        borderRadius='8px'
-                        border='1px solid rgba(0, 0, 0, 0.08)'
-                        maxWidth=''
-                        maxW={{ lg: '668px', md: '880px', sm: 'calc(50% - 12px)', base: '328px' }}
-                        w='100%'
-                        h={{ lg: '324px', md: '400px', base: '128px' }}
-                    >
-                        <Flex flex='1' maxW={{ lg: '346px', md: '400px', base: '158px' }} w='100%'>
-                            <Image
-                                src={getFullMediaUrl(card.image)}
-                                maxW={{ lg: '346px', md: '400px', base: '158px' }}
-                                borderRadius='4px 0 0 4px'
-                            />
-                        </Flex>
+                {Array.isArray(data?.data) &&
+                    data.data.map((card, i) => (
                         <Flex
-                            flex='1'
-                            p={{ md: '20px 24px', base: '8px 8px 4px 8px' }}
-                            direction='column'
-                            gap={{ md: '24px', base: '0' }}
-                            maxW={{ md: '334px', base: '154px' }}
+                            position='relative'
+                            key={i}
+                            borderRadius='8px'
+                            border='1px solid rgba(0, 0, 0, 0.08)'
+                            maxWidth=''
+                            maxW={{
+                                lg: '668px',
+                                md: '880px',
+                                sm: 'calc(50% - 12px)',
+                                base: '328px',
+                            }}
                             w='100%'
+                            h={{ lg: '324px', md: '400px', base: '128px' }}
                         >
-                            <Flex justify={{ md: 'space-between', base: 'flex-start' }}>
-                                <CategoryTags tagsId={card.categoriesIds} />
-                                <Flex
-                                    gap='8px'
-                                    ml={{ md: '16px', base: '0' }}
-                                    mr={{ base: '85px', md: '0' }}
-                                >
-                                    <Flex gap='8px' align='flex-start'>
-                                        <Flex align='center' justify='center' gap='7px' p='0 4px'>
-                                            <Box w='12px' h='12px'>
-                                                <Image src={bookmarkHeart} />
-                                            </Box>
-                                            <Text
-                                                fontFamily='var(--font-family)'
-                                                fontWeight='600'
-                                                fontSize='12px'
-                                                lineHeight='133%'
-                                                color='var(--lime-600)'
+                            <Flex
+                                flex='1'
+                                maxW={{ lg: '346px', md: '400px', base: '158px' }}
+                                w='100%'
+                            >
+                                <Image
+                                    src={getFullMediaUrl(card.image)}
+                                    maxW={{ lg: '346px', md: '400px', base: '158px' }}
+                                    borderRadius='4px 0 0 4px'
+                                />
+                            </Flex>
+                            <Flex
+                                flex='1'
+                                p={{ md: '20px 24px', base: '8px 8px 4px 8px' }}
+                                direction='column'
+                                gap={{ md: '24px', base: '0' }}
+                                maxW={{ md: '334px', base: '154px' }}
+                                w='100%'
+                            >
+                                <Flex justify={{ md: 'space-between', base: 'flex-start' }}>
+                                    <CategoryTags tagsId={card.categoriesIds} />
+                                    <Flex
+                                        gap='8px'
+                                        ml={{ md: '16px', base: '0' }}
+                                        mr={{ base: '85px', md: '0' }}
+                                    >
+                                        <Flex gap='8px' align='flex-start'>
+                                            <Flex
+                                                align='center'
+                                                justify='center'
+                                                gap='7px'
+                                                p='0 4px'
                                             >
-                                                {card.bookmarks}
-                                            </Text>
-                                        </Flex>
-                                        <Flex align='center' justify='center' gap='7px' p='0 4px'>
-                                            <Box w='12px' h='12px'>
-                                                <Image src={emojiHeartEyes} />
-                                            </Box>
-                                            <Text
-                                                fontFamily='var(--font-family)'
-                                                fontWeight='600'
-                                                fontSize='12px'
-                                                lineHeight='133%'
-                                                color='var(--lime-600)'
+                                                <Box w='12px' h='12px'>
+                                                    <Image src={bookmarkHeart} />
+                                                </Box>
+                                                <Text
+                                                    fontFamily='var(--font-family)'
+                                                    fontWeight='600'
+                                                    fontSize='12px'
+                                                    lineHeight='133%'
+                                                    color='var(--lime-600)'
+                                                >
+                                                    {card.bookmarks}
+                                                </Text>
+                                            </Flex>
+                                            <Flex
+                                                align='center'
+                                                justify='center'
+                                                gap='7px'
+                                                p='0 4px'
                                             >
-                                                {card.likes}
-                                            </Text>
+                                                <Box w='12px' h='12px'>
+                                                    <Image src={emojiHeartEyes} />
+                                                </Box>
+                                                <Text
+                                                    fontFamily='var(--font-family)'
+                                                    fontWeight='600'
+                                                    fontSize='12px'
+                                                    lineHeight='133%'
+                                                    color='var(--lime-600)'
+                                                >
+                                                    {card.likes}
+                                                </Text>
+                                            </Flex>
                                         </Flex>
                                     </Flex>
                                 </Flex>
-                            </Flex>
-                            <Box w={{ lg: '274px', base: '100%' }} h='100px'>
-                                <Text
-                                    fontFamily='var(--font-family)'
-                                    fontWeight='500'
-                                    fontSize={{ md: '20px', base: '16px' }}
-                                    lineHeight='140%'
-                                    noOfLines={{ lg: 1, base: 0 }}
-                                    overflow='hidden'
-                                    textOverflow='ellipsis'
-                                >
-                                    {card.title}
-                                </Text>
-                                <Box display={{ base: 'none', md: 'block' }}>
+                                <Box w={{ lg: '274px', base: '100%' }} h='100px'>
                                     <Text
-                                        mt='8px'
                                         fontFamily='var(--font-family)'
-                                        fontWeight='400'
-                                        fontSize='14px'
-                                        lineHeight='143%'
-                                        noOfLines={{ lg: 3, base: 0 }}
+                                        fontWeight='500'
+                                        fontSize={{ md: '20px', base: '16px' }}
+                                        lineHeight='140%'
+                                        noOfLines={{ lg: 1, base: 0 }}
                                         overflow='hidden'
                                         textOverflow='ellipsis'
                                     >
-                                        {card.description}
+                                        {card.title}
                                     </Text>
-                                </Box>
-                            </Box>
-                            <Flex justify='flex-end' gap='8px' mt='auto'>
-                                <Button
-                                    border='1px solid rgba(0, 0, 0, 0.48)'
-                                    borderRadius='6px'
-                                    p={{ md: '0 12px', base: '0' }}
-                                    w={{ md: '122px', base: '24px' }}
-                                    minW='0'
-                                    h={{ md: '32px', base: '24px' }}
-                                    backgroundColor='rgba(255, 255, 255, 0.06)'
-                                    _hover={{ backgroundColor: 'rgba(0, 0, 0, 0.06)' }}
-                                >
-                                    <Image
-                                        src={bookmarkHeart}
-                                        mr={{ md: '8px', base: '0' }}
-                                        w={{ md: '14px', base: '12px' }}
-                                        h={{ md: '14px', base: '12px' }}
-                                    />
                                     <Box display={{ base: 'none', md: 'block' }}>
+                                        <Text
+                                            mt='8px'
+                                            fontFamily='var(--font-family)'
+                                            fontWeight='400'
+                                            fontSize='14px'
+                                            lineHeight='143%'
+                                            noOfLines={{ lg: 3, base: 0 }}
+                                            overflow='hidden'
+                                            textOverflow='ellipsis'
+                                        >
+                                            {card.description}
+                                        </Text>
+                                    </Box>
+                                </Box>
+                                <Flex justify='flex-end' gap='8px' mt='auto'>
+                                    <Button
+                                        border='1px solid rgba(0, 0, 0, 0.48)'
+                                        borderRadius='6px'
+                                        p={{ md: '0 12px', base: '0' }}
+                                        w={{ md: '122px', base: '24px' }}
+                                        minW='0'
+                                        h={{ md: '32px', base: '24px' }}
+                                        backgroundColor='rgba(255, 255, 255, 0.06)'
+                                        _hover={{ backgroundColor: 'rgba(0, 0, 0, 0.06)' }}
+                                    >
+                                        <Image
+                                            src={bookmarkHeart}
+                                            mr={{ md: '8px', base: '0' }}
+                                            w={{ md: '14px', base: '12px' }}
+                                            h={{ md: '14px', base: '12px' }}
+                                        />
+                                        <Box display={{ base: 'none', md: 'block' }}>
+                                            <Text
+                                                fontFamily='var(--font-family)'
+                                                fontWeight='600'
+                                                fontSize='14px'
+                                                lineHeight='143%'
+                                            >
+                                                Сохранить
+                                            </Text>
+                                        </Box>
+                                    </Button>
+                                    <Button
+                                        border='1px solid rgba(0, 0, 0, 0.08)'
+                                        data-test-id={`card-link-${i}`}
+                                        borderRadius='6px'
+                                        p={{ md: '0 12px', base: '0 6px' }}
+                                        w='87px'
+                                        h={{ md: '32px', base: '24px' }}
+                                        backgroundColor='rgba(0, 0, 0, 0.92)'
+                                        _hover={{ backgroundColor: 'rgba(0, 0, 0, 0.52)' }}
+                                        onClick={() =>
+                                            handleGetRecipe(card._id, card.categoriesIds)
+                                        }
+                                    >
                                         <Text
                                             fontFamily='var(--font-family)'
                                             fontWeight='600'
                                             fontSize='14px'
                                             lineHeight='143%'
+                                            color='#fff'
                                         >
-                                            Сохранить
+                                            Готовить
                                         </Text>
-                                    </Box>
-                                </Button>
-                                <Button
-                                    border='1px solid rgba(0, 0, 0, 0.08)'
-                                    data-test-id={`card-link-${i}`}
-                                    borderRadius='6px'
-                                    p={{ md: '0 12px', base: '0 6px' }}
-                                    w='87px'
-                                    h={{ md: '32px', base: '24px' }}
-                                    backgroundColor='rgba(0, 0, 0, 0.92)'
-                                    _hover={{ backgroundColor: 'rgba(0, 0, 0, 0.52)' }}
-                                    onClick={() => handleGetRecipe(card._id, card.categoriesIds)}
-                                >
-                                    <Text
-                                        fontFamily='var(--font-family)'
-                                        fontWeight='600'
-                                        fontSize='14px'
-                                        lineHeight='143%'
-                                        color='#fff'
-                                    >
-                                        Готовить
-                                    </Text>
-                                </Button>
+                                    </Button>
+                                </Flex>
                             </Flex>
                         </Flex>
-                    </Flex>
-                ))}
+                    ))}
             </Flex>
             {data && (
                 <Button
-                    display={{ sm: 'none', base: 'Flex' }}
+                    display={{ md: 'none', base: 'Flex' }}
                     data-test-id='juiciest-link-mobile'
                     borderRadius='6px'
                     padding='0 24px'

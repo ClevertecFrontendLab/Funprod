@@ -26,11 +26,26 @@ export const baseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryE
             result = await rawBaseQuery(args, api, extraOptions);
         }
         if (statusCode === 404) {
-            api.dispatch(setAppError('Попробуйте поискать снова попозже'));
+            api.dispatch(
+                setAppError({
+                    title: 'Ошибка сервера',
+                    message: 'Попробуйте поискать снова попозже',
+                }),
+            );
         } else if (statusCode === 500) {
-            api.dispatch(setAppError('Попробуйте поискать снова попозже'));
+            api.dispatch(
+                setAppError({
+                    title: 'Ошибка сервера',
+                    message: 'Попробуйте поискать снова попозже',
+                }),
+            );
         } else if (statusCode >= 500) {
-            api.dispatch(setAppError('Попробуйте поискать снова попозже'));
+            api.dispatch(
+                setAppError({
+                    title: 'Ошибка сервера',
+                    message: 'Попробуйте поискать снова попозже',
+                }),
+            );
         }
     }
 

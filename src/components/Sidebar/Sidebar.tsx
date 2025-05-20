@@ -43,7 +43,9 @@ export const Sidebar = ({ openBurger, onClose }: SidebarProps) => {
     const handleCategoryClick = (categoryId: string) => {
         dispatch(setSelectedCategoryId(categoryId));
     };
-    const sidebarCategory = categoryData?.filter((item) => item.subCategories);
+    const sidebarCategory = Array.isArray(categoryData)
+        ? categoryData.filter((item) => item.subCategories)
+        : [];
     return (
         <Flex
             data-test-id='nav'

@@ -22,8 +22,8 @@ export const Footer = ({ footerData }: FooterProps) => {
         { skip: !footerSubCategoryId },
     );
 
-    const firstFooterCategory = data?.data.slice(0, 2);
-    const secondFooterCategory = data?.data.slice(2, 5);
+    const firstFooterCategory = Array.isArray(data?.data) && data.data.slice(0, 2);
+    const secondFooterCategory = Array.isArray(data?.data) && data.data.slice(2, 5);
 
     return (
         <Flex
@@ -66,118 +66,120 @@ export const Footer = ({ footerData }: FooterProps) => {
                 direction={{ sm: 'row', base: 'column' }}
                 gap={{ lg: '24px', md: '16px', base: '12px' }}
             >
-                {firstFooterCategory?.map((card, index) => (
-                    <Flex
-                        key={index}
-                        direction='column'
-                        borderRadius='8px'
-                        border='1px solid rgba(0, 0, 0, 0.08)'
-                        w={{ lg: '322px', md: '282px', sm: '232px', base: '328px' }}
-                        h={{ lg: '192px', md: '180px', base: '168px' }}
-                        p={{ lg: '24px', base: '16px' }}
-                    >
-                        <Flex
-                            direction='column'
-                            w={{ lg: '274px', md: '250px', sm: '208px', base: '272px' }}
-                            gap='8px'
-                        >
-                            <Text
-                                fontFamily='var(--font-family)'
-                                fontWeight='500'
-                                fontSize={{ md: '20px', base: '16px' }}
-                                lineHeight='150%'
-                                noOfLines={1}
-                            >
-                                {card.title}
-                            </Text>
-                            <Text
-                                fontFamily='var(--font-family)'
-                                fontWeight='400'
-                                fontSize='14px'
-                                lineHeight='143%'
-                                noOfLines={3}
-                            >
-                                {card.description}
-                            </Text>
-                        </Flex>
-                        <Flex justify='space-between' mt='24px'>
-                            <CategoryTags tagsId={card.categoriesIds.slice(0, 1)} />
-                            <Flex gap='8px' align='flex-start'>
-                                <Flex align='center' justify='center' gap='7px' p='0 4px'>
-                                    <Box w='12px' h='12px'>
-                                        <Image src={bookmarkHeart} />
-                                    </Box>
-                                    <Text
-                                        fontFamily='var(--font-family)'
-                                        fontWeight='600'
-                                        fontSize='12px'
-                                        lineHeight='133%'
-                                        color='var(--lime-600)'
-                                    >
-                                        {card.bookmarks}
-                                    </Text>
-                                </Flex>
-                                <Flex align='center' justify='center' gap='7px' p='0 4px'>
-                                    <Box w='12px' h='12px'>
-                                        <Image src={emojiHeartEyes} />
-                                    </Box>
-                                    <Text
-                                        fontFamily='var(--font-family)'
-                                        fontWeight='600'
-                                        fontSize='12px'
-                                        lineHeight='133%'
-                                        color='var(--lime-600)'
-                                    >
-                                        {card.likes}
-                                    </Text>
-                                </Flex>
-                            </Flex>
-                        </Flex>
-                    </Flex>
-                ))}
-                <Flex direction='column' gap={{ md: '12px', sm: '6px', base: '12px' }}>
-                    {secondFooterCategory?.map((list, index) => (
+                {Array.isArray(firstFooterCategory) &&
+                    firstFooterCategory.map((card, index) => (
                         <Flex
                             key={index}
-                            border='1px solid rgba(0, 0, 0, 0.08);'
+                            direction='column'
                             borderRadius='8px'
-                            w={{ lg: '668px', md: '282px', sm: '240px', base: '328px' }}
-                            h={{ lg: '56px', base: '52px' }}
-                            align='center'
-                            justify='space-between'
-                            gap={{ lg: '12px', md: '8px', base: '6px' }}
+                            border='1px solid rgba(0, 0, 0, 0.08)'
+                            w={{ lg: '322px', md: '282px', sm: '232px', base: '328px' }}
+                            h={{ lg: '192px', md: '180px', base: '168px' }}
+                            p={{ lg: '24px', base: '16px' }}
                         >
-                            <Flex gap={{ lg: '12px', base: '6px' }}>
-                                <Image ml={{ lg: '24px', base: '12px' }} />
+                            <Flex
+                                direction='column'
+                                w={{ lg: '274px', md: '250px', sm: '208px', base: '272px' }}
+                                gap='8px'
+                            >
                                 <Text
                                     fontFamily='var(--font-family)'
                                     fontWeight='500'
-                                    fontSize={{ lg: '20px', base: '18px' }}
-                                    lineHeight='140%'
+                                    fontSize={{ md: '20px', base: '16px' }}
+                                    lineHeight='150%'
                                     noOfLines={1}
                                 >
-                                    {list.title}
+                                    {card.title}
+                                </Text>
+                                <Text
+                                    fontFamily='var(--font-family)'
+                                    fontWeight='400'
+                                    fontSize='14px'
+                                    lineHeight='143%'
+                                    noOfLines={3}
+                                >
+                                    {card.description}
                                 </Text>
                             </Flex>
-                            <Button
-                                mr={{ lg: '24px', base: '12px' }}
-                                maxW={{ lg: '87px', base: '70px' }}
-                                w='100%'
-                                h={{ md: '32px', base: '24px' }}
-                                border='1px solid var(--lime-600)'
-                                bg='transparent'
-                                color='var(--lime-600)'
-                            >
-                                <Text
-                                    fontWeight='600'
-                                    fontSize={{ lg: '14px', base: '12px' }}
-                                    lineHeight='143%'
-                                >
-                                    Готовить
-                                </Text>
-                            </Button>
+                            <Flex justify='space-between' mt='24px'>
+                                <CategoryTags tagsId={card.categoriesIds.slice(0, 1)} />
+                                <Flex gap='8px' align='flex-start'>
+                                    <Flex align='center' justify='center' gap='7px' p='0 4px'>
+                                        <Box w='12px' h='12px'>
+                                            <Image src={bookmarkHeart} />
+                                        </Box>
+                                        <Text
+                                            fontFamily='var(--font-family)'
+                                            fontWeight='600'
+                                            fontSize='12px'
+                                            lineHeight='133%'
+                                            color='var(--lime-600)'
+                                        >
+                                            {card.bookmarks}
+                                        </Text>
+                                    </Flex>
+                                    <Flex align='center' justify='center' gap='7px' p='0 4px'>
+                                        <Box w='12px' h='12px'>
+                                            <Image src={emojiHeartEyes} />
+                                        </Box>
+                                        <Text
+                                            fontFamily='var(--font-family)'
+                                            fontWeight='600'
+                                            fontSize='12px'
+                                            lineHeight='133%'
+                                            color='var(--lime-600)'
+                                        >
+                                            {card.likes}
+                                        </Text>
+                                    </Flex>
+                                </Flex>
+                            </Flex>
                         </Flex>
                     ))}
+                <Flex direction='column' gap={{ md: '12px', sm: '6px', base: '12px' }}>
+                    {Array.isArray(secondFooterCategory) &&
+                        secondFooterCategory.map((list, index) => (
+                            <Flex
+                                key={index}
+                                border='1px solid rgba(0, 0, 0, 0.08);'
+                                borderRadius='8px'
+                                w={{ lg: '668px', md: '282px', sm: '240px', base: '328px' }}
+                                h={{ lg: '56px', base: '52px' }}
+                                align='center'
+                                justify='space-between'
+                                gap={{ lg: '12px', md: '8px', base: '6px' }}
+                            >
+                                <Flex gap={{ lg: '12px', base: '6px' }}>
+                                    <Image ml={{ lg: '24px', base: '12px' }} />
+                                    <Text
+                                        fontFamily='var(--font-family)'
+                                        fontWeight='500'
+                                        fontSize={{ lg: '20px', base: '18px' }}
+                                        lineHeight='140%'
+                                        noOfLines={1}
+                                    >
+                                        {list.title}
+                                    </Text>
+                                </Flex>
+                                <Button
+                                    mr={{ lg: '24px', base: '12px' }}
+                                    maxW={{ lg: '87px', base: '70px' }}
+                                    w='100%'
+                                    h={{ md: '32px', base: '24px' }}
+                                    border='1px solid var(--lime-600)'
+                                    bg='transparent'
+                                    color='var(--lime-600)'
+                                >
+                                    <Text
+                                        fontWeight='600'
+                                        fontSize={{ lg: '14px', base: '12px' }}
+                                        lineHeight='143%'
+                                    >
+                                        Готовить
+                                    </Text>
+                                </Button>
+                            </Flex>
+                        ))}
                 </Flex>
             </Flex>
         </Flex>

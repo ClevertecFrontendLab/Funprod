@@ -4,11 +4,13 @@ import { useLocation } from 'react-router';
 export const useTabIndex = (subCategories?: { category: string }[]) => {
     const location = useLocation();
     const currentPath = location.pathname.split('/').pop();
-    const [tabIndex, setTabIndex] = useState(0);
+    const [tabIndex, setTabIndex] = useState<number | null>(null);
 
     useEffect(() => {
-        const index = subCategories?.findIndex((cat) => cat.category === currentPath);
-        setTabIndex(index === -1 ? 0 : index || 0);
+        if (!subCategories || !currentPath) return;
+
+        const index = subCategories.findIndex((cat) => cat.category === currentPath);
+        setTabIndex(index >= 0 ? index : 0);
     }, [currentPath, subCategories]);
 
     return { tabIndex, setTabIndex };

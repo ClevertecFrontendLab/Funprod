@@ -1,24 +1,26 @@
 import { Alert, AlertIcon, CloseButton, Flex, Text } from '@chakra-ui/react';
 import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { setAppError } from '~/store/app-slice';
+import { setAppError, userErrorSelector } from '~/store/app-slice';
 
 type ErrorNotificationProps = {
-    error: string;
+    title?: string;
+    error?: string;
 };
 
-export const ErrorNotification = ({ error }: ErrorNotificationProps) => {
+export const ErrorNotification = ({ error, title }: ErrorNotificationProps) => {
+    const errorStatus = useSelector(userErrorSelector);
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (error) {
+        if (errorStatus) {
             const timer = setTimeout(() => {
                 dispatch(setAppError(null));
             }, 4000);
             return () => clearTimeout(timer);
         }
-    }, [error, dispatch]);
+    }, [errorStatus, dispatch]);
 
     const handleClose = () => dispatch(setAppError(null));
     return (
@@ -32,15 +34,14 @@ export const ErrorNotification = ({ error }: ErrorNotificationProps) => {
             zIndex='toast'
             width='fit-content'
             w='332px'
-            h='72px'
             bg='#e53e3e'
         >
             <AlertIcon color='#fff' />
             <Flex direction='column'>
-                <Text fontWeight='700' fontSize='16px' color='#fff'>
-                    Ошибка сервера
+                <Text fontWeight='700' fontSize='16px' color='#fff' w='240px'>
+                    {title}
                 </Text>
-                <Text fontWeight='400' fontSize='16px' color='#fff'>
+                <Text fontWeight='400' fontSize='16px' color='#fff' w='240px'>
                     {error}
                 </Text>
             </Flex>

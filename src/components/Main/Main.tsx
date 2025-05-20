@@ -33,7 +33,9 @@ export const Main = () => {
 
     const [isFilterApplied, setIsFilterApplied] = useState<string | boolean>(false);
     const categoryData = useSelector(categoriesSelector);
-    const filterCategory = categoryData?.filter((item) => item.subCategories);
+    const filterCategory = Array.isArray(categoryData)
+        ? categoryData.filter((item) => item.subCategories)
+        : [];
     const [isLoading, setIsLoading] = useState(false);
     useEffect(() => {
         const isApplied =

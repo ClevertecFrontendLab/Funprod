@@ -79,7 +79,9 @@ export const Juiciest = () => {
 
         setIsFilterApplied(!!isApplied);
     }, [excludedIngredients, selectedCategory, selectedMeat, selectedSide, searchQuery]);
-    const dataCategories = categoryData?.filter((item) => item.subCategories);
+    const dataCategories = Array.isArray(categoryData)
+        ? categoryData.filter((item) => item.subCategories)
+        : [];
 
     const handleGetRecipe = (recipeId: string, categoriesIds: string[]) => {
         const { condition, matchedCategory, matchedSubcategory } = checkAndNavigate({

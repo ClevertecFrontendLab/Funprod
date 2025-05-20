@@ -47,10 +47,12 @@ export const NewRecipesSection = ({ categoryData }: NewRecipesSectionProps) => {
         }
     };
 
+    const safeCategoryData = Array.isArray(categoryData) ? categoryData : [];
+
     const handleGetRecipe = (recipeId: string, categoriesIds: string[]) => {
         const { condition, matchedCategory, matchedSubcategory } = checkAndNavigate({
             categoriesIds,
-            categoryData,
+            categoryData: safeCategoryData,
         });
         if (condition) {
             navigate('/error-page');
@@ -61,10 +63,7 @@ export const NewRecipesSection = ({ categoryData }: NewRecipesSectionProps) => {
 
     const fallback = useLocalFallback('cachedRecipeCategory', isError, data);
 
-    const recipesToDisplay = data?.data || fallback?.data || [];
-    const sortedRecipes = [...recipesToDisplay].sort(
-        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-    );
+    const sortedRecipes = data?.data || fallback?.data || [];
 
     return (
         <Flex direction='column' w='100%' maxHeight='550px' mt='32px' position='relative'>

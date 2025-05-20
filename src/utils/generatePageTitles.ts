@@ -7,9 +7,9 @@ export const generatePageTitles = (
     const pageTitles: Record<string, string> = {};
     dataCategories?.forEach((category) => {
         pageTitles[`/${category.category}`] = category.title;
-        const categorySubcategories = dataSubCategories?.filter(
-            (sub) => sub.rootCategoryId === category._id,
-        );
+        const categorySubcategories = Array.isArray(dataSubCategories)
+            ? dataSubCategories.filter((sub) => sub.rootCategoryId === category._id)
+            : [];
         categorySubcategories?.forEach((subcategory) => {
             pageTitles[`/${category.category}/${subcategory.category}`] = `${subcategory.title}`;
         });

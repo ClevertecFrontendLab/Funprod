@@ -12,6 +12,23 @@ const theme = extendTheme({
         heading: 'Inter, sans-serif',
         body: 'Inter, sans-serif',
     },
+    components: {
+        Progress: {
+            // Мы создаем новый кастомный вариант для Progress
+            variants: {
+                custom: {
+                    // Цвет фона (track)
+                    track: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.06)',
+                    },
+                    // Цвет самой полоски прогресса (filledTrack)
+                    filledTrack: {
+                        backgroundColor: '#c4ff61',
+                    },
+                },
+            },
+        },
+    },
 });
 
 export default theme;

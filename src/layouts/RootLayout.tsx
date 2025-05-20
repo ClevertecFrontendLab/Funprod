@@ -22,7 +22,9 @@ export default function RootLayout() {
     const error = useSelector(userErrorSelector);
     const dispatch = useDispatch();
     const categories = useCategories();
-    const filterCategory = categories?.filter((item) => item.subCategories);
+    const filterCategory = Array.isArray(categories)
+        ? categories.filter((item) => item.subCategories)
+        : [];
 
     useEffect(() => {
         if (isDesktop) {
@@ -33,17 +35,16 @@ export default function RootLayout() {
     useEffect(() => {
         const sessionError = sessionStorage.getItem('error');
         if (sessionError) {
-            dispatch(setAppError(sessionError));
+            dispatch(setAppError({ title: 'Ошибка сервера', message: sessionError }));
             sessionStorage.removeItem('error');
         }
     }, [dispatch]);
 
     const randomCategory = useRandomCategory(filterCategory!);
-
     return (
         <Box display='flex' flexDirection='column'>
             {isLoading && <FullPageLoader />}
-            {error && <ErrorNotification error={error} />}
+            {error && <ErrorNotification error={error.message} title={error.title} />}
             <Header openBurger={openBurger} onToggle={onToggle} />
             <Flex>
                 {isDesktop ? (
