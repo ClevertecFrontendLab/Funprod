@@ -15,9 +15,9 @@ export const Breadcrumbs = ({ onClose = () => {} }: Breadcrumbs) => {
     const { data: recipeData } = useGetRecipeByIdQuery({ id: id! });
     const categoryData = useSelector(categoriesSelector);
     const pathnames = location.pathname.split('/').filter(Boolean);
-
+    const data = localStorage.getItem('categories');
     const { breadcrumbItems } = getBreadcrumb({
-        categoryData,
+        categoryData: data ? JSON.parse(data) : categoryData,
         pathnames,
         id,
         recipeData,

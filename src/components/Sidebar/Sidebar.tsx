@@ -16,6 +16,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router';
 
 import { categoriesSelector, setSelectedCategoryId } from '~/store/app-slice';
+import { getCategoriesWithSubcategories } from '~/utils/getCategoriesWithSubcategories';
 import { getFullMediaUrl } from '~/utils/getFullMediaUrl';
 
 import { Breadcrumbs } from '../Header/Breadcrumbs/Breadcrumbs';
@@ -32,8 +33,12 @@ export const Sidebar = ({ openBurger, onClose }: SidebarProps) => {
     const [openIndex, setOpenIndex] = useState<number | null>(null);
     const location = useLocation();
     const currentPath = location.pathname;
-    const categoryData = useSelector(categoriesSelector);
+    const categoryDataRedux = useSelector(categoriesSelector);
+    const localDataString = localStorage.getItem('cachedCategories');
+    const categoryDataLocal = localDataString ? JSON.parse(localDataString) : [];
 
+    const categoryData =
+        categoryDataRedux && categoryDataRedux.length > 0 ? categoryDataRedux : categoryDataLocal;
     const dispatch = useDispatch();
 
     const handleAccordionButton = (index: number) => {
@@ -43,15 +48,15 @@ export const Sidebar = ({ openBurger, onClose }: SidebarProps) => {
     const handleCategoryClick = (categoryId: string) => {
         dispatch(setSelectedCategoryId(categoryId));
     };
-    const sidebarCategory = Array.isArray(categoryData)
-        ? categoryData.filter((item) => item.subCategories)
-        : [];
+    const sidebarCategory = getCategoriesWithSubcategories(categoryData);
+
     return (
         <Flex
             data-test-id='nav'
+            flex='1'
             display={{ base: openBurger ? 'flex' : 'none', md: 'flex' }}
             p={openBurger ? '0' : '14px 4px 0 0'}
-            w={{ md: '256px', base: '344px' }}
+            w={{ md: '256px', base: '0' }}
         >
             <Box
                 borderRadius={{ base: '0 0 12px 12px', md: 'none' }}

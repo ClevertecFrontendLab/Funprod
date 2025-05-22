@@ -7,9 +7,10 @@ import { setAppError, userErrorSelector } from '~/store/app-slice';
 type ErrorNotificationProps = {
     title?: string;
     error?: string;
+    isAuthPage?: boolean;
 };
 
-export const ErrorNotification = ({ error, title }: ErrorNotificationProps) => {
+export const ErrorNotification = ({ error, title, isAuthPage }: ErrorNotificationProps) => {
     const errorStatus = useSelector(userErrorSelector);
     const dispatch = useDispatch();
 
@@ -29,7 +30,7 @@ export const ErrorNotification = ({ error, title }: ErrorNotificationProps) => {
             status='error'
             position='fixed'
             bottom='20px'
-            left='50%'
+            left={isAuthPage ? { md: '25%', base: '50%' } : '50%'}
             transform='translateX(-50%)'
             zIndex='toast'
             width='fit-content'

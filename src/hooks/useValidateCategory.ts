@@ -17,16 +17,14 @@ export const useValidateCategory = ({
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!categoryData || categoryData.length === 0 || !category) return;
-
-        const foundCategory = categoryData.find((cat) => cat.category === category);
+        const foundCategory = categoryData?.find((cat) => cat.category === category);
         const isCategoryValid = Boolean(foundCategory);
 
         const isSubcategoryValid = subcategory
             ? foundCategory?.subCategories?.some((sub) => sub.category === subcategory)
             : true;
 
-        if (!isCategoryValid || !isSubcategoryValid) {
+        if (category && (!isCategoryValid || !isSubcategoryValid)) {
             navigate('/not-found', { replace: true });
         }
     }, [categoryData, category, subcategory, navigate]);

@@ -37,7 +37,7 @@ export const FooterMobile = ({ openBurger }: FooterMobileProps) => (
         position='fixed'
         bottom='0'
         h='84px'
-        w='100%'
+        w={{ lg: '100%', sm: '768px' }}
         bgColor='var(--lime-50)'
     >
         {buttonList.map((item, index) => (

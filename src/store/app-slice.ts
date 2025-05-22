@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+import { authApi } from '~/query/services/auth-api';
 import { Category } from '~/query/services/category-api.type';
 import { recipeApi } from '~/query/services/recipe-api';
 
@@ -66,6 +67,15 @@ export const appSlice = createSlice({
                 state.isLoading = false;
             })
             .addMatcher(recipeApi.endpoints.getRecipesCategory.matchRejected, (state) => {
+                state.isLoading = false;
+            })
+            .addMatcher(authApi.endpoints.login.matchPending, (state) => {
+                state.isLoading = true;
+            })
+            .addMatcher(authApi.endpoints.login.matchFulfilled, (state) => {
+                state.isLoading = false;
+            })
+            .addMatcher(authApi.endpoints.login.matchRejected, (state) => {
                 state.isLoading = false;
             });
     },

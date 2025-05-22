@@ -15,12 +15,8 @@ export function getBreadcrumb({
     id?: string;
     recipeData?: { _id: string; title: string };
 }): { breadcrumbItems?: BreadcrumbItem[]; pageTitles: Record<string, string> } {
-    const dataCategories = Array.isArray(categoryData)
-        ? categoryData.filter((item) => item.subCategories)
-        : [];
-    const dataSubCategories = Array.isArray(categoryData)
-        ? categoryData.filter((item) => !item.subCategories)
-        : [];
+    const dataCategories = categoryData?.filter((item) => item.subCategories);
+    const dataSubCategories = categoryData?.filter((item) => !item.subCategories);
 
     const pageTitles = generatePageTitles(dataCategories, dataSubCategories);
 

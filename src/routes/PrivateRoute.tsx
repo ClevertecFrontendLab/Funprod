@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 
 import { FullPageLoader } from '~/components/FullPageLoader/FullPageLoader';
+import { ROUTES } from '~/constants/routes';
 import { useCheckAuthQuery } from '~/query/services/auth-api';
 
 export function PrivateRoute({ children }: { children: React.ReactNode }) {
@@ -12,7 +13,7 @@ export function PrivateRoute({ children }: { children: React.ReactNode }) {
 
     useEffect(() => {
         if (!token || isError) {
-            navigate('/auth', { replace: true });
+            navigate(ROUTES.AUTH, { replace: true });
         }
     }, [token, isError, navigate]);
 

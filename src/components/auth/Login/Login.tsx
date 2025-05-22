@@ -9,14 +9,22 @@ import {
     Input,
     VStack,
 } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
 
 import { ErrorNotification } from '~/components/ErrorNotification/ErrorNotification';
+import { ROUTES } from '~/constants/routes';
 import { useHealthMutation, useLoginMutation } from '~/query/services/auth-api';
+import { setAppLoader } from '~/store/app-slice';
 
 import { ForgotPassword } from './ForgotPassword/ForgotPassword';
+
+const loginErrorMap: Record<number, { title: string; message: string }> = {
+    401: { title: 'Неверный логин или пароль', message: 'Попробуйте снова' },
+    403: { title: 'E-mail не верифицирован', message: 'Проверьте почту и перейдите по ссылке' },
+};
 
 type FormData = {
     login: string;
@@ -24,11 +32,11 @@ type FormData = {
 };
 
 type LoginProps = {
-    repeatLogin?: boolean;
-    setSuccess?: (value: 'email' | 'reset' | null) => void;
-    onOpen?: () => void;
-    setRepeatLogin?: (value: boolean) => void;
-    setAuthModal?: (value: 'sendEmail' | 'notSuccess' | 'Health') => void;
+    repeatLogin: boolean;
+    setSuccess: (value: 'email' | 'reset' | null) => void;
+    onOpen: () => void;
+    setRepeatLogin: (value: boolean) => void;
+    setAuthModal: (value: 'sendEmail' | 'notSuccess' | 'health') => void;
 };
 
 export const Login = ({
@@ -37,11 +45,12 @@ export const Login = ({
     repeatLogin,
     setRepeatLogin,
     setAuthModal,
-}: LoginProps) => {
+}: Partial<LoginProps>) => {
     const navigate = useNavigate();
     const location = useLocation();
     const [health] = useHealthMutation();
-    const [login, { error, data }] = useLoginMutation();
+    const [login, { error, data, isLoading }] = useLoginMutation();
+    const dispatch = useDispatch();
 
     const {
         handleSubmit,
@@ -52,53 +61,53 @@ export const Login = ({
     const [submittedData, setSubmittedData] = useState<FormData | null>(null);
     const [loginError, setLoginError] = useState<{ title: string; message: string } | null>(null);
 
-    const onSubmit = async (values: FormData) => {
-        const trimmed = {
-            login: values.login.trim(),
-            password: values.password.trim(),
-        };
+    const onSubmit = useCallback(
+        async (values: FormData) => {
+            dispatch(setAppLoader(true));
+            const trimmed = {
+                login: values.login.trim(),
+                password: values.password.trim(),
+            };
 
-        setSubmittedData(trimmed);
-        setRepeatLogin?.(false);
-        const responseHealth = await health({ echo: 'health' });
+            setSubmittedData(trimmed);
+            setRepeatLogin?.(false);
+            const responseHealth = await health({ echo: 'health' });
 
-        if (responseHealth.error) {
-            onOpen?.();
-            return;
-        }
-
-        const responseLogin = await login(trimmed);
-
-        if (responseLogin.data) {
-            navigate('/');
-        }
-    };
+            if (responseHealth.error) {
+                onOpen?.();
+                dispatch(setAppLoader(false));
+                return;
+            }
+            login(trimmed);
+        },
+        [dispatch, health, login, onOpen, setRepeatLogin],
+    );
 
     useEffect(() => {
         if (data) {
+            dispatch(setAppLoader(false));
             navigate('/');
         }
-    }, [data, navigate]);
+    }, [data, dispatch, navigate]);
 
     useEffect(() => {
-        if (error) {
-            if (error && typeof error === 'object' && 'status' in error && error.status === 401) {
-                setLoginError({ title: 'Неверный логин или пароль', message: 'Попробуйте снова' });
-            }
-            if (error && typeof error === 'object' && 'status' in error && error.status === 403) {
-                setLoginError({
-                    title: 'E-mail не верифицирован',
-                    message: 'Проверьте почту и перейдите по ссылке',
-                });
-            }
-            if (error && typeof error === 'object' && 'status' in error && error.status === 500) {
-                setAuthModal?.('Health');
+        if (error && typeof error === 'object' && 'status' in error) {
+            const { status } = error;
+
+            if (status === 500) {
+                setAuthModal?.('health');
                 onOpen?.();
             }
-            const timer = setTimeout(() => {
-                setLoginError(null);
-            }, 5000);
-            return () => clearTimeout(timer);
+
+            const mappedError = loginErrorMap[status as number];
+            if (mappedError) {
+                setLoginError(mappedError);
+
+                const timer = setTimeout(() => {
+                    setLoginError(null);
+                }, 7000);
+                return () => clearTimeout(timer);
+            }
         }
     }, [error, onOpen, setAuthModal]);
 
@@ -108,15 +117,21 @@ export const Login = ({
         }
     }, [onSubmit, repeatLogin, submittedData]);
 
+    useEffect(() => {
+        if (isLoading) {
+            dispatch(setAppLoader(true));
+        }
+    }, [dispatch, isLoading]);
+
     return (
         <>
             {loginError && (
-                <ErrorNotification error={loginError.message} title={loginError.title} />
+                <ErrorNotification error={loginError.message} title={loginError.title} isAuthPage />
             )}
             <Flex direction='column' h='468px' align='center'>
                 <form
                     onSubmit={handleSubmit(onSubmit)}
-                    data-test-id={location.pathname !== '/auth/registration' ? 'sign-in-form' : ''}
+                    data-test-id={location.pathname !== ROUTES.REGISTRATION ? 'sign-in-form' : ''}
                 >
                     <VStack w={{ md: '461px', sm: '355px', base: '328px' }}>
                         <FormControl isInvalid={!!errors.login}>
@@ -129,7 +144,9 @@ export const Login = ({
                                 Логин для входа на сайт
                             </FormLabel>
                             <Input
-                                data-test-id={location.pathname === '/auth' ? 'login-input' : ''}
+                                data-test-id={
+                                    location.pathname === ROUTES.AUTH ? 'login-input' : ''
+                                }
                                 id='login'
                                 placeholder='Введите логин'
                                 {...register('login', {
@@ -173,7 +190,7 @@ export const Login = ({
                             </FormLabel>
                             <Input
                                 data-test-id={
-                                    location.pathname !== '/auth/registration'
+                                    location.pathname !== ROUTES.REGISTRATION
                                         ? 'password-input'
                                         : ''
                                 }
@@ -193,7 +210,7 @@ export const Login = ({
                                 })}
                                 border={error ? '2px solid #e53e3e' : '1px solid #d7ff94'}
                                 borderRadius='6px'
-                                p='0 16px'
+                                p='0 50px 0 16px'
                                 w='100%'
                                 h='48px'
                                 bg='#fff'
@@ -224,7 +241,7 @@ export const Login = ({
                                 onMouseLeave={() => setShowPassword(false)}
                                 variant='link'
                                 position='absolute'
-                                right='14px'
+                                right='10px'
                                 top='38px'
                                 transform='translateY(50%)'
                                 zIndex='1'
@@ -233,7 +250,7 @@ export const Login = ({
                         </FormControl>
                         <Button
                             data-test-id={
-                                location.pathname !== '/auth/registration' ? 'submit-button' : ''
+                                location.pathname !== ROUTES.REGISTRATION ? 'submit-button' : ''
                             }
                             mt={112}
                             colorScheme='teal'

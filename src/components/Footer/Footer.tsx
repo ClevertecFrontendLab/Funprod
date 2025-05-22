@@ -28,12 +28,13 @@ export const Footer = ({ footerData }: FooterProps) => {
     return (
         <Flex
             direction='column'
-            maxWidth='1360px'
-            w='100%'
-            mt='40px'
+            maxWidth='1340px'
+            w={{ lg: '100%', sm: '728px' }}
+            mt={{ md: '40px', base: '0' }}
             gap='24px'
             borderTop='1px solid rgba(0, 0, 0, 0.08)'
             ml='24px'
+            mb={{ md: '0', base: '94px' }}
         >
             <Flex
                 justify='space-between'

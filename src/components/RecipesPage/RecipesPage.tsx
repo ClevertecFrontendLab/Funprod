@@ -18,6 +18,7 @@ import { Link } from 'react-router';
 
 import { useGetRecipeByIdQuery } from '~/query/services/recipe-api';
 import { categoriesSelector } from '~/store/app-slice';
+import { getCategoriesWithSubcategories } from '~/utils/getCategoriesWithSubcategories';
 import { getFullMediaUrl } from '~/utils/getFullMediaUrl';
 
 import { NewRecipesSection } from '../Main/NewRecipesSection/NewRecipesSection';
@@ -33,11 +34,14 @@ export const RecipePage = () => {
     const { data, error, isError, isLoading } = useGetRecipeByIdQuery({ id: id! });
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const categoryData = useSelector(categoriesSelector);
+    const categoryDataRedux = useSelector(categoriesSelector);
+    const localDataString = localStorage.getItem('cachedCategory');
+    const categoryDataLocal = localDataString ? JSON.parse(localDataString) : [];
 
-    const categoryFilter = Array.isArray(categoryData)
-        ? categoryData.filter((item) => item.subCategories)
-        : [];
+    const categoryData =
+        categoryDataRedux && categoryDataRedux.length > 0 ? categoryDataRedux : categoryDataLocal;
+
+    const categoryFilter = getCategoriesWithSubcategories(categoryData);
 
     const [servings, setServings] = useState(data?.portions || 1);
 
@@ -81,8 +85,8 @@ export const RecipePage = () => {
                     maxW={{
                         base: '328px',
                         sm: '728px',
-                        md: '880px',
-                        lg: '1360px',
+                        md: '860px',
+                        lg: '1340px',
                     }}
                     w='100%'
                     direction='column'

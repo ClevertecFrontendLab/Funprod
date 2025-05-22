@@ -92,8 +92,8 @@ export const JuiciestSection = ({ categoryData }: JuiciestSectionProps) => {
                             border='1px solid rgba(0, 0, 0, 0.08)'
                             maxWidth=''
                             maxW={{
-                                lg: '668px',
-                                md: '880px',
+                                lg: '648px',
+                                md: '860px',
                                 sm: 'calc(50% - 12px)',
                                 base: '328px',
                             }}

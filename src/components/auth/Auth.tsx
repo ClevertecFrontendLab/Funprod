@@ -18,6 +18,7 @@ import { useLocation, useNavigate } from 'react-router';
 
 import Rectangle from '~/assets/auth/Rectangle.jpg';
 import logo from '~/assets/header/logo.svg';
+import { ROUTES } from '~/constants/routes';
 import { ApplicationState } from '~/store/configure-store';
 
 import { FullPageLoader } from '../FullPageLoader/FullPageLoader';
@@ -32,7 +33,7 @@ export const Auth = () => {
     const isLoading = useSelector((state: ApplicationState) => state.app.isLoading);
     const emailVerified = queryParams.get('emailVerified');
     const [success, setSuccess] = useState<'email' | 'reset' | null>(null);
-    const [authModal, setAuthModal] = useState<'sendEmail' | 'notSuccess' | 'Health'>('sendEmail');
+    const [authModal, setAuthModal] = useState<'sendEmail' | 'notSuccess' | 'health'>('sendEmail');
     const [tabIndex, setTabIndex] = useState(0);
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [repeatLogin, setRepeatLogin] = useState<boolean>(false);
@@ -44,7 +45,7 @@ export const Auth = () => {
         }
 
         if (emailVerified === 'false') {
-            navigate('/auth/registration');
+            navigate(ROUTES.REGISTRATION);
             setAuthModal('notSuccess');
             onOpen();
         }
@@ -58,18 +59,21 @@ export const Auth = () => {
     }, [success]);
 
     useEffect(() => {
-        if (location.pathname === '/auth') {
+        if (location.pathname === ROUTES.AUTH) {
             setTabIndex(0);
-        } else if (location.pathname === '/auth/registration') {
+        } else if (location.pathname === ROUTES.REGISTRATION) {
             setTabIndex(1);
         }
     }, [location.pathname]);
 
     const handleTabsChange = (index: number) => {
         setTabIndex(index);
-        if (index === 0) navigate('/auth');
-        else if (index === 1) navigate('/auth/registration');
+        if (index === 0) navigate(ROUTES.AUTH);
+        else if (index === 1) navigate(ROUTES.REGISTRATION);
     };
+
+    const successText =
+        success === 'email' ? 'Верификация прошла успешно' : 'Восстановление данных успешно';
     return (
         <Flex w='100%' h='100vh'>
             {isLoading && <FullPageLoader />}
@@ -86,12 +90,12 @@ export const Auth = () => {
                     align='center'
                     justify='center'
                     direction='column'
+                    position='relative'
                 >
                     <Image
                         src={logo}
                         w={{ md: '270px', base: '158px' }}
                         h={{ md: '64px', base: '38px' }}
-                        mt='72px'
                     />
                     <Tabs
                         index={tabIndex}
@@ -163,9 +167,7 @@ export const Auth = () => {
                                     color='#fff'
                                     w={{ md: '332px', base: '240px' }}
                                 >
-                                    {success === 'email'
-                                        ? 'Верификация прошла успешно'
-                                        : 'Восстановление данных успешно'}
+                                    {successText}
                                 </Text>
                                 <CloseButton
                                     data-test-id='close-alert-button'
@@ -187,9 +189,31 @@ export const Auth = () => {
                         authModal={authModal}
                         setRepeatLogin={setRepeatLogin}
                     />
+                    <Text
+                        fontWeight='600'
+                        fontSize='12px'
+                        lineHeight='133%'
+                        color='#000'
+                        position='absolute'
+                        bottom={{ md: '30px', base: '20px' }}
+                        left={{ md: '30px', base: '20px' }}
+                    >
+                        Все права защищены, ученический файл, ©Клевер Технолоджи, 2025
+                    </Text>
                 </Flex>
-                <Flex w='100%' display={{ base: 'none', md: 'flex' }}>
+                <Flex w='100%' display={{ base: 'none', md: 'flex' }} position='relative'>
                     <Image w='100%' src={Rectangle} />
+                    <Text
+                        fontWeight='600'
+                        fontSize='12px'
+                        lineHeight='133%'
+                        color='#000'
+                        position='absolute'
+                        bottom='30px'
+                        right='30px'
+                    >
+                        - Лучший сервис для ваших кулинарных побед
+                    </Text>
                 </Flex>
             </Flex>
         </Flex>

@@ -1,6 +1,7 @@
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import {
     Button,
+    Flex,
     FormControl,
     FormErrorMessage,
     FormHelperText,
@@ -16,8 +17,17 @@ import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router';
 
 import { ErrorNotification } from '~/components/ErrorNotification/ErrorNotification';
+import { ROUTES } from '~/constants/routes';
 import { useSignUpMutation } from '~/query/services/auth-api';
 import { isFetchBaseQueryErrorWithMessage } from '~/utils/isFetchBaseQueryError';
+
+const registrationErrorMap: Record<number, { title: string; message: string } | 'custom'> = {
+    400: 'custom',
+    500: {
+        title: 'Ошибка сервера',
+        message: 'Попробуйте немного позже',
+    },
+};
 
 export type FormData = {
     firstName: string;
@@ -67,7 +77,7 @@ export const Registration = ({ onOpen, setFormData, formData }: RegistrationProp
         const response = await signUp(finalData);
         if (response.data) {
             onOpen?.();
-            navigate('/auth', { replace: true });
+            navigate(ROUTES.AUTH, { replace: true });
         }
     };
 
@@ -89,451 +99,465 @@ export const Registration = ({ onOpen, setFormData, formData }: RegistrationProp
         };
 
     useEffect(() => {
-        if (error) {
-            if (error && typeof error === 'object' && 'status' in error && error.status === 400) {
+        if (error && typeof error === 'object' && 'status' in error) {
+            const mapped = registrationErrorMap[error.status as number];
+
+            if (mapped === 'custom') {
                 if (isFetchBaseQueryErrorWithMessage(error)) {
                     setRegistrationError({
                         title: '',
                         message: error.data.message,
                     });
                 }
-            }
-            if (error && typeof error === 'object' && 'status' in error && error.status === 500) {
-                setRegistrationError({
-                    title: 'Ошибка сервера',
-                    message: 'Попробуйте немного позже',
-                });
+            } else if (mapped) {
+                setRegistrationError(mapped);
             }
         }
-    }, [error, onOpen]);
+    }, [error]);
 
     return (
-        <form
-            onSubmit={handleSubmit(step === 1 ? handleNextStep : handleFinalSubmit)}
-            data-test-id='sign-up-form'
-        >
-            {registrationError && (
-                <ErrorNotification
-                    error={registrationError.message}
-                    title={registrationError.title}
-                />
-            )}
-            <VStack w={{ md: '461px', sm: '355px', base: '328px' }}>
-                <Text>{step === 1 ? 'Шаг 1. Личная информация' : 'Шаг 2. Логин и пароль'}</Text>
-                <Progress
-                    data-test-id='sign-up-progress'
-                    variant='custom'
-                    value={progress}
-                    w='100%'
-                    h='8px'
-                    hasStripe
-                />
-                {step === 1 && (
-                    <>
-                        <FormControl isInvalid={!!errors.firstName}>
-                            <FormLabel
-                                htmlFor='firstName'
-                                fontWeight='400'
-                                fontSize='16px'
-                                lineHeight='150%'
-                            >
-                                Ваше имя
-                            </FormLabel>
-                            <Input
-                                data-test-id='first-name-input'
-                                id='firstName'
-                                placeholder='Имя'
-                                {...register('firstName', {
-                                    required: 'Введите имя',
-                                    pattern: {
-                                        value: /^[А-ЯЁ][А-Яа-яёЁA-Za-z -]*$/,
-                                        message: 'Должно начинаться с кириллицы А-Я',
-                                    },
-                                    validate: {
-                                        startsWithCyrillic: (value) =>
-                                            /^[А-ЯЁ][А-Яа-яёЁ-]*$/.test(value) ||
-                                            'Только кириллица А-Я, и "-"',
-                                    },
-                                    maxLength: {
-                                        value: 50,
-                                        message: 'Максимальная длина 50 символов',
-                                    },
-                                })}
-                                value={watch('firstName')}
-                                onChange={handleFieldChange('firstName', 17)}
-                                onBlur={(e) => {
-                                    const trimmed = e.target.value.trim();
-                                    setValue('firstName', trimmed, {
-                                        shouldValidate: true,
-                                        shouldDirty: true,
-                                    });
-                                }}
-                                border='1px solid #d7ff94'
-                                borderRadius='6px'
-                                p='0 16px'
-                                w='100%'
-                                h='48px'
-                                bg='#fff'
-                                fontWeight='400'
-                                fontSize='18px'
-                                color='#134b00'
-                                _placeholder={{
-                                    fontWeight: '400',
-                                    fontSize: '18px',
-                                    color: '#134b00',
-                                }}
-                            />
-                            <FormErrorMessage>
-                                {errors.firstName && errors.firstName.message}
-                            </FormErrorMessage>
-                        </FormControl>
-                        <FormControl isInvalid={!!errors.lastName} mt='20px'>
-                            <FormLabel
-                                htmlFor='lastName'
-                                fontWeight='400'
-                                fontSize='16px'
-                                lineHeight='150%'
-                            >
-                                Ваша фамилия
-                            </FormLabel>
-                            <Input
-                                data-test-id='last-name-input'
-                                id='lastName'
-                                placeholder='Фамилия'
-                                value={watch('lastName')}
-                                {...register('lastName', {
-                                    required: 'Введите фамилию',
-                                    pattern: {
-                                        value: /^[А-ЯЁ][А-Яа-яёЁA-Za-z -]*$/,
-                                        message: 'Должно начинаться с кириллицы А-Я',
-                                    },
-                                    validate: {
-                                        startsWithCyrillic: (value) =>
-                                            /^[А-ЯЁ][А-Яа-яёЁ-]*$/.test(value) ||
-                                            'Только кириллица А-Я, и "-"',
-                                    },
-                                    maxLength: {
-                                        value: 50,
-                                        message: 'Максимальная длина 50 символов',
-                                    },
-                                })}
-                                onChange={handleFieldChange('lastName', 35)}
-                                onBlur={(e) => {
-                                    const trimmed = e.target.value.trim();
-                                    setValue('lastName', trimmed, {
-                                        shouldValidate: true,
-                                        shouldDirty: true,
-                                    });
-                                }}
-                                border='1px solid #d7ff94'
-                                borderRadius='6px'
-                                p='0 16px'
-                                w='100%'
-                                h='48px'
-                                bg='#fff'
-                                fontWeight='400'
-                                fontSize='18px'
-                                color='#134b00'
-                                _placeholder={{
-                                    fontWeight: '400',
-                                    fontSize: '18px',
-                                    color: '#134b00',
-                                }}
-                            />
-                            <FormErrorMessage>
-                                {errors.lastName && errors.lastName.message}
-                            </FormErrorMessage>
-                        </FormControl>
-                        <FormControl isInvalid={!!errors.email} mt='20px'>
-                            <FormLabel
-                                htmlFor='email'
-                                fontWeight='400'
-                                fontSize='16px'
-                                lineHeight='150%'
-                            >
-                                Ваш e-mail
-                            </FormLabel>
-                            <Input
+        <Flex direction='column' h='468px' align='center'>
+            <form
+                onSubmit={handleSubmit(step === 1 ? handleNextStep : handleFinalSubmit)}
+                data-test-id='sign-up-form'
+            >
+                {registrationError && (
+                    <ErrorNotification
+                        error={registrationError.message}
+                        title={registrationError.title}
+                        isAuthPage
+                    />
+                )}
+                <VStack w={{ md: '461px', sm: '355px', base: '328px' }}>
+                    <Text>{step === 1 ? 'Шаг 1. Личная информация' : 'Шаг 2. Логин и пароль'}</Text>
+                    <Progress
+                        data-test-id='sign-up-progress'
+                        variant='custom'
+                        value={progress}
+                        w='100%'
+                        h='8px'
+                        hasStripe
+                    />
+                    {step === 1 && (
+                        <>
+                            <FormControl isInvalid={!!errors.firstName}>
+                                <FormLabel
+                                    htmlFor='firstName'
+                                    fontWeight='400'
+                                    fontSize='16px'
+                                    lineHeight='150%'
+                                >
+                                    Ваше имя
+                                </FormLabel>
+                                <Input
+                                    data-test-id='first-name-input'
+                                    id='firstName'
+                                    placeholder='Имя'
+                                    {...register('firstName', {
+                                        required: 'Введите имя',
+                                        pattern: {
+                                            value: /^[А-ЯЁ][А-Яа-яёЁA-Za-z -]*$/,
+                                            message: 'Должно начинаться с кириллицы А-Я',
+                                        },
+                                        validate: {
+                                            startsWithCyrillic: (value) =>
+                                                /^[А-ЯЁ][А-Яа-яёЁ-]*$/.test(value) ||
+                                                'Только кириллица А-Я, и "-"',
+                                        },
+                                        maxLength: {
+                                            value: 50,
+                                            message: 'Максимальная длина 50 символов',
+                                        },
+                                    })}
+                                    value={watch('firstName')}
+                                    onChange={handleFieldChange('firstName', 17)}
+                                    onBlur={(e) => {
+                                        const trimmed = e.target.value.trim();
+                                        setValue('firstName', trimmed, {
+                                            shouldValidate: true,
+                                            shouldDirty: true,
+                                        });
+                                    }}
+                                    border='1px solid #d7ff94'
+                                    borderRadius='6px'
+                                    p='0 16px'
+                                    w='100%'
+                                    h='48px'
+                                    bg='#fff'
+                                    fontWeight='400'
+                                    fontSize='18px'
+                                    color='#134b00'
+                                    _placeholder={{
+                                        fontWeight: '400',
+                                        fontSize: '18px',
+                                        color: '#134b00',
+                                    }}
+                                />
+                                <FormErrorMessage>
+                                    {errors.firstName && errors.firstName.message}
+                                </FormErrorMessage>
+                            </FormControl>
+                            <FormControl isInvalid={!!errors.lastName} mt='20px'>
+                                <FormLabel
+                                    htmlFor='lastName'
+                                    fontWeight='400'
+                                    fontSize='16px'
+                                    lineHeight='150%'
+                                >
+                                    Ваша фамилия
+                                </FormLabel>
+                                <Input
+                                    data-test-id='last-name-input'
+                                    id='lastName'
+                                    placeholder='Фамилия'
+                                    value={watch('lastName')}
+                                    {...register('lastName', {
+                                        required: 'Введите фамилию',
+                                        pattern: {
+                                            value: /^[А-ЯЁ][А-Яа-яёЁA-Za-z -]*$/,
+                                            message: 'Должно начинаться с кириллицы А-Я',
+                                        },
+                                        validate: {
+                                            startsWithCyrillic: (value) =>
+                                                /^[А-ЯЁ][А-Яа-яёЁ-]*$/.test(value) ||
+                                                'Только кириллица А-Я, и "-"',
+                                        },
+                                        maxLength: {
+                                            value: 50,
+                                            message: 'Максимальная длина 50 символов',
+                                        },
+                                    })}
+                                    onChange={handleFieldChange('lastName', 35)}
+                                    onBlur={(e) => {
+                                        const trimmed = e.target.value.trim();
+                                        setValue('lastName', trimmed, {
+                                            shouldValidate: true,
+                                            shouldDirty: true,
+                                        });
+                                    }}
+                                    border='1px solid #d7ff94'
+                                    borderRadius='6px'
+                                    p='0 16px'
+                                    w='100%'
+                                    h='48px'
+                                    bg='#fff'
+                                    fontWeight='400'
+                                    fontSize='18px'
+                                    color='#134b00'
+                                    _placeholder={{
+                                        fontWeight: '400',
+                                        fontSize: '18px',
+                                        color: '#134b00',
+                                    }}
+                                />
+                                <FormErrorMessage>
+                                    {errors.lastName && errors.lastName.message}
+                                </FormErrorMessage>
+                            </FormControl>
+                            <FormControl isInvalid={!!errors.email} mt='20px'>
+                                <FormLabel
+                                    htmlFor='email'
+                                    fontWeight='400'
+                                    fontSize='16px'
+                                    lineHeight='150%'
+                                >
+                                    Ваш e-mail
+                                </FormLabel>
+                                <Input
+                                    data-test-id={
+                                        location.pathname === ROUTES.REGISTRATION
+                                            ? 'email-input'
+                                            : ''
+                                    }
+                                    id='email'
+                                    placeholder='e-mail'
+                                    {...register('email', {
+                                        required: 'Введите e-mail',
+                                        maxLength: {
+                                            value: 50,
+                                            message: 'Максимальная длина 50 символов',
+                                        },
+                                        pattern: {
+                                            value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                                            message: 'Введите корректный e-mail',
+                                        },
+                                    })}
+                                    onChange={handleFieldChange('email', 50)}
+                                    onBlur={(e) => {
+                                        const trimmed = e.target.value.trim();
+                                        setValue('email', trimmed, {
+                                            shouldValidate: true,
+                                            shouldDirty: true,
+                                        });
+                                    }}
+                                    border='1px solid #d7ff94'
+                                    borderRadius='6px'
+                                    p='0 16px'
+                                    w='100%'
+                                    h='48px'
+                                    bg='#fff'
+                                    fontWeight='400'
+                                    fontSize='18px'
+                                    color='#134b00'
+                                    _placeholder={{
+                                        fontWeight: '400',
+                                        fontSize: '18px',
+                                        color: '#134b00',
+                                    }}
+                                />
+                                <FormErrorMessage>
+                                    {errors.email && errors.email.message}
+                                </FormErrorMessage>
+                            </FormControl>
+                            <Button
                                 data-test-id={
-                                    location.pathname === '/auth/registration' ? 'email-input' : ''
+                                    location.pathname === ROUTES.REGISTRATION ? 'submit-button' : ''
                                 }
-                                id='email'
-                                placeholder='e-mail'
-                                {...register('email', {
-                                    required: 'Введите e-mail',
-                                    maxLength: {
-                                        value: 50,
-                                        message: 'Максимальная длина 50 символов',
-                                    },
-                                    pattern: {
-                                        value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                                        message: 'Введите корректный e-mail',
-                                    },
-                                })}
-                                onChange={handleFieldChange('email', 50)}
-                                onBlur={(e) => {
-                                    const trimmed = e.target.value.trim();
-                                    setValue('email', trimmed, {
-                                        shouldValidate: true,
-                                        shouldDirty: true,
-                                    });
-                                }}
-                                border='1px solid #d7ff94'
-                                borderRadius='6px'
-                                p='0 16px'
+                                mt='20px'
+                                type='submit'
+                                colorScheme='teal'
                                 w='100%'
                                 h='48px'
-                                bg='#fff'
-                                fontWeight='400'
-                                fontSize='18px'
-                                color='#134b00'
-                                _placeholder={{
-                                    fontWeight: '400',
-                                    fontSize: '18px',
-                                    color: '#134b00',
-                                }}
-                            />
-                            <FormErrorMessage>
-                                {errors.email && errors.email.message}
-                            </FormErrorMessage>
-                        </FormControl>
-                        <Button
-                            data-test-id={
-                                location.pathname === '/auth/registration' ? 'submit-button' : ''
-                            }
-                            mt='20px'
-                            type='submit'
-                            colorScheme='teal'
-                            w='100%'
-                            h='48px'
-                            border='1px solid rgba(0, 0, 0, 0.08)'
-                            borderRadius='6px'
-                            bg='rgba(0, 0, 0, 0.92)'
-                            _hover={{
-                                bg: 'rgba(0, 0, 0, 0.7)',
-                            }}
-                        >
-                            Дальше
-                        </Button>
-                    </>
-                )}
-                {step === 2 && (
-                    <>
-                        <FormControl isInvalid={!!errors.login}>
-                            <FormLabel
-                                htmlFor='login-input'
-                                fontWeight='400'
-                                fontSize='16px'
-                                lineHeight='150%'
-                            >
-                                Логин для входа на сайт
-                            </FormLabel>
-                            <Input
-                                data-test-id='login-input'
-                                id='login-input'
-                                placeholder='Логин'
-                                {...register('login', {
-                                    required: 'Введите логин',
-                                    minLength: { value: 5, message: 'Не соответствует формату' },
-                                    maxLength: {
-                                        value: 50,
-                                        message: 'Максимальная длина 50 символов',
-                                    },
-                                    pattern: {
-                                        value: /^[a-zA-Z0-9!@#$&_+\-.]+$/,
-                                        message: 'Не соответствует формату',
-                                    },
-                                })}
-                                onChange={handleFieldChange('login', 67)}
-                                onBlur={(e) => {
-                                    const trimmed = e.target.value.trim();
-                                    setValue('login', trimmed, {
-                                        shouldValidate: true,
-                                        shouldDirty: true,
-                                    });
-                                }}
-                                border='1px solid #d7ff94'
+                                border='1px solid rgba(0, 0, 0, 0.08)'
                                 borderRadius='6px'
-                                p='0 16px'
+                                bg='rgba(0, 0, 0, 0.92)'
+                                _hover={{
+                                    bg: 'rgba(0, 0, 0, 0.7)',
+                                }}
+                            >
+                                Дальше
+                            </Button>
+                        </>
+                    )}
+                    {step === 2 && (
+                        <>
+                            <FormControl isInvalid={!!errors.login}>
+                                <FormLabel
+                                    htmlFor='login-input'
+                                    fontWeight='400'
+                                    fontSize='16px'
+                                    lineHeight='150%'
+                                >
+                                    Логин для входа на сайт
+                                </FormLabel>
+                                <Input
+                                    data-test-id='login-input'
+                                    id='login-input'
+                                    placeholder='Логин'
+                                    {...register('login', {
+                                        required: 'Введите логин',
+                                        minLength: {
+                                            value: 5,
+                                            message: 'Не соответствует формату',
+                                        },
+                                        maxLength: {
+                                            value: 50,
+                                            message: 'Максимальная длина 50 символов',
+                                        },
+                                        pattern: {
+                                            value: /^[a-zA-Z0-9!@#$&_+\-.]+$/,
+                                            message: 'Не соответствует формату',
+                                        },
+                                    })}
+                                    onChange={handleFieldChange('login', 67)}
+                                    onBlur={(e) => {
+                                        const trimmed = e.target.value.trim();
+                                        setValue('login', trimmed, {
+                                            shouldValidate: true,
+                                            shouldDirty: true,
+                                        });
+                                    }}
+                                    border='1px solid #d7ff94'
+                                    borderRadius='6px'
+                                    p='0 16px'
+                                    w='100%'
+                                    h='48px'
+                                    bg='#fff'
+                                    fontWeight='400'
+                                    fontSize='18px'
+                                    color='#134b00'
+                                    _placeholder={{
+                                        fontWeight: '400',
+                                        fontSize: '18px',
+                                        color: '#134b00',
+                                    }}
+                                />
+                                <FormHelperText
+                                    color='rgba(0, 0, 0, 0.64)'
+                                    fontSize='12px'
+                                    fontWeight='400'
+                                    lineHeight='133%'
+                                >
+                                    Логин не менее 5 символов, только латиница и !@#$&_+-.
+                                </FormHelperText>
+                                <FormErrorMessage mt='0'>
+                                    {errors.login && errors.login.message}
+                                </FormErrorMessage>
+                            </FormControl>
+                            <FormControl
+                                isInvalid={!!errors.password}
+                                mt={errors?.login?.message ? '0' : '20px'}
+                            >
+                                <FormLabel
+                                    htmlFor='password'
+                                    fontWeight='400'
+                                    fontSize='16px'
+                                    lineHeight='150%'
+                                >
+                                    Пароль
+                                </FormLabel>
+                                <Input
+                                    data-test-id='password-input'
+                                    id='password'
+                                    placeholder='Пароль для сайта'
+                                    type={showPassword ? 'text' : 'password'}
+                                    {...register('password', {
+                                        required: 'Введите пароль',
+                                        minLength: {
+                                            value: 8,
+                                            message: 'Не соответствует формату',
+                                        },
+                                        maxLength: {
+                                            value: 50,
+                                            message: 'Максимальная длина 50 символов',
+                                        },
+                                        pattern: {
+                                            value: /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d!@#$&_+\-.]{8,50}$/,
+                                            message: 'Не соответствует формату',
+                                        },
+                                    })}
+                                    onChange={handleFieldChange('password', 85)}
+                                    border='1px solid #d7ff94'
+                                    borderRadius='6px'
+                                    p='0 50px 0 16px'
+                                    w='100%'
+                                    h='48px'
+                                    bg='#fff'
+                                    fontWeight='400'
+                                    fontSize='18px'
+                                    color='#134b00'
+                                    _placeholder={{
+                                        fontWeight: '400',
+                                        fontSize: '18px',
+                                        color: '#134b00',
+                                    }}
+                                />
+                                <FormHelperText
+                                    color='rgba(0, 0, 0, 0.64)'
+                                    fontSize='12px'
+                                    fontWeight='400'
+                                    lineHeight='133%'
+                                >
+                                    Пароль не менее 8 символов, с заглавной буквой и цифрой
+                                </FormHelperText>
+                                <FormErrorMessage mt='0'>
+                                    {errors.password && errors.password.message}
+                                </FormErrorMessage>
+                                <IconButton
+                                    aria-label={showPassword ? 'Скрыть пароль' : 'Показать пароль'}
+                                    icon={
+                                        showPassword ? (
+                                            <ViewIcon w='18px' h='18px' />
+                                        ) : (
+                                            <ViewOffIcon w='18px' h='18px' />
+                                        )
+                                    }
+                                    onMouseDown={() => setShowPassword(true)}
+                                    onMouseUp={() => setShowPassword(false)}
+                                    onMouseLeave={() => setShowPassword(false)}
+                                    variant='link'
+                                    position='absolute'
+                                    right='10px'
+                                    top='38px'
+                                    transform='translateY(50%)'
+                                    zIndex='1'
+                                    color='#000'
+                                />
+                            </FormControl>
+                            <FormControl
+                                isInvalid={!!errors.confirmPassword}
+                                mt={errors?.password?.message ? '0' : '20px'}
+                            >
+                                <FormLabel
+                                    htmlFor='confirmPassword'
+                                    fontWeight='400'
+                                    fontSize='16px'
+                                    lineHeight='150%'
+                                >
+                                    Повторите пароль
+                                </FormLabel>
+                                <Input
+                                    data-test-id='confirm-password-input'
+                                    id='confirmPassword'
+                                    placeholder='Повторите пароль'
+                                    type={showConfirmPassword ? 'text' : 'password'}
+                                    {...register('confirmPassword', {
+                                        required: 'Повторите пароль',
+                                        validate: (value) =>
+                                            value === watch('password') ||
+                                            'Пароли должны совпадать',
+                                    })}
+                                    onChange={handleFieldChange('confirmPassword', 100)}
+                                    border='1px solid #d7ff94'
+                                    borderRadius='6px'
+                                    p='0 50px 0 16px'
+                                    w='100%'
+                                    h='48px'
+                                    bg='#fff'
+                                    fontWeight='400'
+                                    fontSize='18px'
+                                    color='#134b00'
+                                    _placeholder={{
+                                        fontWeight: '400',
+                                        fontSize: '18px',
+                                        color: '#134b00',
+                                    }}
+                                />
+                                <FormErrorMessage mt='0'>
+                                    {errors.confirmPassword && errors.confirmPassword.message}
+                                </FormErrorMessage>
+                                <IconButton
+                                    aria-label={showPassword ? 'Скрыть пароль' : 'Показать пароль'}
+                                    icon={
+                                        showPassword ? (
+                                            <ViewIcon w='18px' h='18px' />
+                                        ) : (
+                                            <ViewOffIcon w='18px' h='18px' />
+                                        )
+                                    }
+                                    onMouseDown={() => setShowConfirmPassword(true)}
+                                    onMouseUp={() => setShowConfirmPassword(false)}
+                                    onMouseLeave={() => setShowConfirmPassword(false)}
+                                    variant='link'
+                                    position='absolute'
+                                    right='10px'
+                                    top='38px'
+                                    transform='translateY(50%)'
+                                    zIndex='1'
+                                    color='#000'
+                                />
+                            </FormControl>
+                            <Button
+                                data-test-id='submit-button'
+                                colorScheme='teal'
+                                isLoading={isSubmitting}
+                                type='submit'
                                 w='100%'
                                 h='48px'
-                                bg='#fff'
-                                fontWeight='400'
-                                fontSize='18px'
-                                color='#134b00'
-                                _placeholder={{
-                                    fontWeight: '400',
-                                    fontSize: '18px',
-                                    color: '#134b00',
-                                }}
-                            />
-                            <FormHelperText
-                                color='rgba(0, 0, 0, 0.64)'
-                                fontSize='12px'
-                                fontWeight='400'
-                                lineHeight='133%'
-                            >
-                                Логин не менее 5 символов, только латиница и !@#$&_+-.
-                            </FormHelperText>
-                            <FormErrorMessage>
-                                {errors.login && errors.login.message}
-                            </FormErrorMessage>
-                        </FormControl>
-                        <FormControl isInvalid={!!errors.password} mt='20px'>
-                            <FormLabel
-                                htmlFor='password'
-                                fontWeight='400'
-                                fontSize='16px'
-                                lineHeight='150%'
-                            >
-                                Пароль
-                            </FormLabel>
-                            <Input
-                                data-test-id='password-input'
-                                id='password'
-                                placeholder='Пароль для сайта'
-                                type={showPassword ? 'text' : 'password'}
-                                {...register('password', {
-                                    required: 'Введите пароль',
-                                    minLength: { value: 8, message: 'Не соответствует формату' },
-                                    maxLength: {
-                                        value: 50,
-                                        message: 'Максимальная длина 50 символов',
-                                    },
-                                    pattern: {
-                                        value: /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d!@#$&_+\-.]{8,50}$/,
-                                        message: 'Не соответствует формату',
-                                    },
-                                })}
-                                onChange={handleFieldChange('password', 85)}
-                                border='1px solid #d7ff94'
+                                mt={errors?.confirmPassword?.message ? '0' : '20px'}
+                                border='1px solid rgba(0, 0, 0, 0.08)'
                                 borderRadius='6px'
-                                p='0 16px'
-                                w='100%'
-                                h='48px'
-                                bg='#fff'
-                                fontWeight='400'
-                                fontSize='18px'
-                                color='#134b00'
-                                _placeholder={{
-                                    fontWeight: '400',
-                                    fontSize: '18px',
-                                    color: '#134b00',
+                                bg='rgba(0, 0, 0, 0.92)'
+                                _hover={{
+                                    bg: 'rgba(0, 0, 0, 0.7)',
                                 }}
-                            />
-                            <FormHelperText
-                                color='rgba(0, 0, 0, 0.64)'
-                                fontSize='12px'
-                                fontWeight='400'
-                                lineHeight='133%'
                             >
-                                Пароль не менее 8 символов, с заглавной буквой и цифрой
-                            </FormHelperText>
-
-                            <FormErrorMessage>
-                                {errors.password && errors.password.message}
-                            </FormErrorMessage>
-                            <IconButton
-                                aria-label={showPassword ? 'Скрыть пароль' : 'Показать пароль'}
-                                icon={
-                                    showPassword ? (
-                                        <ViewIcon w='18px' h='18px' />
-                                    ) : (
-                                        <ViewOffIcon w='18px' h='18px' />
-                                    )
-                                }
-                                onMouseDown={() => setShowPassword(true)}
-                                onMouseUp={() => setShowPassword(false)}
-                                onMouseLeave={() => setShowPassword(false)}
-                                variant='link'
-                                position='absolute'
-                                right='14px'
-                                top='38px'
-                                transform='translateY(50%)'
-                                zIndex='1'
-                                color='#000'
-                            />
-                        </FormControl>
-                        <FormControl isInvalid={!!errors.confirmPassword} mt='20px'>
-                            <FormLabel
-                                htmlFor='confirmPassword'
-                                fontWeight='400'
-                                fontSize='16px'
-                                lineHeight='150%'
-                            >
-                                Повторите пароль
-                            </FormLabel>
-                            <Input
-                                data-test-id='confirm-password-input'
-                                id='confirmPassword'
-                                placeholder='Повторите пароль'
-                                type={showConfirmPassword ? 'text' : 'password'}
-                                {...register('confirmPassword', {
-                                    required: 'Повторите пароль',
-                                    validate: (value) =>
-                                        value === watch('password') || 'Пароли должны совпадать',
-                                })}
-                                onChange={handleFieldChange('confirmPassword', 100)}
-                                border='1px solid #d7ff94'
-                                borderRadius='6px'
-                                p='0 16px'
-                                w='100%'
-                                h='48px'
-                                bg='#fff'
-                                fontWeight='400'
-                                fontSize='18px'
-                                color='#134b00'
-                                _placeholder={{
-                                    fontWeight: '400',
-                                    fontSize: '18px',
-                                    color: '#134b00',
-                                }}
-                            />
-                            <FormErrorMessage>
-                                {errors.confirmPassword && errors.confirmPassword.message}
-                            </FormErrorMessage>
-
-                            <IconButton
-                                aria-label={showPassword ? 'Скрыть пароль' : 'Показать пароль'}
-                                icon={
-                                    showPassword ? (
-                                        <ViewIcon w='18px' h='18px' />
-                                    ) : (
-                                        <ViewOffIcon w='18px' h='18px' />
-                                    )
-                                }
-                                onMouseDown={() => setShowConfirmPassword(true)}
-                                onMouseUp={() => setShowConfirmPassword(false)}
-                                onMouseLeave={() => setShowConfirmPassword(false)}
-                                variant='link'
-                                position='absolute'
-                                right='14px'
-                                top='38px'
-                                transform='translateY(50%)'
-                                zIndex='1'
-                                color='#000'
-                            />
-                        </FormControl>
-                        <Button
-                            data-test-id='submit-button'
-                            colorScheme='teal'
-                            isLoading={isSubmitting}
-                            type='submit'
-                            w='100%'
-                            h='48px'
-                            mt='20px'
-                            border='1px solid rgba(0, 0, 0, 0.08)'
-                            borderRadius='6px'
-                            bg='rgba(0, 0, 0, 0.92)'
-                            _hover={{
-                                bg: 'rgba(0, 0, 0, 0.7)',
-                            }}
-                        >
-                            Зарегистрироваться
-                        </Button>
-                    </>
-                )}
-            </VStack>
-        </form>
+                                Зарегистрироваться
+                            </Button>
+                        </>
+                    )}
+                </VStack>
+            </form>
+        </Flex>
     );
 };

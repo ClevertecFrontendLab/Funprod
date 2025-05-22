@@ -15,16 +15,16 @@ export const AsideBar = () => (
         display={{ base: 'none', md: 'flex' }}
         direction='column'
         justifyContent='space-between'
-        position='fixed'
-        top='0'
-        right='0'
         mt={{ md: '80px', base: '0' }}
         zIndex='1'
+        w={{ md: '208px', base: '0' }}
+        position='relative'
     >
         <Flex
             direction='column'
             alignItems='center'
             justify='center'
+            position='fixed'
             gap='24px'
             w={{ base: '203px', md: '208px' }}
             p={{ base: '0 16px', md: '16px 56px' }}

@@ -7,7 +7,6 @@ import { Swiper as SwiperType } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 import { CategoryTags } from '~/components/CategoryPage/TabComponent/CategoryTags/CategoryTags';
-import { Recipe } from '~/components/mockData';
 import { useLocalFallback } from '~/hooks/useLocalFallback';
 import { Category } from '~/query/services/category-api.type';
 import { useGetRecipesQuery } from '~/query/services/recipe-api';
@@ -21,7 +20,7 @@ import rightSlider from './../../../assets/rightSlider.svg';
 
 type NewRecipesSectionProps = {
     categoryData: Category[];
-    filteredData?: Recipe[];
+    filteredData?: Category[];
 };
 
 export const NewRecipesSection = ({ categoryData }: NewRecipesSectionProps) => {
@@ -34,7 +33,7 @@ export const NewRecipesSection = ({ categoryData }: NewRecipesSectionProps) => {
         sortBy: 'createdAt',
         sortOrder: 'desc',
     });
-
+    console.log('я получил', categoryData);
     const handlePrevClick = () => {
         if (swiperInstance) {
             swiperInstance.slidePrev();
@@ -54,6 +53,12 @@ export const NewRecipesSection = ({ categoryData }: NewRecipesSectionProps) => {
             categoriesIds,
             categoryData: safeCategoryData,
         });
+        console.log(
+            'я сработал',
+            matchedCategory?.category,
+            matchedSubcategory?.category,
+            condition,
+        );
         if (condition) {
             navigate('/error-page');
             return;
