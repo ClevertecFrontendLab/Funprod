@@ -10,10 +10,8 @@ import { FooterMobile } from '~/components/FooterMobile/FooterMobile';
 import { FullPageLoader } from '~/components/FullPageLoader/FullPageLoader';
 import { Header } from '~/components/Header/Header';
 import { Sidebar } from '~/components/Sidebar/Sidebar';
-import { useRandomCategory } from '~/hooks/useRandomCategory';
 import { categoriesSelector, setAppError, userErrorSelector } from '~/store/app-slice';
 import { ApplicationState } from '~/store/configure-store';
-import { getCategoriesWithSubcategories } from '~/utils/getCategoriesWithSubcategories';
 
 export default function RootLayout() {
     const { isOpen: openBurger, onToggle, onClose } = useDisclosure();
@@ -22,7 +20,7 @@ export default function RootLayout() {
     const error = useSelector(userErrorSelector);
     const dispatch = useDispatch();
     const categories = useSelector(categoriesSelector);
-    const filterCategory = getCategoriesWithSubcategories(categories);
+    const filterCategory = categories.filter((item) => item.subCategories);
 
     useEffect(() => {
         if (isDesktop) {
@@ -38,7 +36,6 @@ export default function RootLayout() {
         }
     }, [dispatch]);
 
-    const randomCategory = useRandomCategory(filterCategory!);
     return (
         <Flex direction='column' align='center' w='100%'>
             {isLoading && <FullPageLoader />}
@@ -60,7 +57,7 @@ export default function RootLayout() {
                     onClick={() => onClose()}
                 >
                     <Outlet />
-                    <Footer footerData={randomCategory} />
+                    <Footer footerData={filterCategory} />
                 </Flex>
                 <AsideBar />
             </Flex>

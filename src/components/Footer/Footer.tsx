@@ -1,5 +1,6 @@
 import { Box, Button, Flex, Image, Text } from '@chakra-ui/react';
 
+import { useRandomCategory } from '~/hooks/useRandomCategory';
 import { Category } from '~/query/services/category-api.type';
 import { useGetRecipesCategoryQuery } from '~/query/services/recipe-api';
 
@@ -8,12 +9,13 @@ import bookmarkHeart from './../../assets/actionBar/BookmarkHeart.svg';
 import emojiHeartEyes from './../../assets/actionBar/EmojiHeartEyes.svg';
 
 type FooterProps = {
-    footerData: Category | null;
+    footerData: Category[] | null;
     footerCategoryId?: string;
 };
 
 export const Footer = ({ footerData }: FooterProps) => {
-    const footerSubCategoryId = footerData?.subCategories[0]._id;
+    const randomCategory = useRandomCategory(footerData!);
+    const footerSubCategoryId = randomCategory?.subCategories[0]._id;
     const { data } = useGetRecipesCategoryQuery(
         {
             id: footerSubCategoryId!,
@@ -21,7 +23,6 @@ export const Footer = ({ footerData }: FooterProps) => {
         },
         { skip: !footerSubCategoryId },
     );
-
     const firstFooterCategory = Array.isArray(data?.data) && data.data.slice(0, 2);
     const secondFooterCategory = Array.isArray(data?.data) && data.data.slice(2, 5);
 
@@ -50,7 +51,7 @@ export const Footer = ({ footerData }: FooterProps) => {
                     lineHeight='111%'
                     whiteSpace='wrap'
                 >
-                    {footerData?.title}
+                    {randomCategory?.title}
                 </Text>
                 <Text
                     flex={{ lg: '1', base: '2' }}
@@ -60,7 +61,7 @@ export const Footer = ({ footerData }: FooterProps) => {
                     lineHeight='150%'
                     color='rgba(0, 0, 0, 0.64)'
                 >
-                    {footerData?.description}
+                    {randomCategory?.description}
                 </Text>
             </Flex>
             <Flex
