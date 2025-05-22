@@ -1,19 +1,15 @@
 import { Category } from '~/query/services/category-api.type';
 
-import { getCategoriesWithSubcategories } from './getCategoriesWithSubcategories';
-
 type CheckAndNavigateProps = {
     categoriesIds: string[];
     categoryData?: Category[];
 };
 
 export const checkAndNavigate = ({ categoryData, categoriesIds }: CheckAndNavigateProps) => {
-    const dataCategories = getCategoriesWithSubcategories(categoryData);
+    const dataCategories = categoryData?.filter((item) => item.subCategories);
 
-    const dataSubCategories = Array.isArray(categoryData)
-        ? categoryData.filter((item) => !item.subCategories)
-        : [];
-    const matchedSubcategory = dataSubCategories.find((sub) => categoriesIds.includes(sub._id));
+    const dataSubCategories = categoryData?.filter((item) => !item.subCategories);
+    const matchedSubcategory = dataSubCategories?.find((sub) => categoriesIds.includes(sub._id));
     const matchedCategory = dataCategories?.find(
         (cat) => cat._id === matchedSubcategory?.rootCategoryId,
     );

@@ -20,17 +20,17 @@ type TabComponentProps = {
 };
 
 export const TabComponent = ({ searchQuery = '', categoriesId }: TabComponentProps) => {
-    const { data, isLoading } = useGetRecipesCategoryQuery({
+    const { data } = useGetRecipesCategoryQuery({
         id: categoriesId!,
     });
     const dispatch = useAppDispatch();
     useEffect(() => {
-        if (isLoading) {
+        if (!data) {
             dispatch(setAppLoader(true));
         } else {
             dispatch(setAppLoader(false));
         }
-    }, [dispatch, isLoading]);
+    }, [dispatch, data]);
     return (
         <Flex direction='column' align='center' gap='16px' mt='22px'>
             <Flex wrap='wrap' gap={{ md: '24px', base: '16px' }} justify='space-between'>

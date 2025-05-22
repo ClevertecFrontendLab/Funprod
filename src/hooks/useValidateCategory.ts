@@ -24,7 +24,7 @@ export const useValidateCategory = ({
             ? foundCategory?.subCategories?.some((sub) => sub.category === subcategory)
             : true;
 
-        if (category && (!isCategoryValid || !isSubcategoryValid)) {
+        if (!isCategoryValid || !isSubcategoryValid) {
             navigate('/not-found', { replace: true });
         }
     }, [categoryData, category, subcategory, navigate]);
