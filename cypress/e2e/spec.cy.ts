@@ -2820,7 +2820,7 @@ const signIn = () => {
     );
 };
 
-describe.only('application', () => {
+describe('application', () => {
     beforeEach(() => {
         cy.clearLocalStorage();
         cy.clearAllSessionStorage();
