@@ -85,13 +85,13 @@ export const Reset = ({ setSuccess, onClose, email }: ResetProps) => {
             });
         };
 
-    const handleLoginBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-        const trimmed = e.target.value.trim();
-        setValue('login', trimmed, {
-            shouldValidate: true,
-            shouldDirty: true,
-        });
-    };
+    const handleLoginBlur =
+        (fieldName: keyof FormData) => (e: React.ChangeEvent<HTMLInputElement>) => {
+            setValue(fieldName, e.target.value, {
+                shouldValidate: true,
+                shouldDirty: true,
+            });
+        };
 
     return (
         <Flex direction='column' align='center'>
@@ -127,7 +127,7 @@ export const Reset = ({ setSuccess, onClose, email }: ResetProps) => {
                             errors={errors}
                             helperText='Логин не менее 5 символов, только латиница и !@#$&_+-.'
                             onChange={handleInputChange('login')}
-                            onBlur={handleLoginBlur}
+                            onBlur={handleLoginBlur('login')}
                         />
 
                         <InputField

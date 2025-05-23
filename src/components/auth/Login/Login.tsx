@@ -123,6 +123,10 @@ export const Login = ({
         }
     }, [dispatch, isLoading]);
 
+    const handleLoginBlur = (e: React.ChangeEvent<HTMLInputElement>) => {
+        e.target.value = e.target.value.trim();
+    };
+
     return (
         <>
             {loginError && (
@@ -156,10 +160,8 @@ export const Login = ({
                                         value: 50,
                                         message: 'Максимальная длина 50 символов',
                                     },
-                                    onBlur: (e) => {
-                                        e.target.value = e.target.value.trim();
-                                    },
                                 })}
+                                onBlur={handleLoginBlur}
                                 border={error ? '2px solid #e53e3e' : '1px solid #d7ff94'}
                                 borderRadius='6px'
                                 p='0 16px'
@@ -204,10 +206,8 @@ export const Login = ({
                                         value: 50,
                                         message: 'Максимальная длина 50 символов',
                                     },
-                                    onBlur: (e) => {
-                                        e.target.value = e.target.value.trim();
-                                    },
                                 })}
+                                onBlur={handleLoginBlur}
                                 border={error ? '2px solid #e53e3e' : '1px solid #d7ff94'}
                                 borderRadius='6px'
                                 p='0 50px 0 16px'

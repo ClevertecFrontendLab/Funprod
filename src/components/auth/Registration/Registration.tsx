@@ -115,6 +115,14 @@ export const Registration = ({ onOpen, setFormData, formData }: RegistrationProp
         }
     }, [error]);
 
+    const handleBlur = (fieldName: keyof FormData) => (e: React.ChangeEvent<HTMLInputElement>) => {
+        const trimmed = e.target.value.trim();
+        setValue(fieldName, trimmed, {
+            shouldValidate: true,
+            shouldDirty: true,
+        });
+    };
+
     return (
         <Flex direction='column' h='468px' align='center'>
             <form
@@ -175,13 +183,7 @@ export const Registration = ({ onOpen, setFormData, formData }: RegistrationProp
                                     })}
                                     value={watch('firstName')}
                                     onChange={handleFieldChange('firstName', 17)}
-                                    onBlur={(e) => {
-                                        const trimmed = e.target.value.trim();
-                                        setValue('firstName', trimmed, {
-                                            shouldValidate: true,
-                                            shouldDirty: true,
-                                        });
-                                    }}
+                                    onBlur={handleBlur('firstName')}
                                     border='1px solid #d7ff94'
                                     borderRadius='6px'
                                     p='0 16px'
@@ -287,13 +289,7 @@ export const Registration = ({ onOpen, setFormData, formData }: RegistrationProp
                                         },
                                     })}
                                     onChange={handleFieldChange('email', 50)}
-                                    onBlur={(e) => {
-                                        const trimmed = e.target.value.trim();
-                                        setValue('email', trimmed, {
-                                            shouldValidate: true,
-                                            shouldDirty: true,
-                                        });
-                                    }}
+                                    onBlur={handleBlur('email')}
                                     border='1px solid #d7ff94'
                                     borderRadius='6px'
                                     p='0 16px'
@@ -364,13 +360,7 @@ export const Registration = ({ onOpen, setFormData, formData }: RegistrationProp
                                         },
                                     })}
                                     onChange={handleFieldChange('login', 67)}
-                                    onBlur={(e) => {
-                                        const trimmed = e.target.value.trim();
-                                        setValue('login', trimmed, {
-                                            shouldValidate: true,
-                                            shouldDirty: true,
-                                        });
-                                    }}
+                                    onBlur={handleBlur('login')}
                                     border='1px solid #d7ff94'
                                     borderRadius='6px'
                                     p='0 16px'

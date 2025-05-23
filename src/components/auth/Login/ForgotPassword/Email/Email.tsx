@@ -72,6 +72,14 @@ export const Email = ({ setStep, setEmail }: EmailProps) => {
         }
     }, [error, reset]);
 
+    const handleEmailBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+        const trimmed = e.target.value.trim();
+        setValue('email', trimmed, {
+            shouldValidate: true,
+            shouldDirty: true,
+        });
+    };
+
     return (
         <Flex direction='column' align='center'>
             {forgotError && (
@@ -117,13 +125,7 @@ export const Email = ({ setStep, setEmail }: EmailProps) => {
                                             message: 'Введите корректный e-mail',
                                         },
                                     })}
-                                    onBlur={(e) => {
-                                        const trimmed = e.target.value.trim();
-                                        setValue('email', trimmed, {
-                                            shouldValidate: true,
-                                            shouldDirty: true,
-                                        });
-                                    }}
+                                    onBlur={handleEmailBlur}
                                     border='1px solid #d7ff94'
                                     borderRadius='6px'
                                     p='0 16px'

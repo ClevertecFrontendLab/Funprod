@@ -139,17 +139,17 @@ export const Code = ({ email, setStep }: CodeProps) => {
                             </PinInput>
                         </HStack>
                     </ModalBody>
-                    <ModalFooter
-                        display='flex'
-                        p='0'
-                        m='24px 32px 32px 32px'
-                        fontWeight='400'
-                        fontSize='12px'
-                        lineHeight='133%'
-                        color='rgba(0, 0, 0, 0.48)'
-                        textAlign='center'
-                    >
-                        Не пришло письмо? Проверьте папку Спам.
+                    <ModalFooter display='flex' p='0' m='24px 32px 32px 32px'>
+                        <Text
+                            fontWeight='400'
+                            fontSize='12px'
+                            lineHeight='133%'
+                            color='rgba(0, 0, 0, 0.48)'
+                            w='100%'
+                            textAlign='center'
+                        >
+                            Не пришло письмо? Проверьте папку Спам.
+                        </Text>
                     </ModalFooter>
                 </Box>
             </Flex>
