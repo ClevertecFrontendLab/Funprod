@@ -46,6 +46,10 @@ export const NewRecipesSection = ({ categoryData }: NewRecipesSectionProps) => {
         }
     };
 
+    const fallback = useLocalFallback('cachedRecipeCategory', isError, data);
+
+    if (!categoryData || categoryData.length === 0) return;
+
     const safeCategoryData = Array.isArray(categoryData) ? categoryData : [];
 
     const handleGetRecipe = (recipeId: string, categoriesIds: string[]) => {
@@ -65,8 +69,6 @@ export const NewRecipesSection = ({ categoryData }: NewRecipesSectionProps) => {
         }
         navigate(`/${matchedCategory?.category}/${matchedSubcategory?.category}/${recipeId}`);
     };
-
-    const fallback = useLocalFallback('cachedRecipeCategory', isError, data);
 
     const sortedRecipes = data?.data || fallback?.data || [];
 

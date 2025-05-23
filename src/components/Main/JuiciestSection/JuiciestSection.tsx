@@ -25,14 +25,10 @@ export const JuiciestSection = ({ categoryData }: JuiciestSectionProps) => {
     });
 
     const handleGetRecipe = (recipeId: string, categoriesIds: string[]) => {
-        const { condition, matchedCategory, matchedSubcategory } = checkAndNavigate({
+        const { matchedCategory, matchedSubcategory } = checkAndNavigate({
             categoriesIds,
-            categoryData,
+            categoryData: categoryData || [],
         });
-        if (condition) {
-            navigate('/error-page');
-            return;
-        }
         navigate(`/${matchedCategory?.category}/${matchedSubcategory?.category}/${recipeId}`);
     };
 

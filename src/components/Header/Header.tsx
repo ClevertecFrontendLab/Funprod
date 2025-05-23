@@ -24,7 +24,7 @@ export const Header = ({ openBurger, onToggle }: HeaderProps) => (
     <Flex
         align='center'
         justify='center'
-        w={{ lg: '100%', md: '1440px', sm: '768px' }}
+        w='100%'
         height={{ md: '80px', base: '64px' }}
         color='black'
         position='fixed'

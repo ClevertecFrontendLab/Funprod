@@ -24,6 +24,7 @@ export const ErrorNotification = ({ error, title, isAuthPage }: ErrorNotificatio
     }, [errorStatus, dispatch]);
 
     const handleClose = () => dispatch(setAppError(null));
+
     return (
         <Alert
             data-test-id='error-notification'
@@ -55,6 +56,7 @@ export const ErrorNotification = ({ error, title, isAuthPage }: ErrorNotificatio
                 color='#fff'
                 w='12px'
                 h='12px'
+                zIndex='10'
             />
         </Alert>
     );

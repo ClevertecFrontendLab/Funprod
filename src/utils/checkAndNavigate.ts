@@ -2,7 +2,7 @@ import { Category } from '~/query/services/category-api.type';
 
 type CheckAndNavigateProps = {
     categoriesIds: string[];
-    categoryData?: Category[];
+    categoryData: Category[];
 };
 
 export const checkAndNavigate = ({ categoryData, categoriesIds }: CheckAndNavigateProps) => {

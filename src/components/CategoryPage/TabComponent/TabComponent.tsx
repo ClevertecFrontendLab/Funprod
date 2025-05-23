@@ -1,5 +1,5 @@
 import { Box, Button, Flex, Image, Text } from '@chakra-ui/react';
-import { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
 import { Link as Links } from 'react-router';
 
 import { Category } from '~/query/services/category-api.type';
@@ -24,7 +24,7 @@ export const TabComponent = ({ searchQuery = '', categoriesId }: TabComponentPro
         id: categoriesId!,
     });
     const dispatch = useAppDispatch();
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (!data) {
             dispatch(setAppLoader(true));
         } else {
