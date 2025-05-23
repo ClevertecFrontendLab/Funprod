@@ -33,7 +33,6 @@ export const NewRecipesSection = ({ categoryData }: NewRecipesSectionProps) => {
         sortBy: 'createdAt',
         sortOrder: 'desc',
     });
-    console.log('я получил', categoryData);
     const handlePrevClick = () => {
         if (swiperInstance) {
             swiperInstance.slidePrev();
@@ -57,12 +56,6 @@ export const NewRecipesSection = ({ categoryData }: NewRecipesSectionProps) => {
             categoriesIds,
             categoryData: safeCategoryData,
         });
-        console.log(
-            'я сработал',
-            matchedCategory?.category,
-            matchedSubcategory?.category,
-            condition,
-        );
         if (condition) {
             navigate('/error-page');
             return;
