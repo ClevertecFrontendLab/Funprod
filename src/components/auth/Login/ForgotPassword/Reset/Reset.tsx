@@ -87,7 +87,8 @@ export const Reset = ({ setSuccess, onClose, email }: ResetProps) => {
 
     const handleLoginBlur =
         (fieldName: keyof FormData) => (e: React.ChangeEvent<HTMLInputElement>) => {
-            setValue(fieldName, e.target.value, {
+            const trimmed = e.target.value.trim();
+            setValue(fieldName, trimmed, {
                 shouldValidate: true,
                 shouldDirty: true,
             });
