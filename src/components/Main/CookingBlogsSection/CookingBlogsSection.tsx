@@ -31,7 +31,7 @@ export const CookingBlogsSection = () => (
         direction='column'
         borderRadius='16px'
         padding={{ md: '24px', base: '12px' }}
-        maxWidth={{ lg: '1360px', md: '880px', sm: '728px', base: '328px' }}
+        maxWidth={{ lg: '1340px', md: '860px', sm: '728px', base: '328px' }}
         w='100%'
         maxHeight={{ lg: '304px', md: '264px', sm: '274px', base: '600px' }}
         h='100%'

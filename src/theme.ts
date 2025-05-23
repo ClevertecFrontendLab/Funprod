@@ -12,6 +12,20 @@ const theme = extendTheme({
         heading: 'Inter, sans-serif',
         body: 'Inter, sans-serif',
     },
+    components: {
+        Progress: {
+            variants: {
+                custom: {
+                    track: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.06)',
+                    },
+                    filledTrack: {
+                        backgroundColor: '#c4ff61',
+                    },
+                },
+            },
+        },
+    },
 });
 
 export default theme;

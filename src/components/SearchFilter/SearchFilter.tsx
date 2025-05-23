@@ -81,165 +81,172 @@ export const SearchFilter = ({
     return (
         <Flex direction='column' align='center' gap='16px' mt='42px'>
             <Flex wrap='wrap' gap={{ md: '24px', base: '16px' }} justify='space-between'>
-                {data?.data.map((card, i) => (
-                    <Flex
-                        data-test-id={`food-card-${i}`}
-                        position='relative'
-                        key={card._id}
-                        borderRadius='8px'
-                        border='1px solid rgba(0, 0, 0, 0.08)'
-                        maxWidth=''
-                        maxW={{
-                            lg: '668px',
-                            md: '880px',
-                            sm: 'calc(50% - 12px)',
-                            base: '356px',
-                        }}
-                        w='100%'
-                        h={{ lg: '324px', md: '400px', base: '128px' }}
-                    >
-                        <Flex flex='1'>
-                            <Image
-                                src={getFullMediaUrl(card.image)}
-                                maxW={{ lg: '346px', md: '400px', base: '158px' }}
-                                borderRadius='4px 0 0 4px'
-                            />
-                        </Flex>
+                {Array.isArray(data?.data) &&
+                    data?.data.map((card, i) => (
                         <Flex
-                            flex='1'
-                            p={{ md: '20px 24px', base: '0' }}
-                            m={{ md: '0', base: '8px 8px 4px 8px' }}
-                            direction='column'
-                            gap={{ md: '24px', base: '0' }}
-                            maxW={{ base: '154px', sm: '182px', md: '334px' }}
+                            data-test-id={`food-card-${i}`}
+                            position='relative'
+                            key={card._id}
+                            borderRadius='8px'
+                            border='1px solid rgba(0, 0, 0, 0.08)'
+                            maxWidth=''
+                            maxW={{
+                                lg: '648px',
+                                md: '860px',
+                                sm: 'calc(50% - 12px)',
+                                base: '356px',
+                            }}
                             w='100%'
-                            justify='space-between'
+                            h={{ lg: '324px', md: '400px', base: '128px' }}
                         >
-                            <Flex direction='column'>
-                                <Flex justify={{ md: 'space-between', base: 'flex-start' }}>
-                                    <CategoryTags tagsId={card.categoriesIds} />
-                                    <Flex
-                                        ml={{ md: '36px', base: '0' }}
-                                        mr={{ base: '85px', md: '0' }}
-                                    >
-                                        <Flex gap='8px' align='flex-start'>
-                                            <Flex gap='6px' align='center'>
-                                                <Box w='12px' h='12px'>
-                                                    <Image src={bookmarkHeart} />
-                                                </Box>
-                                                <Text
-                                                    fontFamily='var(--font-family)'
-                                                    fontWeight='600'
-                                                    fontSize='12px'
-                                                    lineHeight='133%'
-                                                    color='var(--lime-600)'
-                                                >
-                                                    {card.bookmarks}
-                                                </Text>
-                                            </Flex>
-                                            <Flex gap='6px' align='center'>
-                                                <Box w='12px' h='12px'>
-                                                    <Image src={emojiHeartEyes} />
-                                                </Box>
-                                                <Text
-                                                    fontFamily='var(--font-family)'
-                                                    fontWeight='600'
-                                                    fontSize='12px'
-                                                    lineHeight='133%'
-                                                    color='var(--lime-600)'
-                                                >
-                                                    {card.likes}
-                                                </Text>
+                            <Flex flex='1'>
+                                <Image
+                                    src={getFullMediaUrl(card.image)}
+                                    maxW={{ lg: '346px', md: '400px', base: '158px' }}
+                                    borderRadius='4px 0 0 4px'
+                                />
+                            </Flex>
+                            <Flex
+                                flex='1'
+                                p={{ md: '20px 24px', base: '0' }}
+                                m={{ md: '0', base: '8px 8px 4px 8px' }}
+                                direction='column'
+                                gap={{ md: '24px', base: '0' }}
+                                maxW={{ base: '154px', sm: '182px', md: '334px' }}
+                                w='100%'
+                                justify='space-between'
+                            >
+                                <Flex direction='column'>
+                                    <Flex justify={{ md: 'space-between', base: 'flex-start' }}>
+                                        <CategoryTags tagsId={card.categoriesIds} />
+                                        <Flex
+                                            ml={{ md: '36px', base: '0' }}
+                                            mr={{ base: '85px', md: '0' }}
+                                        >
+                                            <Flex gap='8px' align='flex-start'>
+                                                <Flex gap='6px' align='center'>
+                                                    <Box w='12px' h='12px'>
+                                                        <Image src={bookmarkHeart} />
+                                                    </Box>
+                                                    <Text
+                                                        fontFamily='var(--font-family)'
+                                                        fontWeight='600'
+                                                        fontSize='12px'
+                                                        lineHeight='133%'
+                                                        color='var(--lime-600)'
+                                                    >
+                                                        {card.bookmarks}
+                                                    </Text>
+                                                </Flex>
+                                                <Flex gap='6px' align='center'>
+                                                    <Box w='12px' h='12px'>
+                                                        <Image src={emojiHeartEyes} />
+                                                    </Box>
+                                                    <Text
+                                                        fontFamily='var(--font-family)'
+                                                        fontWeight='600'
+                                                        fontSize='12px'
+                                                        lineHeight='133%'
+                                                        color='var(--lime-600)'
+                                                    >
+                                                        {card.likes}
+                                                    </Text>
+                                                </Flex>
                                             </Flex>
                                         </Flex>
                                     </Flex>
-                                </Flex>
-                                <Box w={{ lg: '274px', base: '100%' }} textAlign='start' mt='10px'>
-                                    <Text
-                                        fontFamily='var(--font-family)'
-                                        fontWeight='500'
-                                        fontSize={{ md: '20px', base: '16px' }}
-                                        lineHeight='140%'
-                                        noOfLines={{ md: 1, base: 2 }}
-                                        overflow='hidden'
-                                        textOverflow='ellipsis'
-                                        dangerouslySetInnerHTML={{
-                                            __html: highlightText(card.title, searchQuery),
-                                        }}
-                                    />
-                                    <Box display={{ base: 'none', md: 'block' }}>
+                                    <Box
+                                        w={{ lg: '274px', base: '100%' }}
+                                        textAlign='start'
+                                        mt='10px'
+                                    >
                                         <Text
-                                            mt='8px'
                                             fontFamily='var(--font-family)'
-                                            fontWeight='400'
-                                            fontSize='14px'
-                                            lineHeight='143%'
-                                            noOfLines={{ md: 3, base: 0 }}
+                                            fontWeight='500'
+                                            fontSize={{ md: '20px', base: '16px' }}
+                                            lineHeight='140%'
+                                            noOfLines={{ md: 1, base: 2 }}
                                             overflow='hidden'
                                             textOverflow='ellipsis'
-                                        >
-                                            {card.description}
-                                        </Text>
+                                            dangerouslySetInnerHTML={{
+                                                __html: highlightText(card.title, searchQuery),
+                                            }}
+                                        />
+                                        <Box display={{ base: 'none', md: 'block' }}>
+                                            <Text
+                                                mt='8px'
+                                                fontFamily='var(--font-family)'
+                                                fontWeight='400'
+                                                fontSize='14px'
+                                                lineHeight='143%'
+                                                noOfLines={{ md: 3, base: 0 }}
+                                                overflow='hidden'
+                                                textOverflow='ellipsis'
+                                            >
+                                                {card.description}
+                                            </Text>
+                                        </Box>
                                     </Box>
-                                </Box>
-                            </Flex>
-                            <Flex
-                                justify='flex-end'
-                                gap='8px'
-                                mt='auto'
-                                mr={{ base: '4px', md: '0' }}
-                            >
-                                <Button
-                                    border='1px solid rgba(0, 0, 0, 0.48)'
-                                    borderRadius='6px'
-                                    p={{ md: '0 12px', base: '0' }}
-                                    w={{ md: '122px', base: '24px' }}
-                                    minW='0'
-                                    h={{ md: '32px', base: '24px' }}
-                                    backgroundColor='rgba(255, 255, 255, 0.06)'
-                                    _hover={{ backgroundColor: 'rgba(0, 0, 0, 0.06)' }}
+                                </Flex>
+                                <Flex
+                                    justify='flex-end'
+                                    gap='8px'
+                                    mt='auto'
+                                    mr={{ base: '4px', md: '0' }}
                                 >
-                                    <Image
-                                        src={bookmarkHeart}
-                                        mr={{ md: '8px', base: '0' }}
-                                        w={{ md: '14px', base: '12px' }}
-                                        h={{ md: '14px', base: '12px' }}
-                                    />
-                                    <Box display={{ base: 'none', md: 'block' }}>
+                                    <Button
+                                        border='1px solid rgba(0, 0, 0, 0.48)'
+                                        borderRadius='6px'
+                                        p={{ md: '0 12px', base: '0' }}
+                                        w={{ md: '122px', base: '24px' }}
+                                        minW='0'
+                                        h={{ md: '32px', base: '24px' }}
+                                        backgroundColor='rgba(255, 255, 255, 0.06)'
+                                        _hover={{ backgroundColor: 'rgba(0, 0, 0, 0.06)' }}
+                                    >
+                                        <Image
+                                            src={bookmarkHeart}
+                                            mr={{ md: '8px', base: '0' }}
+                                            w={{ md: '14px', base: '12px' }}
+                                            h={{ md: '14px', base: '12px' }}
+                                        />
+                                        <Box display={{ base: 'none', md: 'block' }}>
+                                            <Text
+                                                fontFamily='var(--font-family)'
+                                                fontWeight='600'
+                                                fontSize='14px'
+                                                lineHeight='143%'
+                                            >
+                                                Сохранить
+                                            </Text>
+                                        </Box>
+                                    </Button>
+                                    <Button
+                                        border='1px solid rgba(0, 0, 0, 0.08)'
+                                        borderRadius='6px'
+                                        p={{ md: '0 12px', base: '0 6px' }}
+                                        w='87px'
+                                        h={{ md: '32px', base: '24px' }}
+                                        backgroundColor='rgba(0, 0, 0, 0.92)'
+                                        _hover={{ backgroundColor: 'rgba(0, 0, 0, 0.52)' }}
+                                        onClick={() =>
+                                            handleGetRecipe(card._id, card.categoriesIds)
+                                        }
+                                    >
                                         <Text
                                             fontFamily='var(--font-family)'
                                             fontWeight='600'
                                             fontSize='14px'
                                             lineHeight='143%'
+                                            color='#fff'
                                         >
-                                            Сохранить
+                                            Готовить
                                         </Text>
-                                    </Box>
-                                </Button>
-                                <Button
-                                    border='1px solid rgba(0, 0, 0, 0.08)'
-                                    borderRadius='6px'
-                                    p={{ md: '0 12px', base: '0 6px' }}
-                                    w='87px'
-                                    h={{ md: '32px', base: '24px' }}
-                                    backgroundColor='rgba(0, 0, 0, 0.92)'
-                                    _hover={{ backgroundColor: 'rgba(0, 0, 0, 0.52)' }}
-                                    onClick={() => handleGetRecipe(card._id, card.categoriesIds)}
-                                >
-                                    <Text
-                                        fontFamily='var(--font-family)'
-                                        fontWeight='600'
-                                        fontSize='14px'
-                                        lineHeight='143%'
-                                        color='#fff'
-                                    >
-                                        Готовить
-                                    </Text>
-                                </Button>
+                                    </Button>
+                                </Flex>
                             </Flex>
                         </Flex>
-                    </Flex>
-                ))}
+                    ))}
             </Flex>
         </Flex>
     );

@@ -7,6 +7,7 @@ import { useGetRecipesQuery } from '~/query/services/recipe-api';
 import { Data } from '~/query/services/recipe-api.type';
 import { categoriesSelector } from '~/store/app-slice';
 import { checkAndNavigate } from '~/utils/checkAndNavigate';
+import { getCategoriesWithSubcategories } from '~/utils/getCategoriesWithSubcategories';
 import { getFullMediaUrl } from '~/utils/getFullMediaUrl';
 
 import { CategoryTags } from '../CategoryPage/TabComponent/CategoryTags/CategoryTags';
@@ -79,7 +80,7 @@ export const Juiciest = () => {
 
         setIsFilterApplied(!!isApplied);
     }, [excludedIngredients, selectedCategory, selectedMeat, selectedSide, searchQuery]);
-    const dataCategories = categoryData?.filter((item) => item.subCategories);
+    const dataCategories = getCategoriesWithSubcategories(categoryData);
 
     const handleGetRecipe = (recipeId: string, categoriesIds: string[]) => {
         const { condition, matchedCategory, matchedSubcategory } = checkAndNavigate({
@@ -100,8 +101,8 @@ export const Juiciest = () => {
             w={{
                 base: '328px',
                 sm: '728px',
-                md: '880px',
-                lg: '1360px',
+                md: '860px',
+                lg: '1340px',
             }}
             direction='column'
             m={{ base: '80px 16px 100px 16px', sm: '80px 72px 100px 24px', md: '80px 72px 0 24px' }}
@@ -151,8 +152,8 @@ export const Juiciest = () => {
                                 border='1px solid rgba(0, 0, 0, 0.08)'
                                 maxWidth=''
                                 maxW={{
-                                    lg: '668px',
-                                    md: '880px',
+                                    lg: '648px',
+                                    md: '860px',
                                     sm: 'calc(50% - 12px)',
                                     base: '328px',
                                 }}

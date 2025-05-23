@@ -3,6 +3,7 @@ import { Box, Flex, Text } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
 import { Link, useLocation, useParams } from 'react-router';
 
+import { Category } from '~/query/services/category-api.type';
 import { useGetRecipeByIdQuery } from '~/query/services/recipe-api';
 import { categoriesSelector } from '~/store/app-slice';
 import { getBreadcrumb } from '~/utils/getBreadcrumb';
@@ -15,15 +16,34 @@ export const Breadcrumbs = ({ onClose = () => {} }: Breadcrumbs) => {
     const { data: recipeData } = useGetRecipeByIdQuery({ id: id! });
     const categoryData = useSelector(categoriesSelector);
     const pathnames = location.pathname.split('/').filter(Boolean);
-
+    const data = localStorage.getItem('categories');
     const { breadcrumbItems } = getBreadcrumb({
-        categoryData,
+        categoryData: data ? JSON.parse(data) : categoryData,
         pathnames,
         id,
         recipeData,
     });
 
     breadcrumbItems?.unshift({ label: 'Главная', to: '/' });
+
+    const updatedBreadcrumbItems = breadcrumbItems?.map((item, index) => {
+        if (index === 0 || index === breadcrumbItems.length - 1) return item;
+
+        const categorySlug = item.to.split('/')[1];
+        const allCategories: Category[] = data ? JSON.parse(data) : categoryData;
+
+        const category = allCategories?.find((cat) => cat.category === categorySlug);
+
+        if (category?.subCategories && category.subCategories.length > 0) {
+            const firstSub = category.subCategories[0];
+            return {
+                ...item,
+                to: `/${category.category}/${firstSub.category}`,
+            };
+        }
+
+        return item;
+    });
 
     return (
         <Box
@@ -33,15 +53,17 @@ export const Breadcrumbs = ({ onClose = () => {} }: Breadcrumbs) => {
             display={{ base: 'block', md: 'block' }}
         >
             <Flex wrap='wrap' gap='2px' maxWidth='100%'>
-                {breadcrumbItems?.map((item, index) => (
+                {updatedBreadcrumbItems?.map((item, index) => (
                     <Flex key={`${item.to}-${index}`} align='center' justify='center'>
                         <Link to={item.to}>
                             <Text
                                 data-test-id='breadcrumbs'
                                 fontSize='16px'
-                                fontWeight={index === breadcrumbItems.length - 1 ? '500' : '400'}
+                                fontWeight={
+                                    index === updatedBreadcrumbItems.length - 1 ? '500' : '400'
+                                }
                                 color={
-                                    index === breadcrumbItems.length - 1
+                                    index === updatedBreadcrumbItems.length - 1
                                         ? '#000'
                                         : 'rgba(0, 0, 0, 0.64)'
                                 }
@@ -52,7 +74,7 @@ export const Breadcrumbs = ({ onClose = () => {} }: Breadcrumbs) => {
                                 {item.label}
                             </Text>
                         </Link>
-                        {index < breadcrumbItems.length - 1 && (
+                        {index < updatedBreadcrumbItems.length - 1 && (
                             <ChevronRightIcon
                                 mx='4px'
                                 w={{ md: '22px', base: '18px' }}

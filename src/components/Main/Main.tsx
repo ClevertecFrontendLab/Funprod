@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 
 import useRecipeFilters from '~/hooks/useRecipeFilters';
 import { categoriesSelector } from '~/store/app-slice';
+import { getCategoriesWithSubcategories } from '~/utils/getCategoriesWithSubcategories';
 
 import { PageHeader } from '../PageHeader/PageHeader';
 import { SearchFilter } from '../SearchFilter/SearchFilter';
@@ -32,9 +33,15 @@ export const Main = () => {
     } = useRecipeFilters();
 
     const [isFilterApplied, setIsFilterApplied] = useState<string | boolean>(false);
-    const categoryData = useSelector(categoriesSelector);
-    const filterCategory = categoryData?.filter((item) => item.subCategories);
+    const categoryDataRedux = useSelector(categoriesSelector);
+    const localDataString = localStorage.getItem('cachedCategories');
+    const categoryDataLocal = JSON.parse(localDataString!);
+
+    const categoryData =
+        categoryDataRedux && categoryDataRedux.length > 0 ? categoryDataRedux : categoryDataLocal;
+    const filterCategory = getCategoriesWithSubcategories(categoryData);
     const [isLoading, setIsLoading] = useState(false);
+
     useEffect(() => {
         const isApplied =
             excludedIngredients.length > 0 ||
@@ -51,8 +58,8 @@ export const Main = () => {
             maxW={{
                 base: '328px',
                 sm: '728px',
-                md: '880px',
-                lg: '1360px',
+                md: '860px',
+                lg: '1340px',
             }}
             w='100%'
             direction='column'
@@ -79,7 +86,7 @@ export const Main = () => {
             {isFilterApplied ? (
                 <SearchFilter
                     filteredData={filterCategory}
-                    categoryData={categoryData!}
+                    categoryData={categoryData}
                     searchQuery={searchQuery}
                     categoriesIds={categoriesIds}
                     allergens={allergens}
@@ -88,7 +95,7 @@ export const Main = () => {
                     onLoadingChange={(val) => setIsLoading(val)}
                 />
             ) : (
-                <NewRecipesSection categoryData={categoryData!} />
+                <NewRecipesSection categoryData={categoryData} />
             )}
             <JuiciestSection categoryData={categoryData} />
             <CookingBlogsSection />

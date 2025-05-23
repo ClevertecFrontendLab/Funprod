@@ -43,7 +43,6 @@ export const FooterMobile = ({ openBurger }: FooterMobileProps) => (
         {buttonList.map((item, index) => (
             <Button
                 key={index}
-                maxW='192px'
                 w='100%'
                 h='100%'
                 bg={

@@ -21,7 +21,6 @@ import { Category } from '~/query/services/category-api.type';
 
 import { CustomSelect } from '../CustomSelect/CustomSelect';
 import { DrawerComponent } from '../DrawerComponent/DrawerComponent';
-import { Recipe } from '../mockData';
 import filterIcon from './../../assets/main/icon/filter.svg';
 
 type PageHeaderProps = {
@@ -34,7 +33,7 @@ type PageHeaderProps = {
     setSelectedMeat?: (val: string[]) => void;
     applyFilters?: () => void;
     selectedCategory?: string;
-    filteredData?: Recipe[];
+    filteredData?: Category[];
     selectedMeat?: string[];
     selectedSide?: string[];
     setSearchQuery?: (val: string) => void;
@@ -192,7 +191,7 @@ export const PageHeader = ({
                                             onClick={() => handleClear()}
                                             position='absolute'
                                             top={{ md: '5px', base: '-5px' }}
-                                            right={{ md: '30px', base: '20px' }}
+                                            right={{ md: '30px', base: '25px' }}
                                             aria-label='Search database'
                                             icon={<CloseIcon w='10px' h='10px' />}
                                             bg='transparent'

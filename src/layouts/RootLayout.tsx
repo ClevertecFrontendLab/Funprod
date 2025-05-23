@@ -1,4 +1,4 @@
-import { Box, Flex, useDisclosure, useMediaQuery } from '@chakra-ui/react';
+import { Flex, useDisclosure, useMediaQuery } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Outlet } from 'react-router';
@@ -10,10 +10,9 @@ import { FooterMobile } from '~/components/FooterMobile/FooterMobile';
 import { FullPageLoader } from '~/components/FullPageLoader/FullPageLoader';
 import { Header } from '~/components/Header/Header';
 import { Sidebar } from '~/components/Sidebar/Sidebar';
-import { useCategories } from '~/hooks/useCategories';
-import { useRandomCategory } from '~/hooks/useRandomCategory';
-import { setAppError, userErrorSelector } from '~/store/app-slice';
+import { categoriesSelector, setAppError, userErrorSelector } from '~/store/app-slice';
 import { ApplicationState } from '~/store/configure-store';
+import { getCategoriesWithSubcategories } from '~/utils/getCategoriesWithSubcategories';
 
 export default function RootLayout() {
     const { isOpen: openBurger, onToggle, onClose } = useDisclosure();
@@ -21,8 +20,8 @@ export default function RootLayout() {
     const isLoading = useSelector((state: ApplicationState) => state.app.isLoading);
     const error = useSelector(userErrorSelector);
     const dispatch = useDispatch();
-    const categories = useCategories();
-    const filterCategory = categories?.filter((item) => item.subCategories);
+    const categories = useSelector(categoriesSelector);
+    const filterCategory = getCategoriesWithSubcategories(categories);
 
     useEffect(() => {
         if (isDesktop) {
@@ -33,19 +32,17 @@ export default function RootLayout() {
     useEffect(() => {
         const sessionError = sessionStorage.getItem('error');
         if (sessionError) {
-            dispatch(setAppError(sessionError));
+            dispatch(setAppError({ title: 'Ошибка сервера', message: sessionError }));
             sessionStorage.removeItem('error');
         }
     }, [dispatch]);
 
-    const randomCategory = useRandomCategory(filterCategory!);
-
     return (
-        <Box display='flex' flexDirection='column'>
+        <Flex direction='column' align='center' w='100%'>
             {isLoading && <FullPageLoader />}
-            {error && <ErrorNotification error={error} />}
+            {error && <ErrorNotification error={error.message} title={error.title} />}
             <Header openBurger={openBurger} onToggle={onToggle} />
-            <Flex>
+            <Flex filter={isLoading ? 'blur(2px)' : 'none'} transition='filter 0.2s ease-out'>
                 {isDesktop ? (
                     <Sidebar />
                 ) : (
@@ -61,11 +58,11 @@ export default function RootLayout() {
                     onClick={() => onClose()}
                 >
                     <Outlet />
-                    <Footer footerData={randomCategory} />
+                    <Footer footerData={filterCategory!} />
                 </Flex>
                 <AsideBar />
             </Flex>
             <FooterMobile openBurger={openBurger} />
-        </Box>
+        </Flex>
     );
 }

@@ -7,7 +7,6 @@ import { Swiper as SwiperType } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 import { CategoryTags } from '~/components/CategoryPage/TabComponent/CategoryTags/CategoryTags';
-import { Recipe } from '~/components/mockData';
 import { useLocalFallback } from '~/hooks/useLocalFallback';
 import { Category } from '~/query/services/category-api.type';
 import { useGetRecipesQuery } from '~/query/services/recipe-api';
@@ -21,7 +20,7 @@ import rightSlider from './../../../assets/rightSlider.svg';
 
 type NewRecipesSectionProps = {
     categoryData: Category[];
-    filteredData?: Recipe[];
+    filteredData?: Category[];
 };
 
 export const NewRecipesSection = ({ categoryData }: NewRecipesSectionProps) => {
@@ -34,7 +33,6 @@ export const NewRecipesSection = ({ categoryData }: NewRecipesSectionProps) => {
         sortBy: 'createdAt',
         sortOrder: 'desc',
     });
-
     const handlePrevClick = () => {
         if (swiperInstance) {
             swiperInstance.slidePrev();
@@ -47,10 +45,16 @@ export const NewRecipesSection = ({ categoryData }: NewRecipesSectionProps) => {
         }
     };
 
+    const fallback = useLocalFallback('cachedRecipeCategory', isError, data);
+
+    if (!categoryData || categoryData.length === 0) return;
+
+    const safeCategoryData = Array.isArray(categoryData) ? categoryData : [];
+
     const handleGetRecipe = (recipeId: string, categoriesIds: string[]) => {
         const { condition, matchedCategory, matchedSubcategory } = checkAndNavigate({
             categoriesIds,
-            categoryData,
+            categoryData: safeCategoryData,
         });
         if (condition) {
             navigate('/error-page');
@@ -59,12 +63,7 @@ export const NewRecipesSection = ({ categoryData }: NewRecipesSectionProps) => {
         navigate(`/${matchedCategory?.category}/${matchedSubcategory?.category}/${recipeId}`);
     };
 
-    const fallback = useLocalFallback('cachedRecipeCategory', isError, data);
-
-    const recipesToDisplay = data?.data || fallback?.data || [];
-    const sortedRecipes = [...recipesToDisplay].sort(
-        (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
-    );
+    const sortedRecipes = data?.data || fallback?.data || [];
 
     return (
         <Flex direction='column' w='100%' maxHeight='550px' mt='32px' position='relative'>

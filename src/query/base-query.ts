@@ -16,21 +16,32 @@ export const baseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryE
     api,
     extraOptions,
 ) => {
-    let result = await rawBaseQuery(args, api, extraOptions);
+    const result = await rawBaseQuery(args, api, extraOptions);
 
     if (result.error) {
         const status = result.error?.status;
         const statusCode = typeof status === 'string' ? parseInt(status, 10) : status;
-        if (statusCode === 429) {
-            await new Promise((resolve) => setTimeout(resolve, 10000));
-            result = await rawBaseQuery(args, api, extraOptions);
-        }
         if (statusCode === 404) {
-            api.dispatch(setAppError('Попробуйте поискать снова попозже'));
+            api.dispatch(
+                setAppError({
+                    title: 'Ошибка сервера',
+                    message: 'Попробуйте поискать снова попозже',
+                }),
+            );
         } else if (statusCode === 500) {
-            api.dispatch(setAppError('Попробуйте поискать снова попозже'));
+            api.dispatch(
+                setAppError({
+                    title: 'Ошибка сервера',
+                    message: 'Попробуйте поискать снова попозже',
+                }),
+            );
         } else if (statusCode >= 500) {
-            api.dispatch(setAppError('Попробуйте поискать снова попозже'));
+            api.dispatch(
+                setAppError({
+                    title: 'Ошибка сервера',
+                    message: 'Попробуйте поискать снова попозже',
+                }),
+            );
         }
     }
 

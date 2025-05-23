@@ -17,9 +17,7 @@ export const useValidateCategory = ({
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!categoryData || !category) return;
-
-        const foundCategory = categoryData.find((cat) => cat.category === category);
+        const foundCategory = categoryData?.find((cat) => cat.category === category);
         const isCategoryValid = Boolean(foundCategory);
 
         const isSubcategoryValid = subcategory

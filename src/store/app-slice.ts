@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
+import { authApi } from '~/query/services/auth-api';
 import { Category } from '~/query/services/category-api.type';
+import { recipeApi } from '~/query/services/recipe-api';
 
 import { categoryApi } from './../query/services/category-api';
 import { ApplicationState } from './configure-store';
@@ -9,7 +11,7 @@ export type AppState = typeof initialState;
 
 const initialState = {
     isLoading: false,
-    error: '' as string | null,
+    error: null as { title: string; message: string } | null,
     selectedCategoryId: localStorage.getItem('selectedCategoryId') || null,
     categories: [] as Category[],
 };
@@ -17,7 +19,10 @@ export const appSlice = createSlice({
     name: 'app',
     initialState,
     reducers: {
-        setAppError(state, { payload: error }: PayloadAction<string | null>) {
+        setAppError(
+            state,
+            { payload: error }: PayloadAction<{ title: string; message: string } | null>,
+        ) {
             state.error = error;
         },
         setAppLoader(state, { payload: isLoading }: PayloadAction<boolean>) {
@@ -53,6 +58,24 @@ export const appSlice = createSlice({
                 },
             )
             .addMatcher(categoryApi.endpoints.getCategories.matchRejected, (state) => {
+                state.isLoading = false;
+            })
+            .addMatcher(recipeApi.endpoints.getRecipesCategory.matchPending, (state) => {
+                state.isLoading = true;
+            })
+            .addMatcher(recipeApi.endpoints.getRecipesCategory.matchFulfilled, (state) => {
+                state.isLoading = false;
+            })
+            .addMatcher(recipeApi.endpoints.getRecipesCategory.matchRejected, (state) => {
+                state.isLoading = false;
+            })
+            .addMatcher(authApi.endpoints.login.matchPending, (state) => {
+                state.isLoading = true;
+            })
+            .addMatcher(authApi.endpoints.login.matchFulfilled, (state) => {
+                state.isLoading = false;
+            })
+            .addMatcher(authApi.endpoints.login.matchRejected, (state) => {
                 state.isLoading = false;
             });
     },

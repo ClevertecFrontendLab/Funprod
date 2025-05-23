@@ -1,23 +1,13 @@
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
 
-import { mockData, Recipe } from './../components/mockData';
+import { categoriesSelector } from '~/store/app-slice';
 
 export const allergenKeywords: Record<string, string[]> = {
     'Томат (помидор)': ['томат', 'томатный', 'помидор'],
     Гриб: ['гриб', 'грибы'],
     'Молочные продукты': ['молоко', 'сыр', 'сливки', 'кефир', 'творог'],
     лук: ['лук', 'луковый', 'луковицы'],
-};
-
-const sideDishTranslations: Record<string, string> = {
-    Картошка: 'potatoes',
-    Гречка: 'Buckwheat',
-    Паста: 'Pasta',
-    Спагетти: 'Spaghetti',
-    Рис: 'Rice',
-    Капуста: 'Cabbage',
-    Фасоль: 'Beans',
-    'Другие овощи': 'Other Vegetables',
 };
 
 const useRecipeFilters = () => {
@@ -27,6 +17,7 @@ const useRecipeFilters = () => {
     const [selectedSide, setSelectedSide] = useState<string[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [categoriesIds, setCategoriesIds] = useState<string[]>([]);
+    const categoryData = useSelector(categoriesSelector);
 
     const allergens = excludedIngredients.flatMap((item) => {
         const match = item.match(/^(.+?)\s*\((.+?)\)/);
@@ -39,41 +30,14 @@ const useRecipeFilters = () => {
     const meat = selectedMeat.map((item) => item.split('(')[0].trim().toLowerCase());
     const side = selectedSide.map((item) => item.split('(')[0].trim().toLowerCase());
 
-    const selectedSideTranslations = (side: string) => sideDishTranslations[side] || side;
-
-    const isRecipeAllowed = (recipe: Recipe, excludedAllergens: string[]) =>
-        !excludedAllergens.some((inputAllergen) => {
-            const allergenKey = Object.keys(allergenKeywords).find(
-                (key) => key.toLowerCase() === inputAllergen.toLowerCase(),
-            );
-
-            const keywords = allergenKey ? allergenKeywords[allergenKey] : [inputAllergen];
-
-            return keywords.some((keyword) =>
-                recipe.ingredients.some((ingredient) =>
-                    ingredient.title.toLowerCase().includes(keyword.toLowerCase()),
-                ),
-            );
-        });
-
-    const filteredRecipes = mockData.filter((recipe) => {
-        const meatMatches =
-            selectedMeat.length === 0 || (recipe.meat && selectedMeat.includes(recipe.meat));
-
-        const sideMatches =
-            selectedSide.length === 0 ||
-            (recipe.side &&
-                selectedSide.some((side) => selectedSideTranslations(side) === recipe.side));
-
+    const filteredRecipes = categoryData.filter((recipe) => {
         const categoryMatches =
             selectedCategory === '' ||
             (recipe.category && recipe.category.includes(selectedCategory));
 
-        const allergensMatch = isRecipeAllowed(recipe, excludedIngredients);
-
         const searchMatches = recipe.title.toLowerCase().includes(searchQuery.toLowerCase());
 
-        return meatMatches && sideMatches && categoryMatches && allergensMatch && searchMatches;
+        return categoryMatches && searchMatches;
     });
 
     return {
