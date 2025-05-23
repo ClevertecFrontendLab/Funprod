@@ -75,11 +75,7 @@ export const Email = ({ setStep, setEmail }: EmailProps) => {
     return (
         <Flex direction='column' align='center'>
             {forgotError && (
-                <ErrorNotification
-                    error={forgotError.message}
-                    title={forgotError.title}
-                    isAuthPage
-                />
+                <ErrorNotification error={forgotError.message} title={forgotError.title} />
             )}
             <Image
                 src={Forgot}

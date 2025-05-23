@@ -1,6 +1,7 @@
 import { Category } from '~/query/services/category-api.type';
 
 import { generatePageTitles } from './generatePageTitles';
+import { getCategoriesWithSubcategories } from './getCategoriesWithSubcategories';
 
 type BreadcrumbItem = { label: string; to: string };
 
@@ -15,7 +16,7 @@ export function getBreadcrumb({
     id?: string;
     recipeData?: { _id: string; title: string };
 }): { breadcrumbItems?: BreadcrumbItem[]; pageTitles: Record<string, string> } {
-    const dataCategories = categoryData?.filter((item) => item.subCategories);
+    const dataCategories = getCategoriesWithSubcategories(categoryData);
     const dataSubCategories = categoryData?.filter((item) => !item.subCategories);
 
     const pageTitles = generatePageTitles(dataCategories, dataSubCategories);

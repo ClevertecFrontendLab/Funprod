@@ -12,6 +12,7 @@ import { Header } from '~/components/Header/Header';
 import { Sidebar } from '~/components/Sidebar/Sidebar';
 import { categoriesSelector, setAppError, userErrorSelector } from '~/store/app-slice';
 import { ApplicationState } from '~/store/configure-store';
+import { getCategoriesWithSubcategories } from '~/utils/getCategoriesWithSubcategories';
 
 export default function RootLayout() {
     const { isOpen: openBurger, onToggle, onClose } = useDisclosure();
@@ -20,7 +21,7 @@ export default function RootLayout() {
     const error = useSelector(userErrorSelector);
     const dispatch = useDispatch();
     const categories = useSelector(categoriesSelector);
-    const filterCategory = categories.filter((item) => item.subCategories);
+    const filterCategory = getCategoriesWithSubcategories(categories);
 
     useEffect(() => {
         if (isDesktop) {
@@ -57,7 +58,7 @@ export default function RootLayout() {
                     onClick={() => onClose()}
                 >
                     <Outlet />
-                    <Footer footerData={filterCategory} />
+                    <Footer footerData={filterCategory!} />
                 </Flex>
                 <AsideBar />
             </Flex>
