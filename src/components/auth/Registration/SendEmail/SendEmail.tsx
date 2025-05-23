@@ -48,8 +48,9 @@ export const SendEmail = ({ email }: SendEmailProps) => (
             lineHeight='133%'
             color='rgba(0, 0, 0, 0.48)'
             textAlign='center'
+            whiteSpace={{ md: 'normal', base: 'pre-line' }}
         >
-            Не пришло письмо? Проверьте папку Спам.
+            Не пришло письмо? {'\n'} Проверьте папку Спам.
             <br />
             По другим вопросам свяжитесь с поддержкой.
         </ModalFooter>

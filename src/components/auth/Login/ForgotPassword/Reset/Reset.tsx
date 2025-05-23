@@ -95,7 +95,7 @@ export const Reset = ({ setSuccess, onClose, email }: ResetProps) => {
 
     return (
         <Flex direction='column' align='center'>
-            <Box w={{ md: '332px', base: '270px' }}>
+            <Box w={{ md: '396px', base: '270px' }}>
                 <ModalHeader p='0' m={{ md: '32px 32px 0 32px', base: '32px 0 0 0' }}>
                     <Text fontWeight='700' fontSize='24px' lineHeight='133%' textAlign='center'>
                         Восстановление <br /> аккаунта
@@ -107,7 +107,6 @@ export const Reset = ({ setSuccess, onClose, email }: ResetProps) => {
                             <ErrorNotification
                                 error={resetError.message}
                                 title={resetError.title}
-                                isAuthPage
                             />
                         )}
                         <InputField

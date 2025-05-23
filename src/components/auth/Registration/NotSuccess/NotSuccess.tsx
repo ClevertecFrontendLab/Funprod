@@ -27,7 +27,7 @@ export const NotSuccess = () => (
                     fontSize='16px'
                     lineHeight='150%'
                     textAlign='center'
-                    color='rgba(0, 0, 0, 0.92)'
+                    color='rgba(0, 0, 0, 0.64)'
                 >
                     Ваша ссылка для верификации недействительна. Попробуйте зарегистрироваться
                     снова.

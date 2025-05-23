@@ -46,9 +46,9 @@ export const Repeat = ({ onClose, setRepeatLogin }: RepeatProps) => {
                         fontSize='16px'
                         lineHeight='150%'
                         textAlign='center'
-                        color='rgba(0, 0, 0, 0.92)'
+                        color='rgba(0, 0, 0, 0.64)'
                     >
-                        Что-то пошло не так. Попробуйте еще раз
+                        Что-то пошло не так. <br /> Попробуйте еще раз
                     </Text>
                 </ModalBody>
             </LinkBox>

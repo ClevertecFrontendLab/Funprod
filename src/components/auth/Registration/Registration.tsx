@@ -129,7 +129,11 @@ export const Registration = ({ onOpen, setFormData, formData }: RegistrationProp
                     />
                 )}
                 <VStack w={{ md: '461px', sm: '355px', base: '328px' }}>
-                    <Text>{step === 1 ? 'Шаг 1. Личная информация' : 'Шаг 2. Логин и пароль'}</Text>
+                    <Flex w='100%' textAlign='start'>
+                        <Text fontWeight='400' fontSize='16px' lineHeight='150%'>
+                            {step === 1 ? 'Шаг 1. Личная информация' : 'Шаг 2. Логин и пароль'}
+                        </Text>
+                    </Flex>
                     <Progress
                         data-test-id='sign-up-progress'
                         variant='custom'

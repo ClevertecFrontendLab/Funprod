@@ -94,9 +94,9 @@ export const Code = ({ email, setStep }: CodeProps) => {
                     h={{ md: '206px', base: '108px' }}
                     mt='32px'
                 />
-                <Box w={{ md: '332px', base: '270px' }}>
+                <Box w={{ md: '396px', base: '270px' }}>
                     <ModalHeader p='0' m={{ md: '32px 32px 0 32px', base: '32px 0 0 0' }}>
-                        <>
+                        <Box>
                             {hasError && (
                                 <Text
                                     fontWeight='700'
@@ -113,17 +113,18 @@ export const Code = ({ email, setStep }: CodeProps) => {
                                 fontSize='16px'
                                 lineHeight='150%'
                                 textAlign='center'
+                                whiteSpace={{ md: 'normal', base: 'pre-line' }}
                             >
-                                Мы отправили вам на e-mail {email}
-                                шестизначный код. Введите его ниже.
+                                Мы отправили вам на e-mail
+                                <Text fontWeight='600'>{email}</Text>
+                                шестизначный код.{'\n'} Введите его ниже.
                             </Text>
-                        </>
+                        </Box>
                     </ModalHeader>
                     <ModalBody m={{ md: '16px 32px 0 32px', base: '16px 0 0 0' }} p='0'>
                         <HStack m={{ md: '0 32px', base: '0' }}>
                             <PinInput
                                 otp
-                                size='md'
                                 onComplete={onComplete}
                                 isInvalid={hasError}
                                 value={pinValue}
