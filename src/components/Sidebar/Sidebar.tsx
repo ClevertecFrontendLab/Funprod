@@ -15,8 +15,9 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router';
 
+import { Category } from '~/query/services/category-api.type';
 import { categoriesSelector, setSelectedCategoryId } from '~/store/app-slice';
-import { getCategoriesWithSubcategories } from '~/utils/getCategoriesWithSubcategories';
+import { useCategoriesWithSubcategories } from '~/utils/getCategoriesWithSubcategories';
 import { getFullMediaUrl } from '~/utils/getFullMediaUrl';
 
 import { Breadcrumbs } from '../Header/Breadcrumbs/Breadcrumbs';
@@ -34,11 +35,6 @@ export const Sidebar = ({ openBurger, onClose }: SidebarProps) => {
     const location = useLocation();
     const currentPath = location.pathname;
     const categoryDataRedux = useSelector(categoriesSelector);
-    const localDataString = localStorage.getItem('cachedCategories');
-    const categoryDataLocal = localDataString ? JSON.parse(localDataString) : [];
-
-    const categoryData =
-        categoryDataRedux && categoryDataRedux.length > 0 ? categoryDataRedux : categoryDataLocal;
     const dispatch = useDispatch();
 
     const handleAccordionButton = (index: number) => {
@@ -48,12 +44,11 @@ export const Sidebar = ({ openBurger, onClose }: SidebarProps) => {
     const handleCategoryClick = (categoryId: string) => {
         dispatch(setSelectedCategoryId(categoryId));
     };
-    const sidebarCategory = getCategoriesWithSubcategories(categoryData);
+    const sidebarCategory = useCategoriesWithSubcategories(categoryDataRedux);
 
     return (
         <Flex
             data-test-id='nav'
-            flex='1'
             display={{ base: openBurger ? 'flex' : 'none', md: 'flex' }}
             p={openBurger ? '0' : '14px 4px 0 0'}
             w={{ md: '256px', base: '0' }}
@@ -62,6 +57,7 @@ export const Sidebar = ({ openBurger, onClose }: SidebarProps) => {
                 borderRadius={{ base: '0 0 12px 12px', md: 'none' }}
                 background='#fff'
                 position='fixed'
+                left={{ md: '0', lg: 'unset' }}
                 top={{ md: '80px', base: '64px' }}
                 right={openBurger ? '5px' : 'unset'}
                 h={{ md: '100vh', sm: '868px', base: '652px' }}
@@ -222,62 +218,68 @@ export const Sidebar = ({ openBurger, onClose }: SidebarProps) => {
                                     </h2>
                                     <AccordionPanel padding={0} margin={0}>
                                         <List>
-                                            {section.subCategories.map((item, i) => {
-                                                const isActive =
-                                                    currentPath ===
-                                                    `/${section.category}/${item.category}`;
-                                                return (
-                                                    <ListItem key={i}>
-                                                        <ChakraLink
-                                                            data-test-id={
-                                                                isActive
-                                                                    ? `${item.category}-active`
-                                                                    : ''
-                                                            }
-                                                            as={Link}
-                                                            onClick={() =>
-                                                                handleCategoryClick(section._id)
-                                                            }
-                                                            to={`/${section.category}/${item.category}`}
-                                                            fontWeight={isActive ? '700' : '400'}
-                                                            sx={{
-                                                                display: 'flex',
-                                                                alignItems: 'center',
-                                                                width: '230px',
-                                                                height: '36px',
-                                                                marginLeft: '0',
+                                            {section.subCategories.map(
+                                                (item: Category, i: number) => {
+                                                    const isActive =
+                                                        currentPath ===
+                                                        `/${section.category}/${item.category}`;
+                                                    return (
+                                                        <ListItem key={i}>
+                                                            <ChakraLink
+                                                                data-test-id={
+                                                                    isActive
+                                                                        ? `${item.category}-active`
+                                                                        : ''
+                                                                }
+                                                                as={Link}
+                                                                onClick={() =>
+                                                                    handleCategoryClick(section._id)
+                                                                }
+                                                                to={`/${section.category}/${item.category}`}
+                                                                fontWeight={
+                                                                    isActive ? '700' : '400'
+                                                                }
+                                                                sx={{
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    width: '230px',
+                                                                    height: '36px',
+                                                                    marginLeft: '0',
 
-                                                                _hover: {
-                                                                    textDecoration: 'none',
-                                                                    color: 'inherit',
-                                                                    fontWeight: '700',
-                                                                    '::before': {
-                                                                        width: '8px',
-                                                                        height: '28px',
-                                                                        marginLeft: '33px',
+                                                                    _hover: {
+                                                                        textDecoration: 'none',
+                                                                        color: 'inherit',
+                                                                        fontWeight: '700',
+                                                                        '::before': {
+                                                                            width: '8px',
+                                                                            height: '28px',
+                                                                            marginLeft: '33px',
+                                                                        },
                                                                     },
-                                                                },
-                                                                '::before': {
-                                                                    content: '""',
-                                                                    display: 'inline-block',
-                                                                    width: isActive ? '8px' : '1px',
-                                                                    height: isActive
-                                                                        ? '28px'
-                                                                        : '24px',
-                                                                    backgroundColor: '#c4ff61',
-                                                                    margin: isActive
-                                                                        ? '0 11px 0 33px'
-                                                                        : '2px 11px 2px 40px',
-                                                                    transition:
-                                                                        'width 0.3s ease-in-out, margin-left 0.3s ease-in-out',
-                                                                },
-                                                            }}
-                                                        >
-                                                            {item.title}
-                                                        </ChakraLink>
-                                                    </ListItem>
-                                                );
-                                            })}
+                                                                    '::before': {
+                                                                        content: '""',
+                                                                        display: 'inline-block',
+                                                                        width: isActive
+                                                                            ? '8px'
+                                                                            : '1px',
+                                                                        height: isActive
+                                                                            ? '28px'
+                                                                            : '24px',
+                                                                        backgroundColor: '#c4ff61',
+                                                                        margin: isActive
+                                                                            ? '0 11px 0 33px'
+                                                                            : '2px 11px 2px 40px',
+                                                                        transition:
+                                                                            'width 0.3s ease-in-out, margin-left 0.3s ease-in-out',
+                                                                    },
+                                                                }}
+                                                            >
+                                                                {item.title}
+                                                            </ChakraLink>
+                                                        </ListItem>
+                                                    );
+                                                },
+                                            )}
                                         </List>
                                     </AccordionPanel>
                                 </AccordionItem>

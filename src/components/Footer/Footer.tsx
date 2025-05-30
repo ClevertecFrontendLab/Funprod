@@ -1,4 +1,6 @@
 import { Box, Button, Flex, Image, Text } from '@chakra-ui/react';
+import { memo } from 'react';
+import { useLocation } from 'react-router';
 
 import { useRandomCategory } from '~/hooks/useRandomCategory';
 import { Category } from '~/query/services/category-api.type';
@@ -13,7 +15,9 @@ type FooterProps = {
     footerCategoryId?: string;
 };
 
-export const Footer = ({ footerData }: FooterProps) => {
+export const Footer = memo(({ footerData }: FooterProps) => {
+    const location = useLocation();
+
     const randomCategory = useRandomCategory(footerData!);
     const footerSubCategoryId = randomCategory?.subCategories[0]._id;
     const { data } = useGetRecipesCategoryQuery(
@@ -26,6 +30,7 @@ export const Footer = ({ footerData }: FooterProps) => {
     const firstFooterCategory = Array.isArray(data?.data) && data.data.slice(0, 2);
     const secondFooterCategory = Array.isArray(data?.data) && data.data.slice(2, 5);
 
+    if (location.pathname === '/new-recipe') return null;
     return (
         <Flex
             direction='column'
@@ -186,4 +191,4 @@ export const Footer = ({ footerData }: FooterProps) => {
             </Flex>
         </Flex>
     );
-};
+});

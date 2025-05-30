@@ -25,6 +25,7 @@
         "@emotion/styled": "^11.14.0",
         "@reduxjs/toolkit": "2.5.1",
         "framer-motion": "^12.8.0",
+        "jwt-decode": "^4.0.0",
         "lefthook": "1.10.10",
         "react": "19.0.0",
         "react-dom": "19.0.0",

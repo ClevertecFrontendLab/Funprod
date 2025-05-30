@@ -12,6 +12,7 @@ export type AppState = typeof initialState;
 const initialState = {
     isLoading: false,
     error: null as { title: string; message: string } | null,
+    success: null as { title: string; message: string } | null,
     selectedCategoryId: localStorage.getItem('selectedCategoryId') || null,
     categories: [] as Category[],
 };
@@ -24,6 +25,12 @@ export const appSlice = createSlice({
             { payload: error }: PayloadAction<{ title: string; message: string } | null>,
         ) {
             state.error = error;
+        },
+        setAppSuccess(
+            state,
+            { payload: success }: PayloadAction<{ title: string; message: string } | null>,
+        ) {
+            state.success = success;
         },
         setAppLoader(state, { payload: isLoading }: PayloadAction<boolean>) {
             state.isLoading = isLoading;
@@ -77,13 +84,79 @@ export const appSlice = createSlice({
             })
             .addMatcher(authApi.endpoints.login.matchRejected, (state) => {
                 state.isLoading = false;
+            })
+            .addMatcher(recipeApi.endpoints.createDraftRecipe.matchRejected, (state, action) => {
+                if (action.payload?.status === 409) {
+                    state.error = {
+                        title: 'Ошибка',
+                        message: 'Рецепт с таким названием уже существует',
+                    };
+                }
+                if (action.payload?.status === 500) {
+                    state.error = {
+                        title: 'Ошибка сервера',
+                        message: 'Не удалось сохранить черновик рецепта',
+                    };
+                }
+            })
+            .addMatcher(recipeApi.endpoints.createRecipe.matchRejected, (state, action) => {
+                if (action.payload?.status === 409) {
+                    state.error = {
+                        title: 'Ошибка',
+                        message: 'Рецепт с таким названием уже существует',
+                    };
+                }
+                if (action.payload?.status === 500) {
+                    state.error = {
+                        title: 'Ошибка сервера',
+                        message: 'Попробуйте пока сохранить в черновик.',
+                    };
+                }
+            })
+            .addMatcher(recipeApi.endpoints.editRecipe.matchRejected, (state, action) => {
+                if (action.payload?.status === 409) {
+                    state.error = {
+                        title: 'Ошибка',
+                        message: 'Рецепт с таким названием уже существует',
+                    };
+                }
+                if (action.payload?.status === 500) {
+                    state.error = {
+                        title: 'Ошибка сервера',
+                        message: 'Попробуйте пока сохранить в черновик',
+                    };
+                }
+            })
+
+            .addMatcher(recipeApi.endpoints.editRecipe.matchFulfilled, (state) => {
+                state.success = {
+                    title: '',
+                    message: 'Рецепт успешно опубликован',
+                };
+            })
+            .addMatcher(recipeApi.endpoints.deleteRecipe.matchRejected, (state, action) => {
+                if (action.payload?.status === 500) {
+                    state.error = {
+                        title: 'Ошибка сервера',
+                        message: 'Не удалось удалить рецепт',
+                    };
+                }
+            })
+
+            .addMatcher(recipeApi.endpoints.deleteRecipe.matchFulfilled, (state) => {
+                state.success = {
+                    title: '',
+                    message: 'Рецепт успешно удален',
+                };
             });
     },
 });
 export const userLoadingSelector = (state: ApplicationState) => state.app.isLoading;
 export const userErrorSelector = (state: ApplicationState) => state.app.error;
+export const userSuccessSelector = (state: ApplicationState) => state.app.success;
 export const selectedCategoryIdSelector = (state: ApplicationState) => state.app.selectedCategoryId;
 export const categoriesSelector = (state: ApplicationState) => state.app.categories;
 
-export const { setAppError, setAppLoader, setSelectedCategoryId, setCategories } = appSlice.actions;
+export const { setAppError, setAppLoader, setSelectedCategoryId, setCategories, setAppSuccess } =
+    appSlice.actions;
 export default appSlice.reducer;

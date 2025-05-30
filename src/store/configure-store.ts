@@ -2,6 +2,7 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 
 import { authApi } from '~/query/services/auth-api';
 import { recipeApi } from '~/query/services/recipe-api';
+import { uploadFileApi } from '~/query/services/uploadFile-api';
 
 import { apiSlice } from './../query/create-api';
 import { categoryApi } from './../query/services/category-api';
@@ -15,6 +16,7 @@ const rootReducer = combineReducers({
     [categoryApi.reducerPath]: categoryApi.reducer,
     [recipeApi.reducerPath]: recipeApi.reducer,
     [authApi.reducerPath]: authApi.reducer,
+    [uploadFileApi.reducerPath]: uploadFileApi.reducer,
 });
 
 export type ApplicationState = ReturnType<typeof rootReducer>;
@@ -26,6 +28,7 @@ export const store = configureStore({
             categoryApi.middleware,
             recipeApi.middleware,
             authApi.middleware,
+            uploadFileApi.middleware,
         ),
     devTools: !isProduction,
 });

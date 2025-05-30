@@ -18,30 +18,38 @@ import { Link } from 'react-router';
 
 import { useGetRecipeByIdQuery } from '~/query/services/recipe-api';
 import { categoriesSelector } from '~/store/app-slice';
-import { getCategoriesWithSubcategories } from '~/utils/getCategoriesWithSubcategories';
+import { useCategoriesWithSubcategories } from '~/utils/getCategoriesWithSubcategories';
 import { getFullMediaUrl } from '~/utils/getFullMediaUrl';
+import { getUserIdFromToken } from '~/utils/getUserIdFromToken';
 
 import { NewRecipesSection } from '../Main/NewRecipesSection/NewRecipesSection';
+import { NewRecipe } from '../NewRecipe/NewRecipe';
 import bookmarkHeart from './../../assets/actionBar/BookmarkHeart.svg';
 import emojiHeartEyes from './../../assets/actionBar/EmojiHeartEyes.svg';
 import authorRecipe from './../../assets/AuthorRecipe.jpg';
 import leftIcon from './../../assets/leftIcon.svg';
 import peopleIcon from './../../assets/peopleIcon.svg';
 import time from './../../assets/time.svg';
+import { DeleteButton } from './DeleteButton/DeleteButton';
+import { EditRecipeButton } from './EditRecipeButton/EditRecipeButton';
+import { LikeButton } from './LikeButton/LikeButton';
+import { SaveButton } from './SaveButton/SaveButton';
 
 export const RecipePage = () => {
     const { id } = useParams();
-    const { data, error, isError, isLoading } = useGetRecipeByIdQuery({ id: id! });
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const userId = getUserIdFromToken();
+    const { data, error, isError, isLoading } = useGetRecipeByIdQuery({ id: id! });
     const categoryDataRedux = useSelector(categoriesSelector);
     const localDataString = localStorage.getItem('cachedCategory');
     const categoryDataLocal = localDataString ? JSON.parse(localDataString) : [];
+    const [editMode, setEditMode] = useState(false);
 
     const categoryData =
         categoryDataRedux && categoryDataRedux.length > 0 ? categoryDataRedux : categoryDataLocal;
 
-    const categoryFilter = getCategoriesWithSubcategories(categoryData);
+    const categoryFilter = useCategoriesWithSubcategories(categoryDataRedux);
 
     const [servings, setServings] = useState(data?.portions || 1);
 
@@ -51,13 +59,15 @@ export const RecipePage = () => {
     };
 
     const scaledIngredients = data?.ingredients.map((ingredient) => {
-        const basePortions = data?.portions;
-        const scaledCount = (parseFloat(ingredient.count) * servings) / basePortions;
+        if (ingredient.count) {
+            const basePortions = data?.portions;
+            const scaledCount = (parseFloat(ingredient.count.toString()) * servings) / basePortions;
 
-        return {
-            ...ingredient,
-            count: Number.isNaN(scaledCount) ? ingredient.count : scaledCount.toFixed(1),
-        };
+            return {
+                ...ingredient,
+                count: Number.isNaN(scaledCount) ? ingredient.count : scaledCount.toFixed(1),
+            };
+        }
     });
 
     useEffect(() => {
@@ -78,9 +88,20 @@ export const RecipePage = () => {
     if (!data || data._id !== id || isLoading) {
         return <Spinner />;
     }
+
+    if (editMode) {
+        return (
+            <NewRecipe
+                dataForEditing={data}
+                editMode={editMode}
+                setEditMode={setEditMode}
+                id={data?._id}
+            />
+        );
+    }
     return (
         <>
-            {data && (
+            {(data || !editMode) && (
                 <Flex
                     maxW={{
                         base: '328px',
@@ -224,39 +245,17 @@ export const RecipePage = () => {
                                     align='center'
                                     justify='center'
                                 >
-                                    <Button
-                                        w={{ lg: '219px', md: '160px', base: '132px' }}
-                                        h={{ lg: '48px', md: '32px', base: '24px' }}
-                                        borderRadius='6px'
-                                        border='1px solid rgba(0, 0, 0, 0.48)'
-                                        bg='rgba(255, 255, 255, 0.06)'
-                                    >
-                                        <Image src={emojiHeartEyes} mr='8px' />
-                                        <Text
-                                            fontWeight='600'
-                                            fontSize={{ lg: '18px', md: '14px', base: '12px' }}
-                                            lineHeight='156%'
-                                            color=' rgba(0, 0, 0, 0.8)'
-                                        >
-                                            Оценить рецепт
-                                        </Text>
-                                    </Button>
-                                    <Button
-                                        w={{ lg: '273px', md: '202px', base: '168px' }}
-                                        h={{ lg: '48px', md: '32px', base: '24px' }}
-                                        borderRadius='6px'
-                                        bg='#b1ff2e'
-                                    >
-                                        <Image src={bookmarkHeart} mr='8px' />
-                                        <Text
-                                            fontWeight='600'
-                                            fontSize={{ lg: '18px', md: '14px', base: '12px' }}
-                                            lineHeight='156%'
-                                            color=' rgba(0, 0, 0, 0.8)'
-                                        >
-                                            Сохранить в закладки
-                                        </Text>
-                                    </Button>
+                                    {userId === data?.authorId ? (
+                                        <>
+                                            <DeleteButton id={data?._id} />
+                                            <EditRecipeButton setEditMode={setEditMode} />
+                                        </>
+                                    ) : (
+                                        <>
+                                            <LikeButton id={data?._id} />
+                                            <SaveButton id={data?._id} />
+                                        </>
+                                    )}
                                 </Flex>
                             </Flex>
                         </Flex>
@@ -346,7 +345,8 @@ export const RecipePage = () => {
                                         textAlign='center'
                                         w={{ base: '117px', sm: '100%' }}
                                     >
-                                        {data?.nutritionValue.proteins}
+                                        {data?.nutritionValue.proteins ||
+                                            data?.nutritionValue.protein}
                                     </Text>
                                     <Text
                                         fontWeight='600'
@@ -501,7 +501,7 @@ export const RecipePage = () => {
                                         color='rgba(0, 0, 0, 0.92)'
                                         ml={{ sm: '24px', base: '8px' }}
                                     >
-                                        {item.title}
+                                        {item?.title}
                                     </Text>
                                     <Flex mr={{ sm: '24px', base: '8px' }}>
                                         <Text
@@ -510,7 +510,7 @@ export const RecipePage = () => {
                                             lineHeight='143%'
                                             color='rgba(0, 0, 0, 0.92)'
                                         >
-                                            {item.count} {item.measureUnit}
+                                            {item?.count} {item?.measureUnit}
                                         </Text>
                                     </Flex>
                                 </Flex>
@@ -541,7 +541,7 @@ export const RecipePage = () => {
                                     w={{ lg: '668px', md: '578px', sm: '604px', base: '328px' }}
                                 >
                                     <Image
-                                        src={item ? getFullMediaUrl(item.image) : ''}
+                                        src={item.image ? getFullMediaUrl(item.image) : ''}
                                         maxW={{ md: '300px', base: '158px' }}
                                         minW={{ md: '300px', base: '158px' }}
                                     />

@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 
 import useRecipeFilters from '~/hooks/useRecipeFilters';
 import { categoriesSelector } from '~/store/app-slice';
-import { getCategoriesWithSubcategories } from '~/utils/getCategoriesWithSubcategories';
+import { useCategoriesWithSubcategories } from '~/utils/getCategoriesWithSubcategories';
 
 import { PageHeader } from '../PageHeader/PageHeader';
 import { SearchFilter } from '../SearchFilter/SearchFilter';
@@ -39,7 +39,7 @@ export const Main = () => {
 
     const categoryData =
         categoryDataRedux && categoryDataRedux.length > 0 ? categoryDataRedux : categoryDataLocal;
-    const filterCategory = getCategoriesWithSubcategories(categoryData);
+    const filterCategory = useCategoriesWithSubcategories(categoryDataRedux);
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {

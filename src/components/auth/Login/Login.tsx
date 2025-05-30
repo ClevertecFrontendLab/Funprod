@@ -130,7 +130,11 @@ export const Login = ({
     return (
         <>
             {loginError && (
-                <ErrorNotification error={loginError.message} title={loginError.title} isAuthPage />
+                <ErrorNotification
+                    message={loginError.message}
+                    title={loginError.title}
+                    isAuthPage
+                />
             )}
             <Flex direction='column' h='468px' align='center'>
                 <form

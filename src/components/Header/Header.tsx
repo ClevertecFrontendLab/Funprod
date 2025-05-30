@@ -1,5 +1,6 @@
 import { CloseIcon, HamburgerIcon } from '@chakra-ui/icons';
-import { Box, Button, Flex, Icon, Image, Link, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Icon, Image, Text } from '@chakra-ui/react';
+import { Link } from 'react-router';
 
 import bookmarkHeart from './../../assets/actionBar/BookmarkHeart.svg';
 import emojiHeartEyes from './../../assets/actionBar/EmojiHeartEyes.svg';
@@ -43,7 +44,7 @@ export const Header = ({ openBurger, onToggle }: HeaderProps) => (
             align='center'
             px={{ base: '8px', md: '24px' }}
         >
-            <Link href='/' _hover={{ textDecoration: 'none' }}>
+            <Link to='/' data-test-id='header-logo'>
                 <Image
                     display={{ base: 'none', sm: 'block' }}
                     src={headerLogo}

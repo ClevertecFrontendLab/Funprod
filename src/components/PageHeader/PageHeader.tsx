@@ -98,7 +98,6 @@ export const PageHeader = ({
             width='100%'
             align={{ sm: 'center', base: 'stretch' }}
             height='100%'
-            mt={{ md: '32px', base: '16px' }}
             zIndex='10'
             bg='#fff'
         >

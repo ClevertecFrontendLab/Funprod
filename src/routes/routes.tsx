@@ -7,6 +7,7 @@ import { CategoryPage } from '~/components/CategoryPage/CategoryPage';
 import { TabComponent } from '~/components/CategoryPage/TabComponent/TabComponent';
 import { Juiciest } from '~/components/Juiciest/Juiciest';
 import { Main } from '~/components/Main/Main';
+import { NewRecipe } from '~/components/NewRecipe/NewRecipe';
 import { NotFound } from '~/components/NotFound/NotFound';
 import { RecipePage } from '~/components/RecipesPage/RecipesPage';
 import RootLayout from '~/layouts/RootLayout';
@@ -37,6 +38,14 @@ export const routes: RouteObject[] = [
             },
             {
                 path: ':category/:subcategory/:id',
+                element: <RecipePage />,
+            },
+            {
+                path: 'new-recipe',
+                element: <NewRecipe />,
+            },
+            {
+                path: 'edit-recipe/:category/:subcategory/:id',
                 element: <RecipePage />,
             },
         ],

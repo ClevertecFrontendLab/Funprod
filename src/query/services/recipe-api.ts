@@ -1,17 +1,20 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 
-import { baseQuery } from '../base-query';
+import { baseQueryWithAuth } from './baseQueryWithAuth';
 import {
+    CreateRecipe,
     Data,
     GetRecipesById,
     GetRecipesParams,
     GetRecipesQueryArgs,
+    MeasureUnitsResponse,
     Recipe,
 } from './recipe-api.type';
 
 export const recipeApi = createApi({
     reducerPath: 'recipeApi',
-    baseQuery,
+    baseQuery: baseQueryWithAuth,
+    tagTypes: ['Recipe'],
     endpoints: (builder) => ({
         getRecipes: builder.query<Recipe, Partial<GetRecipesQueryArgs>>({
             query: (params) => ({
@@ -19,7 +22,7 @@ export const recipeApi = createApi({
                 method: 'GET',
                 params,
             }),
-
+            providesTags: [{ type: 'Recipe' }],
             transformResponse: (response: Recipe) => {
                 try {
                     localStorage.setItem('cachedRecipe', JSON.stringify(response));
@@ -49,8 +52,67 @@ export const recipeApi = createApi({
                 url: `recipe/${id}`,
                 method: 'GET',
             }),
+            providesTags: [{ type: 'Recipe' }],
+        }),
+        createRecipe: builder.mutation<Data, CreateRecipe>({
+            query: (body) => ({
+                url: 'recipe',
+                method: 'POST',
+                body,
+            }),
+        }),
+        createDraftRecipe: builder.mutation<Data, CreateRecipe>({
+            query: (body) => ({
+                url: 'recipe/draft',
+                method: 'POST',
+                body,
+            }),
+        }),
+        measureUnits: builder.query<MeasureUnitsResponse[], void>({
+            query: () => ({
+                url: 'measure-units',
+                method: 'GET',
+            }),
+        }),
+        likeRecipe: builder.mutation<Data, string>({
+            query: (id) => ({
+                url: `recipe/${id}/like`,
+                method: 'POST',
+            }),
+        }),
+        bookmarkRecipe: builder.mutation<Data, string>({
+            query: (id) => ({
+                url: `recipe/${id}/bookmark`,
+                method: 'POST',
+            }),
+        }),
+        editRecipe: builder.mutation<Data, { id: string; body: CreateRecipe }>({
+            query: ({ id, body }) => ({
+                url: `recipe/${id}`,
+                method: 'PATCH',
+                body,
+            }),
+            invalidatesTags: [{ type: 'Recipe' }],
+        }),
+        deleteRecipe: builder.mutation<Data, string>({
+            query: (id) => ({
+                url: `recipe/${id}`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: [{ type: 'Recipe' }],
         }),
     }),
 });
 
-export const { useGetRecipesCategoryQuery, useGetRecipesQuery, useGetRecipeByIdQuery } = recipeApi;
+export const {
+    useGetRecipesCategoryQuery,
+    useGetRecipesQuery,
+    useGetRecipeByIdQuery,
+    useCreateRecipeMutation,
+    useCreateDraftRecipeMutation,
+    useMeasureUnitsQuery,
+    useLikeRecipeMutation,
+    useBookmarkRecipeMutation,
+    useEditRecipeMutation,
+    useDeleteRecipeMutation,
+} = recipeApi;

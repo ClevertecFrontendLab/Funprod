@@ -131,7 +131,7 @@ export const Registration = ({ onOpen, setFormData, formData }: RegistrationProp
             >
                 {registrationError && (
                     <ErrorNotification
-                        error={registrationError.message}
+                        message={registrationError.message}
                         title={registrationError.title}
                         isAuthPage
                     />

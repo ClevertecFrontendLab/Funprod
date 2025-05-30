@@ -7,7 +7,7 @@ import { useGetRecipesQuery } from '~/query/services/recipe-api';
 import { Data } from '~/query/services/recipe-api.type';
 import { categoriesSelector } from '~/store/app-slice';
 import { checkAndNavigate } from '~/utils/checkAndNavigate';
-import { getCategoriesWithSubcategories } from '~/utils/getCategoriesWithSubcategories';
+import { useCategoriesWithSubcategories } from '~/utils/getCategoriesWithSubcategories';
 import { getFullMediaUrl } from '~/utils/getFullMediaUrl';
 
 import { CategoryTags } from '../CategoryPage/TabComponent/CategoryTags/CategoryTags';
@@ -80,7 +80,7 @@ export const Juiciest = () => {
 
         setIsFilterApplied(!!isApplied);
     }, [excludedIngredients, selectedCategory, selectedMeat, selectedSide, searchQuery]);
-    const dataCategories = getCategoriesWithSubcategories(categoryData);
+    const dataCategories = useCategoriesWithSubcategories();
 
     const handleGetRecipe = (recipeId: string, categoriesIds: string[]) => {
         const { condition, matchedCategory, matchedSubcategory } = checkAndNavigate({
