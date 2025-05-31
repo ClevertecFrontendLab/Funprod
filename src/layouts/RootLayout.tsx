@@ -69,12 +69,14 @@ export default function RootLayout() {
                 )}
                 <Flex
                     direction='column'
+                    align={{ sm: 'center', md: 'flex-start' }}
                     flex='1'
                     filter={openBurger ? 'blur(4px)' : 'none'}
                     transition='filter 0.2s ease-out'
                     bg={openBurger ? 'rgba(0,0,0,0.1)' : 'transparent'}
                     position='relative'
                     onClick={() => onClose()}
+                    ml={{ base: 0, md: '256px' }}
                 >
                     <Outlet />
                     <Footer footerData={filterCategory!} />

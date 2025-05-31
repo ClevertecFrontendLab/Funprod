@@ -1,6 +1,8 @@
 import { Flex, Image, Text } from '@chakra-ui/react';
 import { Link } from 'react-router';
 
+import { ROUTES } from '~/constants/routes';
+
 import breakfast from './../../assets/Breakfast.jpg';
 import headerLogo from './../../assets/header/logo.svg';
 export const NotFound = () => (
@@ -21,7 +23,7 @@ export const NotFound = () => (
             right='0'
             px={{ base: '8px', md: '24px' }}
         >
-            <Link to='/'>
+            <Link to={ROUTES.HOME}>
                 <Image
                     display={{ base: 'none', sm: 'block' }}
                     src={headerLogo}
@@ -52,7 +54,7 @@ export const NotFound = () => (
                     textAlign='center'
                 >
                     Можете поискать другой рецепт{' '}
-                    <Link to='/' data-test-id='error-page-go-home'>
+                    <Link to={ROUTES.HOME} data-test-id='error-page-go-home'>
                         здесь.
                     </Link>
                 </Text>

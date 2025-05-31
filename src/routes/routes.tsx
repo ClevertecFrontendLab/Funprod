@@ -10,13 +10,14 @@ import { Main } from '~/components/Main/Main';
 import { NewRecipe } from '~/components/NewRecipe/NewRecipe';
 import { NotFound } from '~/components/NotFound/NotFound';
 import { RecipePage } from '~/components/RecipesPage/RecipesPage';
+import { ROUTES } from '~/constants/routes';
 import RootLayout from '~/layouts/RootLayout';
 
 import { PrivateRoute } from './PrivateRoute';
 
 export const routes: RouteObject[] = [
     {
-        path: '/',
+        path: ROUTES.HOME,
         element: (
             <PrivateRoute>
                 <RootLayout />
@@ -25,42 +26,42 @@ export const routes: RouteObject[] = [
         children: [
             { index: true, element: <Main /> },
             {
-                path: 'the-juiciest',
+                path: ROUTES.JUICIEST,
                 children: [{ index: true, element: <Juiciest /> }],
             },
             {
-                path: ':category',
+                path: ROUTES.CATEGORY,
                 element: <CategoryPage />,
                 children: [
                     { index: true, element: <TabComponent /> },
-                    { path: ':subcategory', element: <TabComponent /> },
+                    { path: ROUTES.SUBCATEGORY, element: <TabComponent /> },
                 ],
             },
             {
-                path: ':category/:subcategory/:id',
+                path: `${ROUTES.CATEGORY}/${ROUTES.SUBCATEGORY}/${ROUTES.RECIPE_ID}`,
                 element: <RecipePage />,
             },
             {
-                path: 'new-recipe',
+                path: ROUTES.NEW_RECIPE,
                 element: <NewRecipe />,
             },
             {
-                path: 'edit-recipe/:category/:subcategory/:id',
+                path: `${ROUTES.EDIT_RECIPE}/${ROUTES.CATEGORY}/${ROUTES.SUBCATEGORY}/${ROUTES.RECIPE_ID}`,
                 element: <RecipePage />,
             },
         ],
     },
-    { path: '/not-found', element: <NotFound /> },
+    { path: ROUTES.NOT_FOUND, element: <NotFound /> },
     {
-        path: '/auth',
+        path: ROUTES.AUTH,
         element: <Auth />,
         children: [
             { index: true, element: <Login /> },
             {
-                path: 'registration',
+                path: ROUTES.REGISTRATION,
                 element: <Registration />,
             },
         ],
     },
-    { path: 'verification', element: <Auth /> },
+    { path: ROUTES.VERIFICATION, element: <Auth /> },
 ];

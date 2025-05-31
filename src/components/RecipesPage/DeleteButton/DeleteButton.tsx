@@ -1,23 +1,31 @@
 import { DeleteIcon } from '@chakra-ui/icons';
 import { IconButton } from '@chakra-ui/react';
 import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 
+import { ROUTES } from '~/constants/routes';
 import { useDeleteRecipeMutation } from '~/query/services/recipe-api';
+import { setRecipeId } from '~/store/app-slice';
 
-export const DeleteButton = ({ id }: { id: string }) => {
-    const [deleteRecipe, { data }] = useDeleteRecipeMutation();
+type DeleteButtonProps = {
+    id: string;
+};
+
+export const DeleteButton = ({ id }: DeleteButtonProps) => {
+    const [deleteRecipe, { isSuccess }] = useDeleteRecipeMutation();
     const navigate = useNavigate();
-
-    const handleClick = () => {
-        deleteRecipe(id);
+    const dispatch = useDispatch();
+    const handleClick = async () => {
+        dispatch(setRecipeId(id));
+        await deleteRecipe(id);
     };
 
     useEffect(() => {
-        if (data) {
-            navigate('/');
+        if (isSuccess) {
+            navigate(ROUTES.HOME);
         }
-    }, [data, navigate]);
+    }, [isSuccess, navigate]);
     return (
         <>
             <IconButton

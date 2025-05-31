@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 
 import draft from '~/assets/newRecipe/draft.svg';
+import { ROUTES } from '~/constants/routes';
 import { useFormNavigationBlocker } from '~/hooks/useFormNavigationBlocker';
 import { Category } from '~/query/services/category-api.type';
 import {
@@ -56,7 +57,7 @@ export const NewRecipe = ({ dataForEditing, editMode, setEditMode, id }: NewReci
         mode: 'onChange',
         shouldFocusError: false,
         defaultValues: {
-            ingredients: [{ title: null, count: 100, measureUnit: null }],
+            ingredients: [{ title: null, count: null, measureUnit: null }],
             steps: [{ stepNumber: 1, description: null, image: null }],
             categoriesIds: [],
             description: null,
@@ -130,7 +131,7 @@ export const NewRecipe = ({ dataForEditing, editMode, setEditMode, id }: NewReci
         if (draftData) {
             dispatch(setAppSuccess({ title: '', message: 'Черновик успешно сохранен' }));
             blocker.state === 'blocked' && blocker.proceed();
-            navigate('/');
+            navigate(ROUTES.HOME);
         }
     }, [blocker, dispatch, draftData, navigate]);
 

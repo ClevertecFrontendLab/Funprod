@@ -1,6 +1,8 @@
 import { Button, Flex, Image, Text } from '@chakra-ui/react';
 import { useNavigate } from 'react-router';
 
+import { ROUTES } from '~/constants/routes';
+
 import main from './../../assets/footerMobile/main.svg';
 import profile from './../../assets/footerMobile/profile.svg';
 import search from './../../assets/footerMobile/search.svg';
@@ -33,7 +35,7 @@ export const FooterMobile = ({ openBurger }: FooterMobileProps) => {
     const navigate = useNavigate();
 
     const handleButton = () => {
-        navigate('/new-recipe');
+        navigate(ROUTES.NEW_RECIPE);
     };
 
     return (
@@ -51,7 +53,7 @@ export const FooterMobile = ({ openBurger }: FooterMobileProps) => {
             {buttonList.map((item, index) => (
                 <Button
                     onClick={item.title === 'Записать' ? handleButton : undefined}
-                    key={index}
+                    key={item.title}
                     w='100%'
                     h='100%'
                     bg={

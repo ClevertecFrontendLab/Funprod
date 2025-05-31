@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { authApi } from '~/query/services/auth-api';
 import { Category } from '~/query/services/category-api.type';
 import { recipeApi } from '~/query/services/recipe-api';
+import { uploadFileApi } from '~/query/services/uploadFile-api';
 
 import { categoryApi } from './../query/services/category-api';
 import { ApplicationState } from './configure-store';
@@ -15,6 +16,7 @@ const initialState = {
     success: null as { title: string; message: string } | null,
     selectedCategoryId: localStorage.getItem('selectedCategoryId') || null,
     categories: [] as Category[],
+    recipeId: '',
 };
 export const appSlice = createSlice({
     name: 'app',
@@ -45,6 +47,9 @@ export const appSlice = createSlice({
         },
         setCategories(state, { payload }: PayloadAction<Category[]>) {
             state.categories = payload;
+        },
+        setRecipeId(state, { payload }: PayloadAction<string>) {
+            state.recipeId = payload;
         },
     },
     extraReducers: (builder) => {
@@ -142,11 +147,16 @@ export const appSlice = createSlice({
                     };
                 }
             })
-
             .addMatcher(recipeApi.endpoints.deleteRecipe.matchFulfilled, (state) => {
                 state.success = {
                     title: '',
                     message: 'Рецепт успешно удален',
+                };
+            })
+            .addMatcher(uploadFileApi.endpoints.uploadFile.matchRejected, (state) => {
+                state.error = {
+                    title: 'Ошибка сервера',
+                    message: 'Попробуйте сохранить фото позже.',
                 };
             });
     },
@@ -156,7 +166,14 @@ export const userErrorSelector = (state: ApplicationState) => state.app.error;
 export const userSuccessSelector = (state: ApplicationState) => state.app.success;
 export const selectedCategoryIdSelector = (state: ApplicationState) => state.app.selectedCategoryId;
 export const categoriesSelector = (state: ApplicationState) => state.app.categories;
+export const recipeIdSelector = (state: ApplicationState) => state.app.recipeId;
 
-export const { setAppError, setAppLoader, setSelectedCategoryId, setCategories, setAppSuccess } =
-    appSlice.actions;
+export const {
+    setAppError,
+    setAppLoader,
+    setSelectedCategoryId,
+    setCategories,
+    setAppSuccess,
+    setRecipeId,
+} = appSlice.actions;
 export default appSlice.reducer;

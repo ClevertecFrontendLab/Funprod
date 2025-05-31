@@ -1,5 +1,5 @@
-import { AddIcon, DeleteIcon } from '@chakra-ui/icons';
-import { Button, Flex, FormControl, FormLabel, IconButton, Text, Textarea } from '@chakra-ui/react';
+import { AddIcon } from '@chakra-ui/icons';
+import { Button, Flex, IconButton, Text } from '@chakra-ui/react';
 import {
     Control,
     FieldErrors,
@@ -10,6 +10,7 @@ import {
 } from 'react-hook-form';
 
 import { FormData } from '../NewRecipe';
+import { Step } from './Step/Step';
 import { StepsUploadImage } from './StepsUploadImage/StepsUploadImage';
 
 type CookingStepsProps = {
@@ -48,6 +49,7 @@ export const CookingSteps = ({ register, watch, errors, setValue, control }: Coo
                 </Flex>
                 {fields.map((field, index) => (
                     <Flex
+                        key={field.id}
                         border='1px solid rgba(0, 0, 0, 0.08)'
                         h={{ sm: '160px', base: '352px' }}
                         gap='20px'
@@ -61,72 +63,13 @@ export const CookingSteps = ({ register, watch, errors, setValue, control }: Coo
                             setValue={setValue}
                             index={index}
                         />
-                        <Flex
-                            direction='column'
-                            gap='16px'
-                            justify='center'
-                            p={{ sm: '0', base: '0 20px' }}
-                        >
-                            <Flex align='center' justify='space-between'>
-                                <Flex
-                                    w='51px'
-                                    h='20px'
-                                    bg='rgba(0, 0, 0, 0.06)'
-                                    justify='center'
-                                    align='center'
-                                >
-                                    <Text
-                                        fontWeight='600'
-                                        fontSize='12px'
-                                        lineHeight='133%'
-                                        letterSpacing='0.03em'
-                                        color='#000'
-                                    >
-                                        Шаг {index + 1}
-                                    </Text>
-                                </Flex>
-                                {fields.length > 1 && (
-                                    <IconButton
-                                        data-test-id={
-                                            index === 0 ? '' : `recipe-steps-remove-button-${index}`
-                                        }
-                                        icon={<DeleteIcon color='#2DB100' w='12px' h='14px' />}
-                                        aria-label='Удалить ингредиент'
-                                        onClick={() => remove(index)}
-                                        minW='0px'
-                                        w='32px'
-                                        h='32px'
-                                        p='0'
-                                        bg='transparent'
-                                    />
-                                )}
-                            </Flex>
-                            <FormControl isInvalid={!!errors.steps?.[index]?.description}>
-                                <FormLabel>
-                                    <Textarea
-                                        data-test-id={`recipe-steps-description-${index}`}
-                                        placeholder='Шаг'
-                                        border='1px solid #e2e8f0'
-                                        h={{ sm: '84px', base: '116px' }}
-                                        w='282px'
-                                        borderRadius='6px'
-                                        {...register(`steps.${index}.description`, {
-                                            required: 'Введите краткое описание шага',
-                                            maxLength: {
-                                                value: 500,
-                                                message: 'Максимальная длина 500 символов',
-                                            },
-                                        })}
-                                        _placeholder={{
-                                            fontWeight: '400',
-                                            fontSize: '14px',
-                                            lineHeight: '143%',
-                                            color: 'rgba(0, 0, 0, 0.36)',
-                                        }}
-                                    />
-                                </FormLabel>
-                            </FormControl>
-                        </Flex>
+                        <Step
+                            index={index}
+                            remove={remove}
+                            fields={fields}
+                            errors={errors}
+                            register={register}
+                        />
                     </Flex>
                 ))}
                 <Flex w='100%' justify='flex-end'>

@@ -15,12 +15,16 @@ export const useFormNavigationBlocker = ({ watch, onOpen }: UseFormNavigationBlo
     const watchValues = watch();
     const isFormTrulyDirty = useMemo(
         () =>
-            watchValues.title !== '' ||
-            watchValues.description !== null ||
-            watchValues.image !== null ||
+            !!watchValues.title?.trim() ||
+            !!watchValues.description?.trim() ||
+            !!watchValues.image ||
+            !!watchValues.portions ||
+            !!watchValues.time ||
             watchValues.categoriesIds.length > 0 ||
-            watchValues.ingredients.some((i) => i.title || i.count !== 100 || i.measureUnit) ||
-            watchValues.steps.some((s) => s.description || s.image),
+            watchValues.ingredients.some(
+                (i) => i.title?.trim() || i.count != null || i.measureUnit?.trim(),
+            ) ||
+            watchValues.steps.some((s) => s.description?.trim() || s.image),
         [watchValues],
     );
 

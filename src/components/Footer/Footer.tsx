@@ -2,6 +2,7 @@ import { Box, Button, Flex, Image, Text } from '@chakra-ui/react';
 import { memo } from 'react';
 import { useLocation } from 'react-router';
 
+import { ROUTES } from '~/constants/routes';
 import { useRandomCategory } from '~/hooks/useRandomCategory';
 import { Category } from '~/query/services/category-api.type';
 import { useGetRecipesCategoryQuery } from '~/query/services/recipe-api';
@@ -11,14 +12,14 @@ import bookmarkHeart from './../../assets/actionBar/BookmarkHeart.svg';
 import emojiHeartEyes from './../../assets/actionBar/EmojiHeartEyes.svg';
 
 type FooterProps = {
-    footerData: Category[] | null;
+    footerData: Category[];
     footerCategoryId?: string;
 };
 
 export const Footer = memo(({ footerData }: FooterProps) => {
     const location = useLocation();
 
-    const randomCategory = useRandomCategory(footerData!);
+    const randomCategory = useRandomCategory(footerData);
     const footerSubCategoryId = randomCategory?.subCategories[0]._id;
     const { data } = useGetRecipesCategoryQuery(
         {
@@ -30,7 +31,7 @@ export const Footer = memo(({ footerData }: FooterProps) => {
     const firstFooterCategory = Array.isArray(data?.data) && data.data.slice(0, 2);
     const secondFooterCategory = Array.isArray(data?.data) && data.data.slice(2, 5);
 
-    if (location.pathname === '/new-recipe') return null;
+    if (location.pathname === ROUTES.NEW_RECIPE) return null;
     return (
         <Flex
             direction='column'

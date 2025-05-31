@@ -61,7 +61,7 @@ export const Main = () => {
                 md: '860px',
                 lg: '1340px',
             }}
-            w='100%'
+            w={{ base: '100%', md: 'auto' }}
             direction='column'
             m={{ base: '64px 16px 100px 16px', sm: '64px 16px 100px 24px', md: '80px 72px 0 24px' }}
         >

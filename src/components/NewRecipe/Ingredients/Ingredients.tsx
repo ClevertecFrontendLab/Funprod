@@ -37,7 +37,7 @@ export const Ingredients = ({ register, errors, watch, control }: IngredientsPro
 
     const { data } = useMeasureUnitsQuery();
 
-    const handleAddIngredient = () => append({ title: '', count: 100, measureUnit: '' });
+    const handleAddIngredient = () => append({ title: '', count: null, measureUnit: '' });
 
     return (
         <Flex w='100%' justify='center'>
@@ -139,18 +139,17 @@ export const Ingredients = ({ register, errors, watch, control }: IngredientsPro
                             >
                                 <NumberInput border='1px solid #e2e8f0'>
                                     <NumberInputField
+                                        placeholder='100'
                                         data-test-id={`recipe-ingredients-count-${index}`}
                                         borderRadius='6px'
                                         {...register(`ingredients.${index}.count`, {
-                                            required: 'Введите время приготовления',
-                                            min: {
-                                                value: 1,
-                                                message: 'Только положительное число',
-                                            },
-                                            max: { value: 10000, message: 'не более 10000' },
-                                            validate: (value) =>
-                                                !isNaN(+value!) || 'Должно быть числом',
+                                            required: 'Введите количество',
                                             valueAsNumber: true,
+                                            validate: (value) => {
+                                                if (value === null) return 'Введите количество';
+                                                if (value <= 0) return 'Только положительное число';
+                                                return true;
+                                            },
                                         })}
                                     />
                                 </NumberInput>

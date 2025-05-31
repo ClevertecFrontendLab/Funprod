@@ -1,6 +1,7 @@
 import { Flex, Image, Text } from '@chakra-ui/react';
 import { Link } from 'react-router';
 
+import { ROUTES } from '~/constants/routes';
 import { useGetCategoriesQuery } from '~/query/services/category-api';
 
 type CategoryTagsProps = {
@@ -24,7 +25,7 @@ export const CategoryTags = ({ tagsId }: CategoryTagsProps) => {
             {tagsId?.map((id) => {
                 const filterId = categoryFilter?.filter((item) => item._id === id);
                 return filterId?.map((item, i) => (
-                    <Link to='/' key={i}>
+                    <Link to={ROUTES.HOME} key={i}>
                         <Flex
                             w='100%'
                             h='24px'

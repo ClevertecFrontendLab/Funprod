@@ -1,3 +1,4 @@
+import { ROUTES } from '~/constants/routes';
 import { Category } from '~/query/services/category-api.type';
 
 import { generatePageTitles } from './generatePageTitles';
@@ -29,15 +30,15 @@ export function getBreadcrumb({
         const fullPath = `/${pathnames.slice(0, index + 1).join('/')}`;
         const isLast = index === pathnames.length - 1;
 
-        if (fullPath === '/the-juiciest') {
+        if (fullPath === ROUTES.JUICIEST) {
             acc.push({ label: 'Самое сочное', to: fullPath });
             return acc;
         }
-        if (fullPath === '/new-recipe') {
+        if (fullPath === ROUTES.NEW_RECIPE) {
             acc.push({ label: 'Новый рецепт', to: fullPath });
             return acc;
         }
-        if (fullPath.startsWith('/edit-recipe')) {
+        if (fullPath.startsWith(ROUTES.EDIT_RECIPE)) {
             if (acc.length > 0 && acc[acc.length - 1].label === 'Новый рецепт') {
                 return acc;
             }

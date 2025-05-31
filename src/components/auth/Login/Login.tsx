@@ -86,7 +86,7 @@ export const Login = ({
     useEffect(() => {
         if (data) {
             dispatch(setAppLoader(false));
-            navigate('/');
+            navigate(ROUTES.HOME);
         }
     }, [data, dispatch, navigate]);
 

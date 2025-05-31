@@ -16,8 +16,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router';
 import { Link } from 'react-router';
 
+import { ROUTES } from '~/constants/routes';
 import { useGetRecipeByIdQuery } from '~/query/services/recipe-api';
-import { categoriesSelector } from '~/store/app-slice';
+import { categoriesSelector, recipeIdSelector } from '~/store/app-slice';
 import { useCategoriesWithSubcategories } from '~/utils/getCategoriesWithSubcategories';
 import { getFullMediaUrl } from '~/utils/getFullMediaUrl';
 import { getUserIdFromToken } from '~/utils/getUserIdFromToken';
@@ -40,7 +41,11 @@ export const RecipePage = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const userId = getUserIdFromToken();
-    const { data, error, isError, isLoading } = useGetRecipeByIdQuery({ id: id! });
+    const recipeId = useSelector(recipeIdSelector);
+    const { data, error, isError, isLoading } = useGetRecipeByIdQuery(
+        { id: id! },
+        { skip: id === recipeId },
+    );
     const categoryDataRedux = useSelector(categoriesSelector);
     const localDataString = localStorage.getItem('cachedCategory');
     const categoryDataLocal = localDataString ? JSON.parse(localDataString) : [];
@@ -149,7 +154,7 @@ export const RecipePage = () => {
                                             (item) => item._id === id,
                                         );
                                         return filterId?.map((item, i) => (
-                                            <Link to='/' key={i}>
+                                            <Link to={ROUTES.HOME} key={i}>
                                                 <Flex
                                                     w='100%'
                                                     h='24px'

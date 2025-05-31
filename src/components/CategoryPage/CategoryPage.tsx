@@ -93,11 +93,7 @@ export const CategoryPage = () => {
                 lg: '1340px',
             }}
             direction='column'
-            m={{
-                base: '96px 16px 100px 16px',
-                sm: '64px 16px 100px 24px',
-                md: '112px 72px 0 24px',
-            }}
+            m={{ base: '64px 16px 100px 16px', sm: '64px 16px 100px 24px', md: '80px 72px 0 24px' }}
         >
             <PageHeader
                 title={foundCategory?.title}

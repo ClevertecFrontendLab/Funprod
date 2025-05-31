@@ -2,6 +2,7 @@ import { Box, Button, Flex, Image, Text } from '@chakra-ui/react';
 import { useLayoutEffect } from 'react';
 import { Link as Links } from 'react-router';
 
+import { ROUTES } from '~/constants/routes';
 import { Category } from '~/query/services/category-api.type';
 import { useGetRecipesCategoryQuery } from '~/query/services/recipe-api';
 import { setAppLoader } from '~/store/app-slice';
@@ -168,7 +169,7 @@ export const TabComponent = ({ searchQuery = '', categoriesId }: TabComponentPro
                                             </Text>
                                         </Box>
                                     </Button>
-                                    <Links to='/'>
+                                    <Links to={ROUTES.HOME}>
                                         <Button
                                             data-test-id={`card-link-${i}`}
                                             border='1px solid rgba(0, 0, 0, 0.08)'

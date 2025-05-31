@@ -1,6 +1,8 @@
 import { Flex, Image, Link, Text } from '@chakra-ui/react';
 import { useLocation } from 'react-router';
 
+import { ROUTES } from '~/constants/routes';
+
 import bookmarkHeart from './../../assets/actionBar/BookmarkHeart.svg';
 import emojiHeartEyes from './../../assets/actionBar/EmojiHeartEyes.svg';
 import iconButton from './../../assets/actionBar/IconButton.svg';
@@ -14,7 +16,7 @@ const socialPanel = [
 export const AsideBar = () => {
     const pathname = useLocation().pathname;
 
-    if (pathname === '/new-recipe') {
+    if (pathname === ROUTES.NEW_RECIPE || pathname.startsWith(ROUTES.EDIT_RECIPE)) {
         return null;
     }
 
@@ -74,7 +76,7 @@ export const AsideBar = () => {
             >
                 <Link
                     data-test-id='add-recipe-button'
-                    href='/new-recipe'
+                    href={ROUTES.NEW_RECIPE}
                     display='flex'
                     flexDirection='column'
                     alignItems='center'

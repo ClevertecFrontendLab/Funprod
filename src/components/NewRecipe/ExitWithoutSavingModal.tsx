@@ -29,7 +29,7 @@ export const ExitWithoutSavingModal = ({
 }: ExitWithoutSavingModalProps) => (
     <>
         <Modal isOpen={isOpen} onClose={onClose} isCentered>
-            <ModalOverlay />
+            <ModalOverlay backdropFilter='blur(4px)' bg='rgba(0, 0, 0, 0.16)' />
             <ModalContent
                 data-test-id='recipe-preventive-modal'
                 borderRadius='16px'

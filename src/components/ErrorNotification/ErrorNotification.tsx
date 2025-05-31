@@ -36,11 +36,14 @@ export const ErrorNotification = ({
         }
     }, [errorStatus, dispatch, successStatus]);
 
-    const handleClose = () => dispatch(setAppError(null));
+    const handleClose = () => {
+        dispatch(setAppError(null));
+        dispatch(setAppSuccess(null));
+    };
     return (
         <Alert
             data-test-id='error-notification'
-            status={success !== null ? 'success' : 'error'}
+            status={success ? 'success' : 'error'}
             position='fixed'
             bottom='80px'
             left={isAuthPage ? { md: '25%', base: '50%' } : '50%'}
