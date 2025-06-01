@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 
+import { ROUTES } from '~/constants/routes';
 import { Category } from '~/query/services/category-api.type';
 
 type UseValidateCategoryProps = {
@@ -25,7 +26,7 @@ export const useValidateCategory = ({
             : true;
 
         if (!isCategoryValid || !isSubcategoryValid) {
-            navigate('/not-found', { replace: true });
+            navigate(ROUTES.NOT_FOUND, { replace: true });
         }
     }, [categoryData, category, subcategory, navigate]);
 };

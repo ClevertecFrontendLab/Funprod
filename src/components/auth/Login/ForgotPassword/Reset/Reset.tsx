@@ -106,7 +106,7 @@ export const Reset = ({ setSuccess, onClose, email }: ResetProps) => {
                     <form onSubmit={handleSubmit(onSubmit)}>
                         {resetError && (
                             <ErrorNotification
-                                error={resetError.message}
+                                message={resetError.message}
                                 title={resetError.title}
                             />
                         )}

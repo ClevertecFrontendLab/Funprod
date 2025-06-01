@@ -86,7 +86,7 @@ export const Code = ({ email, setStep }: CodeProps) => {
 
     return (
         <Flex direction='column' align='center'>
-            {codeError && <ErrorNotification error={codeError.message} title={codeError.title} />}
+            {codeError && <ErrorNotification message={codeError.message} title={codeError.title} />}
             <Flex direction='column' align='center'>
                 <Image
                     src={Pin}

@@ -1,5 +1,7 @@
 import { Box, Button, Flex, Image, Link, Text } from '@chakra-ui/react';
 
+import { ROUTES } from '~/constants/routes';
+
 import alexBlog from './../../../assets/main//alexBlog.jpg';
 import elenaBlog from './../../../assets/main//elenaBlog.jpg';
 import ekaterina from './../../../assets/main/ekaterina.jpg';
@@ -66,7 +68,7 @@ export const CookingBlogsSection = () => (
         <Flex gap={{ md: '16px', base: '12px' }} wrap={{ sm: 'nowrap', base: 'wrap' }}>
             {cookingBlogsCard.map((item, index) => (
                 <Link
-                    href='/'
+                    href={ROUTES.HOME}
                     _hover={{
                         boxShadow: 'md',
                     }}

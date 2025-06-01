@@ -1,7 +1,7 @@
+import { ROUTES } from '~/constants/routes';
 import { Category } from '~/query/services/category-api.type';
 
 import { generatePageTitles } from './generatePageTitles';
-import { getCategoriesWithSubcategories } from './getCategoriesWithSubcategories';
 
 type BreadcrumbItem = { label: string; to: string };
 
@@ -16,8 +16,13 @@ export function getBreadcrumb({
     id?: string;
     recipeData?: { _id: string; title: string };
 }): { breadcrumbItems?: BreadcrumbItem[]; pageTitles: Record<string, string> } {
-    const dataCategories = getCategoriesWithSubcategories(categoryData);
-    const dataSubCategories = categoryData?.filter((item) => !item.subCategories);
+    const dataCategories = Array.isArray(categoryData)
+        ? categoryData.filter((item: Category) => item.subCategories)
+        : [];
+
+    const dataSubCategories = Array.isArray(categoryData)
+        ? categoryData.filter((item) => !item.subCategories)
+        : [];
 
     const pageTitles = generatePageTitles(dataCategories, dataSubCategories);
 
@@ -25,8 +30,19 @@ export function getBreadcrumb({
         const fullPath = `/${pathnames.slice(0, index + 1).join('/')}`;
         const isLast = index === pathnames.length - 1;
 
-        if (fullPath === '/the-juiciest') {
+        if (fullPath === ROUTES.JUICIEST) {
             acc.push({ label: 'Самое сочное', to: fullPath });
+            return acc;
+        }
+        if (fullPath === ROUTES.NEW_RECIPE) {
+            acc.push({ label: 'Новый рецепт', to: fullPath });
+            return acc;
+        }
+        if (fullPath.startsWith(ROUTES.EDIT_RECIPE)) {
+            if (acc.length > 0 && acc[acc.length - 1].label === 'Новый рецепт') {
+                return acc;
+            }
+            acc.push({ label: 'Новый рецепт', to: fullPath });
             return acc;
         }
 

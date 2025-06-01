@@ -2,8 +2,9 @@ import { Box, Button, Flex, Image, Text } from '@chakra-ui/react';
 import { Link, useNavigate } from 'react-router';
 
 import { CategoryTags } from '~/components/CategoryPage/TabComponent/CategoryTags/CategoryTags';
+import { ROUTES } from '~/constants/routes';
 import { Category } from '~/query/services/category-api.type';
-import { useGetRecipesQuery } from '~/query/services/recipe-api';
+import { useBookmarkRecipeMutation, useGetRecipesQuery } from '~/query/services/recipe-api';
 import { checkAndNavigate } from '~/utils/checkAndNavigate';
 import { getFullMediaUrl } from '~/utils/getFullMediaUrl';
 
@@ -30,6 +31,10 @@ export const JuiciestSection = ({ categoryData }: JuiciestSectionProps) => {
             categoryData: categoryData || [],
         });
         navigate(`/${matchedCategory?.category}/${matchedSubcategory?.category}/${recipeId}`);
+    };
+    const [bookmarkRecipe] = useBookmarkRecipeMutation();
+    const handleOnClick = (id: string) => {
+        bookmarkRecipe(id);
     };
 
     return (
@@ -72,7 +77,7 @@ export const JuiciestSection = ({ categoryData }: JuiciestSectionProps) => {
                             fontSize={{ lg: '18x', base: '16px' }}
                             lineHeight='150%'
                         >
-                            <Link to='/the-juiciest'>Вся подборка</Link>
+                            <Link to={ROUTES.JUICIEST}>Вся подборка</Link>
                         </Text>
                         <Image src={arrowRight} ml='8px' w='16px' h='16px' />
                     </Button>
@@ -201,6 +206,7 @@ export const JuiciestSection = ({ categoryData }: JuiciestSectionProps) => {
                                         h={{ md: '32px', base: '24px' }}
                                         backgroundColor='rgba(255, 255, 255, 0.06)'
                                         _hover={{ backgroundColor: 'rgba(0, 0, 0, 0.06)' }}
+                                        onClick={() => handleOnClick(card._id)}
                                     >
                                         <Image
                                             src={bookmarkHeart}
@@ -262,7 +268,7 @@ export const JuiciestSection = ({ categoryData }: JuiciestSectionProps) => {
                     }}
                 >
                     <Text fontWeight='600' fontSize={{ lg: '18x', base: '16px' }} lineHeight='150%'>
-                        <Link to='/the-juiciest'>Вся подборка</Link>
+                        <Link to={ROUTES.JUICIEST}>Вся подборка</Link>
                     </Text>
                     <Image src={arrowRight} ml='8px' w='16px' h='16px' />
                 </Button>

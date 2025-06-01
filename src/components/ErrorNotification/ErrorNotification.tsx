@@ -2,33 +2,48 @@ import { Alert, AlertIcon, CloseButton, Flex, Text } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { setAppError, userErrorSelector } from '~/store/app-slice';
+import {
+    setAppError,
+    setAppSuccess,
+    userErrorSelector,
+    userSuccessSelector,
+} from '~/store/app-slice';
 
 type ErrorNotificationProps = {
     title?: string;
-    error?: string;
+    message?: string;
     isAuthPage?: boolean;
+    success?: { title: string; message: string } | null;
 };
 
-export const ErrorNotification = ({ error, title, isAuthPage }: ErrorNotificationProps) => {
+export const ErrorNotification = ({
+    message,
+    title,
+    isAuthPage,
+    success,
+}: ErrorNotificationProps) => {
     const errorStatus = useSelector(userErrorSelector);
+    const successStatus = useSelector(userSuccessSelector);
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (errorStatus) {
+        if (errorStatus || successStatus) {
             const timer = setTimeout(() => {
                 dispatch(setAppError(null));
-            }, 4000);
+                dispatch(setAppSuccess(null));
+            }, 10000);
             return () => clearTimeout(timer);
         }
-    }, [errorStatus, dispatch]);
+    }, [errorStatus, dispatch, successStatus]);
 
-    const handleClose = () => dispatch(setAppError(null));
-
+    const handleClose = () => {
+        dispatch(setAppError(null));
+        dispatch(setAppSuccess(null));
+    };
     return (
         <Alert
             data-test-id='error-notification'
-            status='error'
+            status={success ? 'success' : 'error'}
             position='fixed'
             bottom='80px'
             left={isAuthPage ? { md: '25%', base: '50%' } : '50%'}
@@ -36,7 +51,7 @@ export const ErrorNotification = ({ error, title, isAuthPage }: ErrorNotificatio
             zIndex='toast'
             width='fit-content'
             w='332px'
-            bg='#e53e3e'
+            bg={success ? '#38a169' : '#e53e3e'}
         >
             <AlertIcon color='#fff' />
             <Flex direction='column'>
@@ -44,7 +59,7 @@ export const ErrorNotification = ({ error, title, isAuthPage }: ErrorNotificatio
                     {title}
                 </Text>
                 <Text fontWeight='400' fontSize='16px' color='#fff' w='240px'>
-                    {error}
+                    {message}
                 </Text>
             </Flex>
             <CloseButton

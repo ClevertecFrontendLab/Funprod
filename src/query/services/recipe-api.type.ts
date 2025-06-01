@@ -24,10 +24,21 @@ export type Data = {
     _id: string;
 };
 
+export type CreateRecipe = {
+    title: string;
+    description: string | null;
+    time: number;
+    portions: number;
+    categoriesIds: string[];
+    image: string;
+    steps: Step[];
+    ingredients: Ingredient[];
+};
+
 export type Step = {
     stepNumber: number;
-    description: string;
-    image: string;
+    description: string | null;
+    image: string | null;
 };
 
 export type NutritionValue = {
@@ -39,9 +50,9 @@ export type NutritionValue = {
 };
 
 export type Ingredient = {
-    title: string;
-    count: string;
-    measureUnit: string;
+    title: string | null;
+    count: number | null;
+    measureUnit: string | null;
 };
 
 export type Meta = {
@@ -72,4 +83,9 @@ export type GetRecipesParams = {
 };
 export type GetRecipesById = {
     id: string;
+};
+
+export type MeasureUnitsResponse = {
+    _id: string;
+    name: string;
 };

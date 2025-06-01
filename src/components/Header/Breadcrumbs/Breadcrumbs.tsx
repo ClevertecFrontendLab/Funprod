@@ -3,9 +3,10 @@ import { Box, Flex, Text } from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
 import { Link, useLocation, useParams } from 'react-router';
 
+import { ROUTES } from '~/constants/routes';
 import { Category } from '~/query/services/category-api.type';
 import { useGetRecipeByIdQuery } from '~/query/services/recipe-api';
-import { categoriesSelector } from '~/store/app-slice';
+import { categoriesSelector, recipeIdSelector } from '~/store/app-slice';
 import { getBreadcrumb } from '~/utils/getBreadcrumb';
 
 type Breadcrumbs = { onClose?: () => void };
@@ -13,7 +14,8 @@ type Breadcrumbs = { onClose?: () => void };
 export const Breadcrumbs = ({ onClose = () => {} }: Breadcrumbs) => {
     const location = useLocation();
     const { id } = useParams();
-    const { data: recipeData } = useGetRecipeByIdQuery({ id: id! });
+    const recipeId = useSelector(recipeIdSelector);
+    const { data: recipeData } = useGetRecipeByIdQuery({ id: id! }, { skip: id === recipeId });
     const categoryData = useSelector(categoriesSelector);
     const pathnames = location.pathname.split('/').filter(Boolean);
     const data = localStorage.getItem('categories');
@@ -24,7 +26,7 @@ export const Breadcrumbs = ({ onClose = () => {} }: Breadcrumbs) => {
         recipeData,
     });
 
-    breadcrumbItems?.unshift({ label: 'Главная', to: '/' });
+    breadcrumbItems?.unshift({ label: 'Главная', to: ROUTES.HOME });
 
     const updatedBreadcrumbItems = breadcrumbItems?.map((item, index) => {
         if (index === 0 || index === breadcrumbItems.length - 1) return item;

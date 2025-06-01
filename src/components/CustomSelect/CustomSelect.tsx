@@ -69,8 +69,28 @@ export const CustomSelect = ({
         }
     }, [handleToggle]);
     return (
-        <Flex maxW='400px' w='100%'>
-            <Menu closeOnSelect={false}>
+        <Flex maxW='400px' w='100%' h='auto'>
+            <Menu
+                closeOnSelect={false}
+                modifiers={
+                    !isOpenDrawer
+                        ? [
+                              {
+                                  name: 'preventOverflow',
+                                  options: {
+                                      mainAxis: false,
+                                  },
+                              },
+                              {
+                                  name: 'flip',
+                                  options: {
+                                      fallbackPlacements: [],
+                                  },
+                              },
+                          ]
+                        : []
+                }
+            >
                 {({ isOpen }) => (
                     <>
                         <MenuButton

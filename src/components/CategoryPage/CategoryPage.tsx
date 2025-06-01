@@ -10,7 +10,7 @@ import { useTabIndex } from '~/hooks/useTabIndex';
 import { useValidateCategory } from '~/hooks/useValidateCategory';
 import { Category } from '~/query/services/category-api.type';
 import { categoriesSelector } from '~/store/app-slice';
-import { getCategoriesWithSubcategories } from '~/utils/getCategoriesWithSubcategories';
+import { useCategoriesWithSubcategories } from '~/utils/getCategoriesWithSubcategories';
 
 import { PageHeader } from '../PageHeader/PageHeader';
 import { SearchFilter } from '../SearchFilter/SearchFilter';
@@ -28,7 +28,7 @@ export const CategoryPage = () => {
 
     const categoryData =
         categoryDataRedux && categoryDataRedux.length > 0 ? categoryDataRedux : categoryDataLocal;
-    const filterCategory = getCategoriesWithSubcategories(categoryData);
+    const filterCategory = useCategoriesWithSubcategories();
 
     const foundCategory = categoryData?.find((cat: Category) => cat.category === category);
 
