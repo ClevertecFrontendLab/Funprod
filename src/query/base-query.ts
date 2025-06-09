@@ -9,6 +9,7 @@ import { setAppError } from '~/store/app-slice';
 
 const rawBaseQuery = fetchBaseQuery({
     baseUrl: 'https://marathon-api.clevertec.ru/',
+    credentials: 'include',
 });
 
 export const baseQuery: BaseQueryFn<string | FetchArgs, unknown, FetchBaseQueryError> = async (

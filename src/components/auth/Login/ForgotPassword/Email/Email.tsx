@@ -17,7 +17,7 @@ import { useForm } from 'react-hook-form';
 
 import Forgot from '~/assets/Forgot.jpg';
 import { ErrorNotification } from '~/components/ErrorNotification/ErrorNotification';
-import { useForgotPasswordMutation } from '~/query/services/auth-api';
+import { useForgotPasswordMutation } from '~/query/services/auth-api/auth-api';
 
 const errorMap: Record<number, { title: string; message: string }> = {
     403: {

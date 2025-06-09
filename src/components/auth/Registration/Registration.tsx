@@ -18,7 +18,7 @@ import { useLocation, useNavigate } from 'react-router';
 
 import { ErrorNotification } from '~/components/ErrorNotification/ErrorNotification';
 import { ROUTES } from '~/constants/routes';
-import { useSignUpMutation } from '~/query/services/auth-api';
+import { useSignUpMutation } from '~/query/services/auth-api/auth-api';
 import { isFetchBaseQueryErrorWithMessage } from '~/utils/isFetchBaseQueryError';
 
 const registrationErrorMap: Record<number, { title: string; message: string } | 'custom'> = {

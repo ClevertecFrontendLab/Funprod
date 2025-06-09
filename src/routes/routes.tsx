@@ -3,6 +3,8 @@ import { RouteObject } from 'react-router';
 import { Auth } from '~/components/auth/Auth';
 import { Login } from '~/components/auth/Login/Login';
 import { Registration } from '~/components/auth/Registration/Registration';
+import { Blogger } from '~/components/Blogs/Blogger/Blogger';
+import { Blogs } from '~/components/Blogs/Blogs';
 import { CategoryPage } from '~/components/CategoryPage/CategoryPage';
 import { TabComponent } from '~/components/CategoryPage/TabComponent/TabComponent';
 import { Juiciest } from '~/components/Juiciest/Juiciest';
@@ -48,6 +50,14 @@ export const routes: RouteObject[] = [
             {
                 path: `${ROUTES.EDIT_RECIPE}/${ROUTES.CATEGORY}/${ROUTES.SUBCATEGORY}/${ROUTES.RECIPE_ID}`,
                 element: <RecipePage />,
+            },
+            {
+                path: ROUTES.BLOGS,
+                element: <Blogs />,
+            },
+            {
+                path: `${ROUTES.BLOGS}/${ROUTES.USER_ID}`,
+                element: <Blogger />,
             },
         ],
     },

@@ -16,6 +16,8 @@ type ErrorNotificationProps = {
     success?: { title: string; message: string } | null;
 };
 
+const ERROR_DISPLAY_DURATION_MS = 15000;
+
 export const ErrorNotification = ({
     message,
     title,
@@ -31,7 +33,7 @@ export const ErrorNotification = ({
             const timer = setTimeout(() => {
                 dispatch(setAppError(null));
                 dispatch(setAppSuccess(null));
-            }, 10000);
+            }, ERROR_DISPLAY_DURATION_MS);
             return () => clearTimeout(timer);
         }
     }, [errorStatus, dispatch, successStatus]);
@@ -55,10 +57,22 @@ export const ErrorNotification = ({
         >
             <AlertIcon color='#fff' />
             <Flex direction='column'>
-                <Text fontWeight='700' fontSize='16px' color='#fff' w='240px'>
+                <Text
+                    data-test-id='error-notification-title'
+                    fontWeight='700'
+                    fontSize='16px'
+                    color='#fff'
+                    w='240px'
+                >
                     {title}
                 </Text>
-                <Text fontWeight='400' fontSize='16px' color='#fff' w='240px'>
+                <Text
+                    data-test-id='error-notification-description'
+                    fontWeight='400'
+                    fontSize='16px'
+                    color='#fff'
+                    w='240px'
+                >
                     {message}
                 </Text>
             </Flex>

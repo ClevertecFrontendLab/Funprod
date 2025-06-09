@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
 
 import { ROUTES } from '~/constants/routes';
-import { useDeleteRecipeMutation } from '~/query/services/recipe-api';
+import { useDeleteRecipeMutation } from '~/query/services/recipe-api/recipe-api';
 import { setRecipeId } from '~/store/app-slice';
 
 type DeleteButtonProps = {

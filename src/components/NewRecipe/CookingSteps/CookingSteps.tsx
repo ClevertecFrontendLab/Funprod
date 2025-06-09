@@ -56,7 +56,6 @@ export const CookingSteps = ({ register, watch, errors, setValue, control }: Coo
                         direction={{ sm: 'row', base: 'column' }}
                     >
                         <StepsUploadImage
-                            key={field.id}
                             register={register}
                             watch={watch}
                             errors={errors}

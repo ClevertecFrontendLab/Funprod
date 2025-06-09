@@ -1,9 +1,9 @@
 export type Recipe = {
-    data: Data[];
+    data: RecipeData[];
     meta: Meta;
 };
 
-export type Data = {
+export type RecipeData = {
     title: string;
     description: string;
     time: number;
@@ -88,4 +88,36 @@ export type GetRecipesById = {
 export type MeasureUnitsResponse = {
     _id: string;
     name: string;
+};
+export type GetRecipeByUserId = {
+    recipes: RecipeByUserId[];
+    totalBookmarks: number;
+    totalSubscribers: number;
+    userId: string;
+    notes: Note[];
+};
+
+export type RecipeByUserId = {
+    _id: string;
+    createdAt: string;
+    title: string;
+    description: string;
+    time: number;
+    image: string;
+    views: number;
+    portions: number;
+    authorId: string;
+    recommendedByUserId: string[];
+    categoriesIds: string[];
+    steps: Step[];
+    nutritionValue: NutritionValue;
+    ingredients: Ingredient[];
+    likes: number;
+    bookmarks: number;
+};
+
+export type Note = {
+    _id: string;
+    date: string;
+    text: string;
 };

@@ -4,8 +4,8 @@ import { useLocation } from 'react-router';
 
 import { ROUTES } from '~/constants/routes';
 import { useRandomCategory } from '~/hooks/useRandomCategory';
-import { Category } from '~/query/services/category-api.type';
-import { useGetRecipesCategoryQuery } from '~/query/services/recipe-api';
+import { Category } from '~/query/services/category-api/category-api.type';
+import { useGetRecipesCategoryQuery } from '~/query/services/recipe-api/recipe-api';
 
 import { CategoryTags } from '../CategoryPage/TabComponent/CategoryTags/CategoryTags';
 import bookmarkHeart from './../../assets/actionBar/BookmarkHeart.svg';
@@ -31,12 +31,13 @@ export const Footer = memo(({ footerData }: FooterProps) => {
     const firstFooterCategory = Array.isArray(data?.data) && data.data.slice(0, 2);
     const secondFooterCategory = Array.isArray(data?.data) && data.data.slice(2, 5);
 
-    if (location.pathname === ROUTES.NEW_RECIPE) return null;
+    if (location.pathname === ROUTES.NEW_RECIPE || location.pathname.startsWith(ROUTES.BLOGS))
+        return null;
     return (
         <Flex
             direction='column'
             maxWidth='1340px'
-            w={{ lg: '100%', sm: '728px' }}
+            w={{ md: '100%', sm: '728px' }}
             mt={{ md: '40px', base: '0' }}
             gap='24px'
             borderTop='1px solid rgba(0, 0, 0, 0.08)'
@@ -75,9 +76,9 @@ export const Footer = memo(({ footerData }: FooterProps) => {
                 gap={{ lg: '24px', md: '16px', base: '12px' }}
             >
                 {Array.isArray(firstFooterCategory) &&
-                    firstFooterCategory.map((card, index) => (
+                    firstFooterCategory.map((card) => (
                         <Flex
-                            key={index}
+                            key={card._id}
                             direction='column'
                             borderRadius='8px'
                             border='1px solid rgba(0, 0, 0, 0.08)'
@@ -146,9 +147,9 @@ export const Footer = memo(({ footerData }: FooterProps) => {
                     ))}
                 <Flex direction='column' gap={{ md: '12px', sm: '6px', base: '12px' }}>
                     {Array.isArray(secondFooterCategory) &&
-                        secondFooterCategory.map((list, index) => (
+                        secondFooterCategory.map((list) => (
                             <Flex
-                                key={index}
+                                key={list._id}
                                 border='1px solid rgba(0, 0, 0, 0.08);'
                                 borderRadius='8px'
                                 w={{ lg: '668px', md: '282px', sm: '240px', base: '328px' }}

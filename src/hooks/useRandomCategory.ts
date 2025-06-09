@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router';
 
-import { Category } from '~/query/services/category-api.type';
+import { Category } from '~/query/services/category-api/category-api.type';
 
 export const useRandomCategory = (categories?: Category[] | null) => {
     const [randomCategory, setRandomCategory] = useState<Category | null>(null);

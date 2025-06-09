@@ -18,7 +18,7 @@ import {
     UseFormWatch,
 } from 'react-hook-form';
 
-import { useMeasureUnitsQuery } from '~/query/services/recipe-api';
+import { useMeasureUnitsQuery } from '~/query/services/recipe-api/recipe-api';
 
 import { FormData } from '../NewRecipe';
 

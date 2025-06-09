@@ -4,7 +4,8 @@ import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 
 import { ErrorNotification } from '~/components/ErrorNotification/ErrorNotification';
-import { useResetPasswordMutation } from '~/query/services/auth-api';
+import { HTTP_STATUS } from '~/constants/httpStatusCodes';
+import { useResetPasswordMutation } from '~/query/services/auth-api/auth-api';
 import { setAppError, setAppLoader } from '~/store/app-slice';
 
 import { InputField } from './InputField/InputField';
@@ -58,7 +59,12 @@ export const Reset = ({ setSuccess, onClose, email }: ResetProps) => {
 
     useEffect(() => {
         if (error) {
-            if (error && typeof error === 'object' && 'status' in error && error.status === 500) {
+            if (
+                error &&
+                typeof error === 'object' &&
+                'status' in error &&
+                error.status === HTTP_STATUS.SERVER_ERROR
+            ) {
                 setResetError({
                     title: 'Ошибка сервера',
                     message: 'Попробуйте немного позже',

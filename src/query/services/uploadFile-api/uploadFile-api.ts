@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 
-import { baseQueryWithAuth } from './baseQueryWithAuth';
+import { baseQueryWithAuth } from '../../baseQueryWithAuth';
 
 type UploadFileResponse = {
     name: string;

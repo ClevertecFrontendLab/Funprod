@@ -1,11 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { authApi } from '~/query/services/auth-api';
-import { Category } from '~/query/services/category-api.type';
-import { recipeApi } from '~/query/services/recipe-api';
-import { uploadFileApi } from '~/query/services/uploadFile-api';
+import { authApi } from '~/query/services/auth-api/auth-api';
+import { bloggersApi } from '~/query/services/bloggers-api/bloggers-api';
+import { Category } from '~/query/services/category-api/category-api.type';
+import { recipeApi } from '~/query/services/recipe-api/recipe-api';
+import { uploadFileApi } from '~/query/services/uploadFile-api/uploadFile-api';
 
-import { categoryApi } from './../query/services/category-api';
+import { categoryApi } from '../query/services/category-api/category-api';
 import { ApplicationState } from './configure-store';
 
 export type AppState = typeof initialState;
@@ -62,11 +63,7 @@ export const appSlice = createSlice({
                 (state, { payload }) => {
                     state.isLoading = false;
                     state.categories = payload;
-                    try {
-                        localStorage.setItem('cachedCategories', JSON.stringify(payload));
-                    } catch (e) {
-                        console.warn('Failed to cache categories', e);
-                    }
+                    localStorage.setItem('cachedCategories', JSON.stringify(payload));
                 },
             )
             .addMatcher(categoryApi.endpoints.getCategories.matchRejected, (state) => {
@@ -79,6 +76,15 @@ export const appSlice = createSlice({
                 state.isLoading = false;
             })
             .addMatcher(recipeApi.endpoints.getRecipesCategory.matchRejected, (state) => {
+                state.isLoading = false;
+            })
+            .addMatcher(recipeApi.endpoints.getRecipes.matchPending, (state) => {
+                state.isLoading = true;
+            })
+            .addMatcher(recipeApi.endpoints.getRecipes.matchFulfilled, (state) => {
+                state.isLoading = false;
+            })
+            .addMatcher(recipeApi.endpoints.getRecipes.matchRejected, (state) => {
                 state.isLoading = false;
             })
             .addMatcher(authApi.endpoints.login.matchPending, (state) => {
@@ -158,6 +164,30 @@ export const appSlice = createSlice({
                     title: 'Ошибка сервера',
                     message: 'Попробуйте сохранить фото позже.',
                 };
+            })
+            .addMatcher(bloggersApi.endpoints.getBloggers.matchPending, (state) => {
+                state.isLoading = true;
+            })
+            .addMatcher(bloggersApi.endpoints.getBloggers.matchFulfilled, (state) => {
+                state.isLoading = false;
+            })
+            .addMatcher(bloggersApi.endpoints.getBloggers.matchRejected, (state) => {
+                state.isLoading = false;
+            })
+            .addMatcher(bloggersApi.endpoints.getBloggerById.matchRejected, (state) => {
+                state.error = {
+                    title: 'Ошибка сервера',
+                    message: 'Попробуйте немного позже.',
+                };
+            })
+            .addMatcher(bloggersApi.endpoints.getBloggerById.matchPending, (state) => {
+                state.isLoading = true;
+            })
+            .addMatcher(bloggersApi.endpoints.getBloggerById.matchFulfilled, (state) => {
+                state.isLoading = false;
+            })
+            .addMatcher(bloggersApi.endpoints.getBloggerById.matchRejected, (state) => {
+                state.isLoading = false;
             });
     },
 });

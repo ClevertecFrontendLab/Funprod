@@ -10,15 +10,19 @@ import { FooterMobile } from '~/components/FooterMobile/FooterMobile';
 import { FullPageLoader } from '~/components/FullPageLoader/FullPageLoader';
 import { Header } from '~/components/Header/Header';
 import { Sidebar } from '~/components/Sidebar/Sidebar';
-import { useGetCategoriesQuery } from '~/query/services/category-api';
-import { setAppError, userErrorSelector, userSuccessSelector } from '~/store/app-slice';
-import { ApplicationState } from '~/store/configure-store';
+import { useGetCategoriesQuery } from '~/query/services/category-api/category-api';
+import {
+    setAppError,
+    userErrorSelector,
+    userLoadingSelector,
+    userSuccessSelector,
+} from '~/store/app-slice';
 import { useCategoriesWithSubcategories } from '~/utils/getCategoriesWithSubcategories';
 
 export default function RootLayout() {
     const { isOpen: openBurger, onToggle, onClose } = useDisclosure();
     const [isDesktop] = useMediaQuery(`(min-width: 1024px)`);
-    const isLoading = useSelector((state: ApplicationState) => state.app.isLoading);
+    const isLoading = useSelector(userLoadingSelector);
     const error = useSelector(userErrorSelector);
     const success = useSelector(userSuccessSelector);
     const dispatch = useDispatch();
@@ -61,26 +65,29 @@ export default function RootLayout() {
                 maxW='1920px'
                 w='100%'
                 position='relative'
+                minH='100vh'
             >
                 {isDesktop ? (
                     <Sidebar />
                 ) : (
                     openBurger && <Sidebar openBurger={openBurger} onClose={onClose} />
                 )}
-                <Flex
-                    direction='column'
-                    align={{ sm: 'center', md: 'flex-start' }}
-                    flex='1'
-                    filter={openBurger ? 'blur(4px)' : 'none'}
-                    transition='filter 0.2s ease-out'
-                    bg={openBurger ? 'rgba(0,0,0,0.1)' : 'transparent'}
-                    position='relative'
-                    onClick={() => onClose()}
-                    ml={{ base: 0, md: '256px' }}
-                >
-                    <Outlet />
-                    <Footer footerData={filterCategory!} />
-                </Flex>
+                {data && (
+                    <Flex
+                        direction='column'
+                        align={{ sm: 'center', md: 'flex-start' }}
+                        flex='1'
+                        filter={openBurger ? 'blur(4px)' : 'none'}
+                        transition='filter 0.2s ease-out'
+                        bg={openBurger ? 'rgba(0,0,0,0.1)' : 'transparent'}
+                        position='relative'
+                        onClick={() => onClose()}
+                        ml={{ base: 0, md: '256px' }}
+                    >
+                        <Outlet />
+                        <Footer footerData={filterCategory} />
+                    </Flex>
+                )}
                 <AsideBar />
             </Flex>
             <FooterMobile openBurger={openBurger} />

@@ -2,8 +2,9 @@ import { Box, Button, Flex, Image, Text } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 
-import { Category } from '~/query/services/category-api.type';
-import { useGetRecipesQuery } from '~/query/services/recipe-api';
+import { ROUTES } from '~/constants/routes';
+import { Category } from '~/query/services/category-api/category-api.type';
+import { useGetRecipesQuery } from '~/query/services/recipe-api/recipe-api';
 import { checkAndNavigate } from '~/utils/checkAndNavigate';
 import { getFullMediaUrl } from '~/utils/getFullMediaUrl';
 import { highlightText } from '~/utils/highlightText';
@@ -62,7 +63,7 @@ export const SearchFilter = ({
             categoryData,
         });
         if (condition) {
-            navigate('/error-page');
+            navigate(ROUTES.NOT_FOUND);
             return;
         }
         navigate(`/${matchedCategory?.category}/${matchedSubcategory?.category}/${recipeId}`);
@@ -91,7 +92,7 @@ export const SearchFilter = ({
                             border='1px solid rgba(0, 0, 0, 0.08)'
                             maxWidth=''
                             maxW={{
-                                lg: '648px',
+                                lg: '664px',
                                 md: '860px',
                                 sm: 'calc(50% - 12px)',
                                 base: '356px',

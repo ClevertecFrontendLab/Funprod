@@ -2,19 +2,19 @@ import { Button, Image, Text } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
-import bookmarkHeart from '~/assets/actionBar/BookmarkHeart.svg';
-import { useBookmarkRecipeMutation } from '~/query/services/recipe-api';
+import emojiHeartEyes from '~/assets/actionBar/EmojiHeartEyes.svg';
+import { useLikeRecipeMutation } from '~/query/services/recipe-api/recipe-api';
 import { setAppError } from '~/store/app-slice';
 
-type SaveButtonProps = {
+type LikeButtonProps = {
     id: string;
 };
 
-export const SaveButton = ({ id }: SaveButtonProps) => {
-    const [bookmarkRecipe, { error }] = useBookmarkRecipeMutation();
+export const LikeButton = ({ id }: LikeButtonProps) => {
+    const [likeRecipe, { error }] = useLikeRecipeMutation();
     const dispatch = useDispatch();
     const handleOnClick = () => {
-        bookmarkRecipe(id);
+        likeRecipe(id);
     };
 
     useEffect(() => {
@@ -27,22 +27,24 @@ export const SaveButton = ({ id }: SaveButtonProps) => {
             );
         }
     }, [dispatch, error]);
+
     return (
         <Button
-            w={{ lg: '273px', md: '202px', base: '168px' }}
+            w={{ lg: '219px', md: '160px', base: '132px' }}
             h={{ lg: '48px', md: '32px', base: '24px' }}
             borderRadius='6px'
-            bg='#b1ff2e'
+            border='1px solid rgba(0, 0, 0, 0.48)'
+            bg='rgba(255, 255, 255, 0.06)'
             onClick={handleOnClick}
         >
-            <Image src={bookmarkHeart} mr='8px' />
+            <Image src={emojiHeartEyes} mr='8px' />
             <Text
                 fontWeight='600'
                 fontSize={{ lg: '18px', md: '14px', base: '12px' }}
                 lineHeight='156%'
                 color=' rgba(0, 0, 0, 0.8)'
             >
-                Сохранить в закладки
+                Оценить рецепт
             </Text>
         </Button>
     );

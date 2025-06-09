@@ -2,10 +2,10 @@ import { Flex, Image, Text } from '@chakra-ui/react';
 import { Link } from 'react-router';
 
 import { ROUTES } from '~/constants/routes';
-import { useGetCategoriesQuery } from '~/query/services/category-api';
+import { useGetCategoriesQuery } from '~/query/services/category-api/category-api';
 
 type CategoryTagsProps = {
-    tagsId: string[] | undefined;
+    tagsId?: string[];
 };
 
 export const CategoryTags = ({ tagsId }: CategoryTagsProps) => {
@@ -24,8 +24,8 @@ export const CategoryTags = ({ tagsId }: CategoryTagsProps) => {
         >
             {tagsId?.map((id) => {
                 const filterId = categoryFilter?.filter((item) => item._id === id);
-                return filterId?.map((item, i) => (
-                    <Link to={ROUTES.HOME} key={i}>
+                return filterId?.map((item) => (
+                    <Link to={ROUTES.HOME} key={item._id}>
                         <Flex
                             w='100%'
                             h='24px'

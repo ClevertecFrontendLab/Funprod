@@ -2,18 +2,18 @@ import { Button, Flex, Image, Text, useDisclosure } from '@chakra-ui/react';
 import { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 
 import draft from '~/assets/newRecipe/draft.svg';
 import { ROUTES } from '~/constants/routes';
 import { useFormNavigationBlocker } from '~/hooks/useFormNavigationBlocker';
-import { Category } from '~/query/services/category-api.type';
+import { Category } from '~/query/services/category-api/category-api.type';
 import {
     useCreateDraftRecipeMutation,
     useCreateRecipeMutation,
     useEditRecipeMutation,
-} from '~/query/services/recipe-api';
-import { Data } from '~/query/services/recipe-api.type';
+} from '~/query/services/recipe-api/recipe-api';
+import { RecipeData } from '~/query/services/recipe-api/recipe-api.type';
 import { categoriesSelector, setAppSuccess } from '~/store/app-slice';
 import { checkAndNavigate } from '~/utils/checkAndNavigate';
 
@@ -36,7 +36,7 @@ export type FormData = {
 };
 
 type NewRecipeProps = {
-    dataForEditing?: Data;
+    dataForEditing?: RecipeData;
     editMode?: boolean;
     setEditMode?: (editMode: boolean) => void;
     id?: string;
@@ -93,7 +93,7 @@ export const NewRecipe = ({ dataForEditing, editMode, setEditMode, id }: NewReci
     const { isOpen, onOpen, onClose } = useDisclosure();
 
     const { blocker, allowNextNavigation } = useFormNavigationBlocker({ watch, onOpen });
-
+    const location = useLocation();
     const dispatch = useDispatch();
     const navigate = useNavigate();
 

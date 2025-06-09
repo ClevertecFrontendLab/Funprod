@@ -2,14 +2,16 @@ import 'swiper/swiper-bundle.css';
 
 import { Box, Button, Flex, Image, Text } from '@chakra-ui/react';
 import { useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { Swiper as SwiperType } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 import { CategoryTags } from '~/components/CategoryPage/TabComponent/CategoryTags/CategoryTags';
+import { ROUTES } from '~/constants/routes';
 import { useLocalFallback } from '~/hooks/useLocalFallback';
-import { Category } from '~/query/services/category-api.type';
-import { useGetRecipesQuery } from '~/query/services/recipe-api';
+import { useGetRecipesQuery } from '~/query/services/recipe-api/recipe-api';
+import { categoriesSelector } from '~/store/app-slice';
 import { checkAndNavigate } from '~/utils/checkAndNavigate';
 import { getFullMediaUrl } from '~/utils/getFullMediaUrl';
 
@@ -18,13 +20,16 @@ import emojiHeartEyes from './../../../assets/actionBar/EmojiHeartEyes.svg';
 import leftSlider from './../../../assets/leftSlider.svg';
 import rightSlider from './../../../assets/rightSlider.svg';
 
-type NewRecipesSectionProps = {
-    categoryData: Category[];
-    filteredData?: Category[];
-};
-
-export const NewRecipesSection = ({ categoryData }: NewRecipesSectionProps) => {
+export const NewRecipesSection = () => {
     const navigate = useNavigate();
+
+    const categoryDataRedux = useSelector(categoriesSelector);
+    const localDataString = localStorage.getItem('cachedCategories');
+    const categoryDataLocal = JSON.parse(localDataString!);
+
+    const categoryData1 =
+        categoryDataRedux && categoryDataRedux.length > 0 ? categoryDataRedux : categoryDataLocal;
+
     const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null);
     const swiperRef = useRef(null);
     const { data, isError } = useGetRecipesQuery({
@@ -47,9 +52,9 @@ export const NewRecipesSection = ({ categoryData }: NewRecipesSectionProps) => {
 
     const fallback = useLocalFallback('cachedRecipeCategory', isError, data);
 
-    if (!categoryData || categoryData.length === 0) return;
+    if (!categoryData1 || categoryData1.length === 0) return;
 
-    const safeCategoryData = Array.isArray(categoryData) ? categoryData : [];
+    const safeCategoryData = Array.isArray(categoryData1) ? categoryData1 : [];
 
     const handleGetRecipe = (recipeId: string, categoriesIds: string[]) => {
         const { condition, matchedCategory, matchedSubcategory } = checkAndNavigate({
@@ -57,7 +62,7 @@ export const NewRecipesSection = ({ categoryData }: NewRecipesSectionProps) => {
             categoryData: safeCategoryData,
         });
         if (condition) {
-            navigate('/error-page');
+            navigate(ROUTES.NOT_FOUND);
             return;
         }
         navigate(`/${matchedCategory?.category}/${matchedSubcategory?.category}/${recipeId}`);
@@ -66,7 +71,13 @@ export const NewRecipesSection = ({ categoryData }: NewRecipesSectionProps) => {
     const sortedRecipes = data?.data || fallback?.data || [];
 
     return (
-        <Flex direction='column' w='100%' maxHeight='550px' mt='32px' position='relative'>
+        <Flex
+            direction='column'
+            w='100%'
+            minHeight={{ lg: '550', md: '414px', base: '220px' }}
+            mt='32px'
+            position='relative'
+        >
             <>
                 <Text
                     fontWeight='500'

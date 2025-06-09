@@ -10,4 +10,6 @@ export const ROUTES = {
     EDIT_RECIPE: '/edit-recipe',
     NOT_FOUND: '/not-found',
     VERIFICATION: '/verification',
+    BLOGS: '/blogs',
+    USER_ID: ':userId',
 };

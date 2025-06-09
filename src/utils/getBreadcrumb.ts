@@ -1,5 +1,5 @@
 import { ROUTES } from '~/constants/routes';
-import { Category } from '~/query/services/category-api.type';
+import { Category } from '~/query/services/category-api/category-api.type';
 
 import { generatePageTitles } from './generatePageTitles';
 
@@ -43,6 +43,11 @@ export function getBreadcrumb({
                 return acc;
             }
             acc.push({ label: 'Новый рецепт', to: fullPath });
+            return acc;
+        }
+
+        if (fullPath === ROUTES.BLOGS) {
+            acc.push({ label: 'Блоги', to: fullPath });
             return acc;
         }
 

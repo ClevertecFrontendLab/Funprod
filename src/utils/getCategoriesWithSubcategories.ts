@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import { Category } from '~/query/services/category-api.type';
+import { Category } from '~/query/services/category-api/category-api.type';
 
 function getCategoriesWithSubcategories(categoryDataRedux?: Category[]) {
     try {
