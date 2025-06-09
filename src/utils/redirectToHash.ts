@@ -6,7 +6,12 @@ export function redirectToHashIfNeeded() {
     const hasHash = hash.startsWith('#/');
     const isRoot = path === '/';
 
-    if (!hasHash && !isRoot) {
+    if (hash.startsWith('#/Funprod')) {
+        const newUrl = '/Funprod/' + '#' + path + search;
+        window.location.replace(newUrl);
+        return;
+    }
+    if (!hasHash && !isRoot && !path.startsWith('/Funprod')) {
         const newUrl = '/#' + path + search;
         window.location.replace(newUrl);
     }
