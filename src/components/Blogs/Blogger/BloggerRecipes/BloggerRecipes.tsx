@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router';
 import BookmarkHeart from '~/assets/actionBar/BookmarkHeart.svg';
 import emojiHeartEyes from '~/assets/actionBar/EmojiHeartEyes.svg';
 import { CategoryTags } from '~/components/CategoryPage/TabComponent/CategoryTags/CategoryTags';
+import { ROUTES } from '~/constants/routes';
 import { GetRecipeByUserId } from '~/query/services/recipe-api/recipe-api.type';
 import { categoriesSelector } from '~/store/app-slice';
 import { checkAndNavigate } from '~/utils/checkAndNavigate';
@@ -14,6 +15,8 @@ import { getFullMediaUrl } from '~/utils/getFullMediaUrl';
 type BloggerRecipesProps = {
     data?: GetRecipeByUserId;
 };
+
+const MAX_VISIBLE_RECIPES = 8;
 
 export const BloggerRecipes = ({ data }: BloggerRecipesProps) => {
     const [showAll, setShowAll] = useState(false);
@@ -25,7 +28,7 @@ export const BloggerRecipes = ({ data }: BloggerRecipesProps) => {
             categoryData,
         });
         if (condition) {
-            navigate('/error-page');
+            navigate(ROUTES.NOT_FOUND);
             return;
         }
         navigate(`/${matchedCategory?.category}/${matchedSubcategory?.category}/${recipeId}`);
@@ -33,7 +36,7 @@ export const BloggerRecipes = ({ data }: BloggerRecipesProps) => {
 
     if (!data) return null;
 
-    const recipes = data.recipes.slice(0, showAll ? data.recipes.length : 8);
+    const recipes = data.recipes.slice(0, showAll ? data.recipes.length : MAX_VISIBLE_RECIPES);
 
     return (
         <Flex mt='32px' direction='column'>
@@ -204,7 +207,7 @@ export const BloggerRecipes = ({ data }: BloggerRecipesProps) => {
                 ))}
             </Flex>
             <Flex w='100%' justify='center' mt='24px'>
-                {!showAll && data.recipes.length > 8 && (
+                {!showAll && data.recipes.length > MAX_VISIBLE_RECIPES && (
                     <Button
                         data-test-id='load-more-button'
                         borderRadius='6px'

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 
+import { ROUTES } from '~/constants/routes';
 import { useGetRecipesQuery } from '~/query/services/recipe-api/recipe-api';
 import { RecipeData } from '~/query/services/recipe-api/recipe-api.type';
 import { categoriesSelector } from '~/store/app-slice';
@@ -37,7 +38,7 @@ export const Juiciest = () => {
         side,
     } = useRecipeFilters();
     const [page, setPage] = useState(1);
-    const [allRecipes, setAllRecipes] = useState<RecipeData[] | []>([]);
+    const [allRecipes, setAllRecipes] = useState<RecipeData[]>([]);
     const { data, isFetching } = useGetRecipesQuery({
         page,
         limit: 8,
@@ -87,7 +88,7 @@ export const Juiciest = () => {
             categoryData,
         });
         if (condition) {
-            navigate('/error-page');
+            navigate(ROUTES.NOT_FOUND);
             return;
         }
         navigate(`/${matchedCategory?.category}/${matchedSubcategory?.category}/${recipeId}`);

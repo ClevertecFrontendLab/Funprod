@@ -5,8 +5,8 @@ import { ROUTES } from '~/constants/routes';
 import { Category } from '~/query/services/category-api/category-api.type';
 
 type UseValidateCategoryProps = {
-    categoryData: Category[] | undefined;
-    category: string | undefined;
+    categoryData?: Category[];
+    category?: string;
     subcategory?: string;
 };
 

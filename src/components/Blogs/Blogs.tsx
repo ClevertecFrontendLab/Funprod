@@ -9,13 +9,15 @@ import { getUserIdFromToken } from '~/utils/getUserIdFromToken';
 import { NewRecipesSection } from '../Main/NewRecipesSection/NewRecipesSection';
 import { Bloggers } from './Bloggers/Bloggers';
 import { Favorites } from './Favorites/Favorites';
-
+export const DEFAULT_LIMIT = 9;
 export const Blogs = () => {
     const navigate = useNavigate();
     const userId = getUserIdFromToken();
-    const [limit, setLimit] = useState<string>('9');
-
-    const { data, refetch, isError } = useGetBloggersQuery({ currentUserId: userId, limit });
+    const [limit, setLimit] = useState<number | 'all'>(DEFAULT_LIMIT);
+    const { data, refetch, isError } = useGetBloggersQuery({
+        currentUserId: userId,
+        limit: String(limit),
+    });
 
     useEffect(() => {
         if (isError) {
@@ -23,8 +25,7 @@ export const Blogs = () => {
         }
     }, [isError, navigate]);
 
-    if (!data) return null;
-    if (!data.others) return null;
+    if (!data || !data.others) return null;
 
     return (
         <Flex

@@ -16,6 +16,8 @@ type ErrorNotificationProps = {
     success?: { title: string; message: string } | null;
 };
 
+const ERROR_DISPLAY_DURATION_MS = 15000;
+
 export const ErrorNotification = ({
     message,
     title,
@@ -31,7 +33,7 @@ export const ErrorNotification = ({
             const timer = setTimeout(() => {
                 dispatch(setAppError(null));
                 dispatch(setAppSuccess(null));
-            }, 15000);
+            }, ERROR_DISPLAY_DURATION_MS);
             return () => clearTimeout(timer);
         }
     }, [errorStatus, dispatch, successStatus]);

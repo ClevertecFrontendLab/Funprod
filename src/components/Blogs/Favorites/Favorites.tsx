@@ -5,6 +5,7 @@ import BookmarkHeart from '~/assets/actionBar/BookmarkHeart.svg';
 import PeopleFillWhite from '~/assets/actionBar/PeopleFillWhite.svg';
 import { ROUTES } from '~/constants/routes';
 import { Blogger } from '~/query/services/bloggers-api/bloggers-api.type';
+import { getRecipeWord } from '~/utils/getRecipeWord';
 type FavoritesProps = {
     bloggers: Blogger[];
 };
@@ -12,13 +13,6 @@ export const Favorites = ({ bloggers }: FavoritesProps) => {
     const navigate = useNavigate();
 
     if (!bloggers.length) return null;
-
-    const getRecipeWord = (count: number) => {
-        if (count % 10 === 1 && count % 100 !== 11) return 'новый рецепт';
-        if ([2, 3, 4].includes(count % 10) && ![12, 13, 14].includes(count % 100))
-            return 'новых рецепта';
-        return 'новых рецептов';
-    };
 
     const handleGoToBlogger = (bloggerId: string, goToNotes?: boolean) => {
         const path = `${ROUTES.BLOGS}/${bloggerId}${goToNotes ? '#notes' : ''}`;

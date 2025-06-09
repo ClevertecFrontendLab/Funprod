@@ -2,6 +2,7 @@ import { Box, Button, Flex, Image, Text } from '@chakra-ui/react';
 import { useLayoutEffect } from 'react';
 import { useNavigate } from 'react-router';
 
+import { ROUTES } from '~/constants/routes';
 import { Category } from '~/query/services/category-api/category-api.type';
 import { useGetRecipesCategoryQuery } from '~/query/services/recipe-api/recipe-api';
 import { setAppLoader } from '~/store/app-slice';
@@ -46,7 +47,7 @@ export const TabComponent = ({
             categoryData: categoryData || [],
         });
         if (condition) {
-            navigate('/error-page');
+            navigate(ROUTES.NOT_FOUND);
             return;
         }
         navigate(`/${matchedCategory?.category}/${matchedSubcategory?.category}/${recipeId}`);

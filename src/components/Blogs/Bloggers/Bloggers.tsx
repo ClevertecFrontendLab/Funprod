@@ -4,13 +4,14 @@ import arrowRight from '~/assets/main/icon/arrowRight.svg';
 import { Blogger } from '~/query/services/bloggers-api/bloggers-api.type';
 
 import { BloggersCards } from '../BloggersCards/BloggersCards';
+import { DEFAULT_LIMIT } from '../Blogs';
 
 type BloggersProps = {
     bloggers: Blogger[];
     fromUserId: string;
-    limit: string;
+    limit: number | 'all';
     refetch: () => void;
-    setLimit: (val: string) => void;
+    setLimit: (val: number | 'all') => void;
 };
 
 export const Bloggers = ({ bloggers, fromUserId, limit, refetch, setLimit }: BloggersProps) => (
@@ -53,7 +54,7 @@ export const Bloggers = ({ bloggers, fromUserId, limit, refetch, setLimit }: Blo
                 fontWeight='600'
                 fontSize='18px'
                 lineHeight='156%'
-                onClick={() => setLimit('9')}
+                onClick={() => setLimit(DEFAULT_LIMIT)}
             >
                 Свернуть
             </Button>

@@ -8,6 +8,7 @@ import { Swiper as SwiperType } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 
 import { CategoryTags } from '~/components/CategoryPage/TabComponent/CategoryTags/CategoryTags';
+import { ROUTES } from '~/constants/routes';
 import { useLocalFallback } from '~/hooks/useLocalFallback';
 import { useGetRecipesQuery } from '~/query/services/recipe-api/recipe-api';
 import { categoriesSelector } from '~/store/app-slice';
@@ -61,7 +62,7 @@ export const NewRecipesSection = () => {
             categoryData: safeCategoryData,
         });
         if (condition) {
-            navigate('/error-page');
+            navigate(ROUTES.NOT_FOUND);
             return;
         }
         navigate(`/${matchedCategory?.category}/${matchedSubcategory?.category}/${recipeId}`);

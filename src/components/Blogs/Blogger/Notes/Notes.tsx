@@ -5,6 +5,9 @@ import { useLocation } from 'react-router';
 import { Note } from '~/query/services/recipe-api/recipe-api.type';
 import { formatDate } from '~/utils/formatDate';
 
+const DEFAULT_VISIBLE_NOTES = 3;
+const MAX_NOTE_LENGTH = 160;
+
 type NotesProps = {
     notes: Note[];
 };
@@ -64,7 +67,7 @@ export const Notes = ({ notes }: NotesProps) => {
                         bg='#fff'
                         p='24px'
                         gap={{ md: '16px', base: '12px' }}
-                        display={!showAll && index >= 3 ? 'none' : 'flex'}
+                        display={!showAll && index >= DEFAULT_VISIBLE_NOTES ? 'none' : 'flex'}
                     >
                         <Text
                             data-test-id='notes-card-date'
@@ -81,13 +84,15 @@ export const Notes = ({ notes }: NotesProps) => {
                             fontSize='14px'
                             lineHeight='143%'
                         >
-                            {note.text.length > 160 ? `${note.text.slice(0, 160)}...` : note.text}
+                            {note.text.length > MAX_NOTE_LENGTH
+                                ? `${note.text.slice(0, MAX_NOTE_LENGTH)}...`
+                                : note.text}
                         </Text>
                     </Flex>
                 ))}
             </Flex>
             <Flex justify='center'>
-                {!showAll && notes.length > 3 ? (
+                {!showAll && notes.length > DEFAULT_VISIBLE_NOTES ? (
                     <Button
                         data-test-id='blogger-user-notes-button'
                         w='147px'

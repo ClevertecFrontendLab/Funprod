@@ -5,7 +5,7 @@ import { ROUTES } from '~/constants/routes';
 import { useGetCategoriesQuery } from '~/query/services/category-api/category-api';
 
 type CategoryTagsProps = {
-    tagsId: string[] | undefined;
+    tagsId?: string[];
 };
 
 export const CategoryTags = ({ tagsId }: CategoryTagsProps) => {

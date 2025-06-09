@@ -13,7 +13,7 @@ export const CookingBlogsSection = () => {
     const { data } = useGetBloggersQuery({ currentUserId: userId, limit });
     const navigate = useNavigate();
 
-    const otherBloggers = data?.others ? data.others : [];
+    const otherBloggers = data?.others ?? [];
 
     const [isDesktop] = useMediaQuery('(min-width: 1025px)');
     const handleClick = () => {
