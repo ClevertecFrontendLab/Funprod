@@ -16,6 +16,7 @@ export const OtherBloggers = () => {
     const navigate = useNavigate();
 
     if (!data?.others) return null;
+
     return (
         <Flex w='100%' mt={{ md: '64px', base: '32px' }} direction='column' gap='24px'>
             <Flex w='100%' align='center' justify='space-between'>

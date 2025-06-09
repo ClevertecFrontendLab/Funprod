@@ -8,6 +8,7 @@ import {
     GetBloggerByIdResponse,
     GetBloggersRequest,
     GetBloggersResponse,
+    SubscriptionRequest,
 } from './bloggers-api.type';
 
 export const bloggersApi = createApi({
@@ -21,6 +22,7 @@ export const bloggersApi = createApi({
                 method: 'GET',
                 params,
             }),
+            providesTags: [Tags.BLOGGERS],
         }),
         getBloggerById: builder.query<GetBloggerByIdResponse, GetBloggerByIdRequest>({
             query: ({ bloggerId, currentUserId }) => ({
@@ -29,7 +31,15 @@ export const bloggersApi = createApi({
                 params: { currentUserId },
             }),
         }),
+        subscription: builder.mutation<unknown, SubscriptionRequest>({
+            query: (body) => ({
+                url: 'users/toggle-subscription',
+                method: 'PATCH',
+                body,
+            }),
+            invalidatesTags: [{ type: Tags.BLOGGERS }],
+        }),
     }),
 });
 
-export const { useGetBloggersQuery, useGetBloggerByIdQuery } = bloggersApi;
+export const { useGetBloggersQuery, useGetBloggerByIdQuery, useSubscriptionMutation } = bloggersApi;

@@ -15,6 +15,7 @@ import { useDispatch } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
 
 import { ErrorNotification } from '~/components/ErrorNotification/ErrorNotification';
+import { HTTP_STATUS } from '~/constants/httpStatusCodes';
 import { ROUTES } from '~/constants/routes';
 import { useHealthMutation, useLoginMutation } from '~/query/services/auth-api/auth-api';
 import { setAppLoader } from '~/store/app-slice';
@@ -94,7 +95,7 @@ export const Login = ({
         if (error && typeof error === 'object' && 'status' in error) {
             const { status } = error;
 
-            if (status === 500) {
+            if (status === HTTP_STATUS.SERVER_ERROR) {
                 setAuthModal?.('health');
                 onOpen?.();
             }

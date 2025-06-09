@@ -3,9 +3,12 @@ import { Avatar, Box, Button, Flex, Image, Text } from '@chakra-ui/react';
 import PersonPlusFill from '~/assets/actionBar/PersonPlusFill.svg';
 import subscribeIcon from '~/assets/actionBar/subscribeIcon.svg';
 import peopleIcon from '~/assets/peopleIcon.svg';
-import { useGetBloggerByIdQuery } from '~/query/services/bloggers-api/bloggers-api';
-import { useSubscriptionMutation } from '~/query/services/users-api/users-api';
+import {
+    useGetBloggerByIdQuery,
+    useSubscriptionMutation,
+} from '~/query/services/bloggers-api/bloggers-api';
 import { getUserIdFromToken } from '~/utils/getUserIdFromToken';
+
 export const Author = ({ bloggerId }: { bloggerId: string }) => {
     const currentUserId = getUserIdFromToken();
     const { data, refetch } = useGetBloggerByIdQuery({ currentUserId, bloggerId });

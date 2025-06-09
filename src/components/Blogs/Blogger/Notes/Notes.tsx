@@ -91,37 +91,39 @@ export const Notes = ({ notes }: NotesProps) => {
                     </Flex>
                 ))}
             </Flex>
-            <Flex justify='center'>
-                {!showAll && notes.length > DEFAULT_VISIBLE_NOTES ? (
-                    <Button
-                        data-test-id='blogger-user-notes-button'
-                        w='147px'
-                        h='32px'
-                        borderRadius='6px'
-                        bg='transparent'
-                        fontWeight='600'
-                        fontSize='14px'
-                        lineHeight='143%'
-                        onClick={() => setShowAll(true)}
-                    >
-                        Показать больше
-                    </Button>
-                ) : (
-                    <Button
-                        data-test-id='blogger-user-notes-button'
-                        w='147px'
-                        h='32px'
-                        borderRadius='6px'
-                        bg='transparent'
-                        fontWeight='600'
-                        fontSize='14px'
-                        lineHeight='143%'
-                        onClick={() => setShowAll(false)}
-                    >
-                        Свернуть
-                    </Button>
-                )}
-            </Flex>
+            {notes.length > DEFAULT_VISIBLE_NOTES && (
+                <Flex justify='center'>
+                    {!showAll ? (
+                        <Button
+                            data-test-id='blogger-user-notes-button'
+                            w='147px'
+                            h='32px'
+                            borderRadius='6px'
+                            bg='transparent'
+                            fontWeight='600'
+                            fontSize='14px'
+                            lineHeight='143%'
+                            onClick={() => setShowAll(true)}
+                        >
+                            Показать больше
+                        </Button>
+                    ) : (
+                        <Button
+                            data-test-id='blogger-user-notes-button'
+                            w='147px'
+                            h='32px'
+                            borderRadius='6px'
+                            bg='transparent'
+                            fontWeight='600'
+                            fontSize='14px'
+                            lineHeight='143%'
+                            onClick={() => setShowAll(false)}
+                        >
+                            Свернуть
+                        </Button>
+                    )}
+                </Flex>
+            )}
         </Flex>
     );
 };

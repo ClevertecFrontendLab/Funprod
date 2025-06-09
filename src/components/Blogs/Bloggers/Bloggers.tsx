@@ -10,11 +10,10 @@ type BloggersProps = {
     bloggers: Blogger[];
     fromUserId: string;
     limit: number | 'all';
-    refetch: () => void;
     setLimit: (val: number | 'all') => void;
 };
 
-export const Bloggers = ({ bloggers, fromUserId, limit, refetch, setLimit }: BloggersProps) => (
+export const Bloggers = ({ bloggers, fromUserId, limit, setLimit }: BloggersProps) => (
     <Flex
         data-test-id='blogs-others-box'
         w='100%'
@@ -27,12 +26,7 @@ export const Bloggers = ({ bloggers, fromUserId, limit, refetch, setLimit }: Blo
     >
         <Flex data-test-id='blogs-others-grid' wrap='wrap' gap={{ md: '16px', base: '12px' }}>
             {bloggers.map((blogger) => (
-                <BloggersCards
-                    key={blogger._id}
-                    blogger={blogger}
-                    fromUserId={fromUserId}
-                    refetch={refetch}
-                />
+                <BloggersCards key={blogger._id} blogger={blogger} fromUserId={fromUserId} />
             ))}
         </Flex>
         {limit === 'all' ? (

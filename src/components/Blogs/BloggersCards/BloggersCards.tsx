@@ -8,22 +8,16 @@ import PersonPlusFill from '~/assets/actionBar/PersonPlusFill.svg';
 import subscribeIcon from '~/assets/actionBar/subscribeIcon.svg';
 import { Loader } from '~/components/Loader/Loader';
 import { ROUTES } from '~/constants/routes';
+import { useSubscriptionMutation } from '~/query/services/bloggers-api/bloggers-api';
 import { Blogger } from '~/query/services/bloggers-api/bloggers-api.type';
-import { useSubscriptionMutation } from '~/query/services/users-api/users-api';
 
 type BloggersCardsProps = {
     blogger: Blogger;
     fromUserId: string;
-    refetch?: () => void;
     isOtherBlock?: boolean;
 };
 
-export const BloggersCards = ({
-    blogger,
-    fromUserId,
-    refetch,
-    isOtherBlock,
-}: BloggersCardsProps) => {
+export const BloggersCards = ({ blogger, fromUserId, isOtherBlock }: BloggersCardsProps) => {
     const [loadingId, setLoadingId] = useState<string | null>(null);
     const [subscribedIds, setSubscribedIds] = useState<string[]>([]);
     const [subscribe] = useSubscriptionMutation();
@@ -39,7 +33,6 @@ export const BloggersCards = ({
             setSubscribedIds((prev) =>
                 isSubscribed ? prev.filter((id) => id !== toUserId) : [...prev, toUserId],
             );
-            refetch?.();
             setLoadingId(null);
         }
     };
@@ -54,7 +47,7 @@ export const BloggersCards = ({
             ? blogger.notes[0].text
             : '';
 
-    const isSubscribed = subscribedIds.includes(blogger._id) || blogger.isFavorite;
+    const isSubscribed = blogger.isFavorite;
 
     return (
         <Flex data-test-id='blogger-user-other-blogs-grid' mb='24px'>

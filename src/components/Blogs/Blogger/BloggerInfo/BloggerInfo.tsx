@@ -8,8 +8,10 @@ import PersonPlusFill from '~/assets/actionBar/PersonPlusFill.svg';
 import subscribeIcon from '~/assets/actionBar/subscribeIcon.svg';
 import { Loader } from '~/components/Loader/Loader';
 import { ROUTES } from '~/constants/routes';
-import { useGetBloggerByIdQuery } from '~/query/services/bloggers-api/bloggers-api';
-import { useSubscriptionMutation } from '~/query/services/users-api/users-api';
+import {
+    useGetBloggerByIdQuery,
+    useSubscriptionMutation,
+} from '~/query/services/bloggers-api/bloggers-api';
 import { getUserIdFromToken } from '~/utils/getUserIdFromToken';
 type BloggerInfoProps = {
     bloggerId: string;
@@ -18,10 +20,11 @@ type BloggerInfoProps = {
 export const BloggerInfo = ({ bloggerId }: BloggerInfoProps) => {
     const currentUserId = getUserIdFromToken();
     const navigate = useNavigate();
-    const { data, refetch, error } = useGetBloggerByIdQuery({ currentUserId, bloggerId });
+    const { data, error } = useGetBloggerByIdQuery({ currentUserId, bloggerId });
     const [subscribe] = useSubscriptionMutation();
     const [loadingId, setLoadingId] = useState<string | null>(null);
     const [subscribedIds, setSubscribedIds] = useState<string[]>([]);
+
     const handleClickSubscribe = async (toUserId: string) => {
         if (!toUserId) return;
         setLoadingId(toUserId);
@@ -33,7 +36,6 @@ export const BloggerInfo = ({ bloggerId }: BloggerInfoProps) => {
             } else {
                 setSubscribedIds((prev) => [...prev, toUserId]);
             }
-            await refetch();
         }
         setLoadingId(null);
     };

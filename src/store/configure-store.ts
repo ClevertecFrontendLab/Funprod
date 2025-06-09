@@ -4,7 +4,6 @@ import { authApi } from '~/query/services/auth-api/auth-api';
 import { bloggersApi } from '~/query/services/bloggers-api/bloggers-api';
 import { recipeApi } from '~/query/services/recipe-api/recipe-api';
 import { uploadFileApi } from '~/query/services/uploadFile-api/uploadFile-api';
-import { usersApi } from '~/query/services/users-api/users-api';
 
 import { categoryApi } from '../query/services/category-api/category-api';
 import { apiSlice } from './../query/create-api';
@@ -20,9 +19,7 @@ const rootReducer = combineReducers({
     [authApi.reducerPath]: authApi.reducer,
     [uploadFileApi.reducerPath]: uploadFileApi.reducer,
     [bloggersApi.reducerPath]: bloggersApi.reducer,
-    [usersApi.reducerPath]: usersApi.reducer,
 });
-
 export type ApplicationState = ReturnType<typeof rootReducer>;
 export const store = configureStore({
     reducer: rootReducer,
@@ -34,7 +31,6 @@ export const store = configureStore({
             authApi.middleware,
             uploadFileApi.middleware,
             bloggersApi.middleware,
-            usersApi.middleware,
         ),
     devTools: !isProduction,
 });

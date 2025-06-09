@@ -14,7 +14,7 @@ export const Blogs = () => {
     const navigate = useNavigate();
     const userId = getUserIdFromToken();
     const [limit, setLimit] = useState<number | 'all'>(DEFAULT_LIMIT);
-    const { data, refetch, isError } = useGetBloggersQuery({
+    const { data, isError } = useGetBloggersQuery({
         currentUserId: userId,
         limit: String(limit),
     });
@@ -52,7 +52,6 @@ export const Blogs = () => {
             <Bloggers
                 bloggers={data.others}
                 fromUserId={userId}
-                refetch={refetch}
                 limit={limit}
                 setLimit={setLimit}
             />

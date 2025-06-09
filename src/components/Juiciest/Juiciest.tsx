@@ -12,6 +12,7 @@ import { useCategoriesWithSubcategories } from '~/utils/getCategoriesWithSubcate
 import { getFullMediaUrl } from '~/utils/getFullMediaUrl';
 
 import { CategoryTags } from '../CategoryPage/TabComponent/CategoryTags/CategoryTags';
+import { FullPageLoader } from '../FullPageLoader/FullPageLoader';
 import { PageHeader } from '../PageHeader/PageHeader';
 import { SearchFilter } from '../SearchFilter/SearchFilter';
 import bookmarkHeart from './../../assets/actionBar/BookmarkHeart.svg';
@@ -95,6 +96,12 @@ export const Juiciest = () => {
     };
 
     const isDisabledButton = page >= (data?.meta?.totalPages || 0) || isFetching;
+
+    useEffect(() => {
+        if (!data) {
+            <FullPageLoader />;
+        }
+    }, [data]);
 
     return (
         <Flex

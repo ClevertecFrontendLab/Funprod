@@ -73,3 +73,8 @@ export type Note = {
     date: string;
     text: string;
 };
+
+export type SubscriptionRequest = {
+    toUserId: string;
+    fromUserId: string;
+};

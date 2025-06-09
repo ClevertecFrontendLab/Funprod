@@ -2,6 +2,7 @@ import { Flex } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router';
 
+import { HTTP_STATUS } from '~/constants/httpStatusCodes';
 import { ROUTES } from '~/constants/routes';
 import { useGetRecipeByUserIdQuery } from '~/query/services/recipe-api/recipe-api';
 
@@ -18,9 +19,9 @@ export const Blogger = () => {
 
     useEffect(() => {
         if (typeof error === 'object' && error !== null && 'status' in error) {
-            if (error?.status === 404) {
+            if (error?.status === HTTP_STATUS.NOT_FOUND) {
                 navigate(ROUTES.NOT_FOUND);
-            } else if (error?.status === 500) {
+            } else if (error?.status === HTTP_STATUS.SERVER_ERROR) {
                 navigate(ROUTES.HOME);
             } else {
                 navigate(ROUTES.HOME);
