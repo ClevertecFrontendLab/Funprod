@@ -15,7 +15,7 @@ import { useDispatch } from 'react-redux';
 
 import Pin from '~/assets/pinImg.jpg';
 import { ErrorNotification } from '~/components/ErrorNotification/ErrorNotification';
-import { useCheckVerificationCodeMutation } from '~/query/services/auth-api';
+import { useCheckVerificationCodeMutation } from '~/query/services/auth-api/auth-api';
 import { setAppLoader } from '~/store/app-slice';
 
 const baseTestId = 'verification-code-input-';

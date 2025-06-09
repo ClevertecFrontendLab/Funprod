@@ -13,9 +13,9 @@ import headerLogoMobile from './../../assets/header/logoMobile.svg';
 import { Breadcrumbs } from './Breadcrumbs/Breadcrumbs';
 
 const socialPanel = [
-    { count: 185, icon: bookmarkHeart },
-    { count: 589, icon: peopleFill },
-    { count: 587, icon: emojiHeartEyes },
+    { id: 1, count: 185, icon: bookmarkHeart },
+    { id: 2, count: 589, icon: peopleFill },
+    { id: 3, count: 587, icon: emojiHeartEyes },
 ];
 
 type HeaderProps = {
@@ -102,8 +102,8 @@ export const Header = ({ openBurger, onToggle }: HeaderProps) => (
                         lineHeight='150%'
                         color='var(--lime-600)'
                     >
-                        {socialPanel.map((item, index) => (
-                            <Flex gap='8px' key={index}>
+                        {socialPanel.map((item) => (
+                            <Flex gap='8px' key={item.id}>
                                 <Image src={item.icon} w='10px' h='12px' />
                                 <Text
                                     fontWeight='600'

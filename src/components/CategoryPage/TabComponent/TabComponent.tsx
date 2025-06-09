@@ -1,12 +1,12 @@
 import { Box, Button, Flex, Image, Text } from '@chakra-ui/react';
 import { useLayoutEffect } from 'react';
-import { Link as Links } from 'react-router';
+import { useNavigate } from 'react-router';
 
-import { ROUTES } from '~/constants/routes';
-import { Category } from '~/query/services/category-api.type';
-import { useGetRecipesCategoryQuery } from '~/query/services/recipe-api';
+import { Category } from '~/query/services/category-api/category-api.type';
+import { useGetRecipesCategoryQuery } from '~/query/services/recipe-api/recipe-api';
 import { setAppLoader } from '~/store/app-slice';
 import { useAppDispatch } from '~/store/hooks';
+import { checkAndNavigate } from '~/utils/checkAndNavigate';
 import { getFullMediaUrl } from '~/utils/getFullMediaUrl';
 import { highlightText } from '~/utils/highlightText';
 
@@ -17,24 +17,44 @@ import { CategoryTags } from './CategoryTags/CategoryTags';
 type TabComponentProps = {
     searchQuery?: string;
     categoriesId?: string;
-    dataCategory?: Category;
+    categoryData?: Category[];
 };
 
-export const TabComponent = ({ searchQuery = '', categoriesId }: TabComponentProps) => {
-    const { data } = useGetRecipesCategoryQuery({
+export const TabComponent = ({
+    searchQuery = '',
+    categoriesId,
+    categoryData,
+}: TabComponentProps) => {
+    const navigate = useNavigate();
+    const { data, isLoading } = useGetRecipesCategoryQuery({
         id: categoriesId!,
     });
+
     const dispatch = useAppDispatch();
+
     useLayoutEffect(() => {
-        if (!data) {
+        if (isLoading) {
             dispatch(setAppLoader(true));
         } else {
             dispatch(setAppLoader(false));
         }
-    }, [dispatch, data]);
+    }, [dispatch, isLoading]);
+
+    const handleGetRecipe = (recipeId: string, categoriesIds: string[]) => {
+        const { condition, matchedCategory, matchedSubcategory } = checkAndNavigate({
+            categoriesIds,
+            categoryData: categoryData || [],
+        });
+        if (condition) {
+            navigate('/error-page');
+            return;
+        }
+        navigate(`/${matchedCategory?.category}/${matchedSubcategory?.category}/${recipeId}`);
+    };
+
     return (
         <Flex direction='column' align='center' gap='16px' mt='22px'>
-            <Flex wrap='wrap' gap={{ md: '24px', base: '16px' }} justify='space-between'>
+            <Flex wrap='wrap' gap={{ md: '24px', base: '16px' }} minH='500px'>
                 {Array.isArray(data?.data) &&
                     data.data.map((card, i) => (
                         <Flex
@@ -45,7 +65,7 @@ export const TabComponent = ({ searchQuery = '', categoriesId }: TabComponentPro
                             border='1px solid rgba(0, 0, 0, 0.08)'
                             maxWidth=''
                             maxW={{
-                                lg: '648px',
+                                lg: '668px',
                                 md: '860px',
                                 sm: 'calc(50% - 12px)',
                                 base: '356px',
@@ -55,7 +75,7 @@ export const TabComponent = ({ searchQuery = '', categoriesId }: TabComponentPro
                         >
                             <Image
                                 src={getFullMediaUrl(card.image)}
-                                w={{ md: '346px', base: '158px' }}
+                                minW={{ md: '346px', base: '158px' }}
                                 borderRadius='4px 0 0 4px'
                             />
                             <Flex
@@ -169,28 +189,29 @@ export const TabComponent = ({ searchQuery = '', categoriesId }: TabComponentPro
                                             </Text>
                                         </Box>
                                     </Button>
-                                    <Links to={ROUTES.HOME}>
-                                        <Button
-                                            data-test-id={`card-link-${i}`}
-                                            border='1px solid rgba(0, 0, 0, 0.08)'
-                                            borderRadius='6px'
-                                            p={{ md: '0 12px', base: '0 6px' }}
-                                            w='87px'
-                                            h={{ md: '32px', base: '24px' }}
-                                            backgroundColor='rgba(0, 0, 0, 0.92)'
-                                            _hover={{ backgroundColor: 'rgba(0, 0, 0, 0.52)' }}
+                                    <Button
+                                        data-test-id={`card-link-${i}`}
+                                        border='1px solid rgba(0, 0, 0, 0.08)'
+                                        borderRadius='6px'
+                                        p={{ md: '0 12px', base: '0 6px' }}
+                                        w='87px'
+                                        h={{ md: '32px', base: '24px' }}
+                                        backgroundColor='rgba(0, 0, 0, 0.92)'
+                                        _hover={{ backgroundColor: 'rgba(0, 0, 0, 0.52)' }}
+                                        onClick={() =>
+                                            handleGetRecipe(card._id, card.categoriesIds)
+                                        }
+                                    >
+                                        <Text
+                                            fontFamily='var(--font-family)'
+                                            fontWeight='600'
+                                            fontSize='14px'
+                                            lineHeight='143%'
+                                            color='#fff'
                                         >
-                                            <Text
-                                                fontFamily='var(--font-family)'
-                                                fontWeight='600'
-                                                fontSize='14px'
-                                                lineHeight='143%'
-                                                color='#fff'
-                                            >
-                                                Готовить
-                                            </Text>
-                                        </Button>
-                                    </Links>
+                                            Готовить
+                                        </Text>
+                                    </Button>
                                 </Flex>
                             </Flex>
                         </Flex>

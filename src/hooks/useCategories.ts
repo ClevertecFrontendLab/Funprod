@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { useGetCategoriesQuery } from '~/query/services/category-api';
+import { useGetCategoriesQuery } from '~/query/services/category-api/category-api';
 import { setCategories } from '~/store/app-slice';
 import { ApplicationState } from '~/store/configure-store';
 

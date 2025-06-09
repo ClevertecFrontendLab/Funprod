@@ -13,7 +13,7 @@ import { Link, useLocation } from 'react-router';
 
 import arrowDown from '~/assets/sidebar/arrowDown.svg';
 import arrowUp from '~/assets/sidebar/arrowUp.svg';
-import { Category } from '~/query/services/category-api.type';
+import { Category } from '~/query/services/category-api/category-api.type';
 import { getFullMediaUrl } from '~/utils/getFullMediaUrl';
 
 type SidebarLitsProps = {
@@ -105,10 +105,10 @@ export const SidebarList = ({
             </h2>
             <AccordionPanel padding={0} margin={0}>
                 <List>
-                    {section.subCategories.map((item, i) => {
+                    {section.subCategories.map((item) => {
                         const isActive = currentPath === `/${section.category}/${item.category}`;
                         return (
-                            <ListItem key={i}>
+                            <ListItem key={item._id}>
                                 <ChakraLink
                                     data-test-id={isActive ? `${item.category}-active` : ''}
                                     as={Link}

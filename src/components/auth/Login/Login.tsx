@@ -16,7 +16,7 @@ import { useLocation, useNavigate } from 'react-router';
 
 import { ErrorNotification } from '~/components/ErrorNotification/ErrorNotification';
 import { ROUTES } from '~/constants/routes';
-import { useHealthMutation, useLoginMutation } from '~/query/services/auth-api';
+import { useHealthMutation, useLoginMutation } from '~/query/services/auth-api/auth-api';
 import { setAppLoader } from '~/store/app-slice';
 
 import { ForgotPassword } from './ForgotPassword/ForgotPassword';

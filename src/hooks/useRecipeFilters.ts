@@ -17,8 +17,8 @@ const useRecipeFilters = () => {
     const [selectedSide, setSelectedSide] = useState<string[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [categoriesIds, setCategoriesIds] = useState<string[]>([]);
-    const categoryData = useSelector(categoriesSelector);
-
+    const categoryDataRaw = useSelector(categoriesSelector);
+    const categoryData = Array.isArray(categoryDataRaw) ? categoryDataRaw : [];
     const allergens = excludedIngredients.flatMap((item) => {
         const match = item.match(/^(.+?)\s*\((.+?)\)/);
         if (match) {

@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 
-import { baseQuery } from '../base-query';
+import { baseQuery } from '../../base-query';
 import { Category } from './category-api.type';
 
 export const categoryApi = createApi({

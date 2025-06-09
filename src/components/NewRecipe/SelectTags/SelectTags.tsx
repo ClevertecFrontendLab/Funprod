@@ -14,7 +14,7 @@ import {
 import React, { useEffect, useState } from 'react';
 import { FieldErrors, UseFormRegister, UseFormSetValue, UseFormWatch } from 'react-hook-form';
 
-import { Category } from '~/query/services/category-api.type';
+import { Category } from '~/query/services/category-api/category-api.type';
 
 import { FormData } from '../NewRecipe';
 

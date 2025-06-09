@@ -3,15 +3,14 @@ import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 
-import { useGetRecipesQuery } from '~/query/services/recipe-api';
-import { Data } from '~/query/services/recipe-api.type';
+import { useGetRecipesQuery } from '~/query/services/recipe-api/recipe-api';
+import { RecipeData } from '~/query/services/recipe-api/recipe-api.type';
 import { categoriesSelector } from '~/store/app-slice';
 import { checkAndNavigate } from '~/utils/checkAndNavigate';
 import { useCategoriesWithSubcategories } from '~/utils/getCategoriesWithSubcategories';
 import { getFullMediaUrl } from '~/utils/getFullMediaUrl';
 
 import { CategoryTags } from '../CategoryPage/TabComponent/CategoryTags/CategoryTags';
-import { FullPageLoader } from '../FullPageLoader/FullPageLoader';
 import { PageHeader } from '../PageHeader/PageHeader';
 import { SearchFilter } from '../SearchFilter/SearchFilter';
 import bookmarkHeart from './../../assets/actionBar/BookmarkHeart.svg';
@@ -38,8 +37,8 @@ export const Juiciest = () => {
         side,
     } = useRecipeFilters();
     const [page, setPage] = useState(1);
-    const [allRecipes, setAllRecipes] = useState<Data[] | []>([]);
-    const { data, isLoading, isFetching } = useGetRecipesQuery({
+    const [allRecipes, setAllRecipes] = useState<RecipeData[] | []>([]);
+    const { data, isFetching } = useGetRecipesQuery({
         page,
         limit: 8,
         sortBy: 'likes',
@@ -101,8 +100,8 @@ export const Juiciest = () => {
             w={{
                 base: '328px',
                 sm: '728px',
-                md: '860px',
-                lg: '1340px',
+                md: '880px',
+                lg: '1360px',
             }}
             direction='column'
             m={{ base: '80px 16px 100px 16px', sm: '80px 72px 100px 24px', md: '80px 72px 0 24px' }}
@@ -133,16 +132,9 @@ export const Juiciest = () => {
                     garnish={side}
                     onLoadingChange={(val) => setIsLoading(val)}
                 />
-            ) : isLoading ? (
-                <FullPageLoader />
             ) : (
                 <>
-                    <Flex
-                        wrap='wrap'
-                        gap={{ md: '24px', base: '16px' }}
-                        justify='space-between'
-                        mt='32px'
-                    >
+                    <Flex wrap='wrap' gap={{ md: '24px', base: '16px' }} mt='32px'>
                         {allRecipes.map((card, i) => (
                             <Flex
                                 data-test-id={`food-card-${i}`}
@@ -152,7 +144,7 @@ export const Juiciest = () => {
                                 border='1px solid rgba(0, 0, 0, 0.08)'
                                 maxWidth=''
                                 maxW={{
-                                    lg: '648px',
+                                    lg: '668px',
                                     md: '860px',
                                     sm: 'calc(50% - 12px)',
                                     base: '328px',
@@ -163,7 +155,7 @@ export const Juiciest = () => {
                                 <Flex flex='1'>
                                     <Image
                                         src={getFullMediaUrl(card.image)}
-                                        maxW={{ lg: '346px', md: '400px', base: '158px' }}
+                                        minW={{ lg: '346px', md: '400px', base: '158px' }}
                                         borderRadius='4px 0 0 4px'
                                     />
                                 </Flex>

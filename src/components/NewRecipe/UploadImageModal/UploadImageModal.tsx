@@ -17,7 +17,7 @@ import { useEffect, useRef, useState } from 'react';
 import { UseFormSetValue } from 'react-hook-form';
 
 import uploadImg from '~/assets/newRecipe/uploadImg.svg';
-import { useUploadFileMutation } from '~/query/services/uploadFile-api';
+import { useUploadFileMutation } from '~/query/services/uploadFile-api/uploadFile-api';
 import { getFullMediaUrl } from '~/utils/getFullMediaUrl';
 
 import { FormData } from '../NewRecipe';

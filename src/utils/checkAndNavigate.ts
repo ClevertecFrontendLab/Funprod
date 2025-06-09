@@ -1,4 +1,4 @@
-import { Category } from '~/query/services/category-api.type';
+import { Category } from '~/query/services/category-api/category-api.type';
 
 type CheckAndNavigateProps = {
     categoriesIds: string[];

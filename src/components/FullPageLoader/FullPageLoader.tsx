@@ -2,13 +2,13 @@ import { Flex, Spinner } from '@chakra-ui/react';
 
 export const FullPageLoader = () => (
     <Flex
-        align='center'
-        justify='center'
+        position='fixed'
         top='50%'
         left='50%'
         transform='translate(-50%, -50%)'
+        align='center'
+        justify='center'
         data-test-id='app-loader'
-        position='absolute'
         zIndex='10000'
     >
         <Flex

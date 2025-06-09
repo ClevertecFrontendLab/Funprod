@@ -58,12 +58,12 @@ export const Main = () => {
             maxW={{
                 base: '328px',
                 sm: '728px',
-                md: '860px',
-                lg: '1340px',
+                md: '880px',
+                lg: '1360px',
             }}
             w={{ base: '100%', md: 'auto' }}
             direction='column'
-            m={{ base: '64px 16px 100px 16px', sm: '64px 16px 100px 24px', md: '80px 72px 0 24px' }}
+            m={{ base: '64px 16px 100px 16px', sm: '64px 16px 100px 24px', md: '80px 62px 0 24px' }}
         >
             <PageHeader
                 title='Приятного аппетита!'
@@ -95,7 +95,7 @@ export const Main = () => {
                     onLoadingChange={(val) => setIsLoading(val)}
                 />
             ) : (
-                <NewRecipesSection categoryData={categoryData} />
+                <NewRecipesSection />
             )}
             <JuiciestSection categoryData={categoryData} />
             <CookingBlogsSection />

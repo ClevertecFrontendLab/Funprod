@@ -61,7 +61,7 @@ export const baseQueryWithAuth: BaseQueryFn<
         api.dispatch(
             setAppError({
                 title: 'Ошибка сервера',
-                message: 'Попробуйте поискать снова попозже',
+                message: 'Попробуйте немного позже.',
             }),
         );
     }

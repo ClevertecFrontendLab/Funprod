@@ -3,8 +3,11 @@ import { Link, useNavigate } from 'react-router';
 
 import { CategoryTags } from '~/components/CategoryPage/TabComponent/CategoryTags/CategoryTags';
 import { ROUTES } from '~/constants/routes';
-import { Category } from '~/query/services/category-api.type';
-import { useBookmarkRecipeMutation, useGetRecipesQuery } from '~/query/services/recipe-api';
+import { Category } from '~/query/services/category-api/category-api.type';
+import {
+    useBookmarkRecipeMutation,
+    useGetRecipesQuery,
+} from '~/query/services/recipe-api/recipe-api';
 import { checkAndNavigate } from '~/utils/checkAndNavigate';
 import { getFullMediaUrl } from '~/utils/getFullMediaUrl';
 
@@ -83,41 +86,35 @@ export const JuiciestSection = ({ categoryData }: JuiciestSectionProps) => {
                     </Button>
                 )}
             </Flex>
-            <Flex wrap='wrap' gap={{ md: '24px', base: '16px' }} justify='space-between'>
+            <Flex wrap='wrap' gap={{ md: '24px', base: '16px' }}>
                 {Array.isArray(data?.data) &&
                     data.data.map((card, i) => (
                         <Flex
                             position='relative'
-                            key={i}
+                            key={card._id}
                             borderRadius='8px'
                             border='1px solid rgba(0, 0, 0, 0.08)'
                             maxWidth=''
                             maxW={{
-                                lg: '648px',
+                                lg: '668px',
                                 md: '860px',
                                 sm: 'calc(50% - 12px)',
                                 base: '328px',
                             }}
                             w='100%'
-                            h={{ lg: '324px', md: '400px', base: '128px' }}
+                            h={{ lg: '324px', md: '300px', base: '148px' }}
                         >
-                            <Flex
-                                flex='1'
-                                maxW={{ lg: '346px', md: '400px', base: '158px' }}
-                                w='100%'
-                            >
+                            <Flex maxW={{ lg: '346px', md: '400px', base: '158px' }} w='100%'>
                                 <Image
                                     src={getFullMediaUrl(card.image)}
-                                    maxW={{ lg: '346px', md: '400px', base: '158px' }}
                                     borderRadius='4px 0 0 4px'
                                 />
                             </Flex>
                             <Flex
-                                flex='1'
                                 p={{ md: '20px 24px', base: '8px 8px 4px 8px' }}
                                 direction='column'
                                 gap={{ md: '24px', base: '0' }}
-                                maxW={{ md: '334px', base: '154px' }}
+                                maxW={{ lg: '334px', md: '460px', sm: '200px', base: '154px' }}
                                 w='100%'
                             >
                                 <Flex justify={{ md: 'space-between', base: 'flex-start' }}>
@@ -188,7 +185,7 @@ export const JuiciestSection = ({ categoryData }: JuiciestSectionProps) => {
                                             fontWeight='400'
                                             fontSize='14px'
                                             lineHeight='143%'
-                                            noOfLines={{ lg: 3, base: 0 }}
+                                            noOfLines={3}
                                             overflow='hidden'
                                             textOverflow='ellipsis'
                                         >

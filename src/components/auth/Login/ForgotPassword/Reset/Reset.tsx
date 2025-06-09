@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 
 import { ErrorNotification } from '~/components/ErrorNotification/ErrorNotification';
-import { useResetPasswordMutation } from '~/query/services/auth-api';
+import { useResetPasswordMutation } from '~/query/services/auth-api/auth-api';
 import { setAppError, setAppLoader } from '~/store/app-slice';
 
 import { InputField } from './InputField/InputField';

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 
 import { FullPageLoader } from '~/components/FullPageLoader/FullPageLoader';
 import { ROUTES } from '~/constants/routes';
-import { useCheckAuthQuery } from '~/query/services/auth-api';
+import { useCheckAuthQuery } from '~/query/services/auth-api/auth-api';
 
 export function PrivateRoute({ children }: { children: React.ReactNode }) {
     const token = localStorage.getItem('accessToken');

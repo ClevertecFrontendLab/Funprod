@@ -8,7 +8,7 @@ import useRecipeFilters from '~/hooks/useRecipeFilters';
 import { useResetFiltersOnCategoryChange } from '~/hooks/useResetFiltersOnCategoryChange';
 import { useTabIndex } from '~/hooks/useTabIndex';
 import { useValidateCategory } from '~/hooks/useValidateCategory';
-import { Category } from '~/query/services/category-api.type';
+import { Category } from '~/query/services/category-api/category-api.type';
 import { categoriesSelector } from '~/store/app-slice';
 import { useCategoriesWithSubcategories } from '~/utils/getCategoriesWithSubcategories';
 
@@ -89,8 +89,8 @@ export const CategoryPage = () => {
             w={{
                 base: '328px',
                 sm: '728px',
-                md: '860px',
-                lg: '1340px',
+                md: '880px',
+                lg: '1360px',
             }}
             direction='column'
             m={{ base: '64px 16px 100px 16px', sm: '64px 16px 100px 24px', md: '80px 72px 0 24px' }}
@@ -178,7 +178,7 @@ export const CategoryPage = () => {
                                     <TabComponent
                                         searchQuery={searchQuery}
                                         categoriesId={item._id}
-                                        dataCategory={foundCategory}
+                                        categoryData={categoryData}
                                     />
                                 )}
                             </TabPanel>

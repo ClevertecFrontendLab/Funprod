@@ -1,24 +1,32 @@
 import { ChevronRightIcon } from '@chakra-ui/icons';
 import { Box, Flex, Text } from '@chakra-ui/react';
+import { skipToken } from '@reduxjs/toolkit/query';
 import { useSelector } from 'react-redux';
 import { Link, useLocation, useParams } from 'react-router';
 
 import { ROUTES } from '~/constants/routes';
-import { Category } from '~/query/services/category-api.type';
-import { useGetRecipeByIdQuery } from '~/query/services/recipe-api';
+import { useGetBloggerByIdQuery } from '~/query/services/bloggers-api/bloggers-api';
+import { Category } from '~/query/services/category-api/category-api.type';
+import { useGetRecipeByIdQuery } from '~/query/services/recipe-api/recipe-api';
 import { categoriesSelector, recipeIdSelector } from '~/store/app-slice';
 import { getBreadcrumb } from '~/utils/getBreadcrumb';
+import { getUserIdFromToken } from '~/utils/getUserIdFromToken';
 
 type Breadcrumbs = { onClose?: () => void };
 
 export const Breadcrumbs = ({ onClose = () => {} }: Breadcrumbs) => {
     const location = useLocation();
-    const { id } = useParams();
+    const { id, userId } = useParams();
     const recipeId = useSelector(recipeIdSelector);
-    const { data: recipeData } = useGetRecipeByIdQuery({ id: id! }, { skip: id === recipeId });
+    const { data: recipeData } = useGetRecipeByIdQuery(id && id !== recipeId ? { id } : skipToken);
     const categoryData = useSelector(categoriesSelector);
     const pathnames = location.pathname.split('/').filter(Boolean);
     const data = localStorage.getItem('categories');
+    const currentUserId = getUserIdFromToken();
+    const bloggerId = userId ?? null;
+    const { data: bloggerData } = useGetBloggerByIdQuery(
+        bloggerId ? { currentUserId, bloggerId } : skipToken,
+    );
     const { breadcrumbItems } = getBreadcrumb({
         categoryData: data ? JSON.parse(data) : categoryData,
         pathnames,
@@ -46,6 +54,19 @@ export const Breadcrumbs = ({ onClose = () => {} }: Breadcrumbs) => {
 
         return item;
     });
+
+    if (location.pathname.startsWith(`${ROUTES.BLOGS}/`) && bloggerData) {
+        if (!bloggerData?.bloggerInfo) return null;
+        const bloggerLabel = `${bloggerData.bloggerInfo.firstName} ${bloggerData.bloggerInfo.lastName} (@${bloggerData.bloggerInfo.login})`;
+        const bloggerPath = `${ROUTES.BLOGS}/${bloggerId}`;
+
+        if (updatedBreadcrumbItems && updatedBreadcrumbItems.length > 0) {
+            updatedBreadcrumbItems[updatedBreadcrumbItems.length - 1] = {
+                label: bloggerLabel,
+                to: bloggerPath,
+            };
+        }
+    }
 
     return (
         <Box

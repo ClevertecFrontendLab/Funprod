@@ -1,5 +1,6 @@
-import { Flex, Image, Link, Text } from '@chakra-ui/react';
+import { Box, Flex, Image, Text } from '@chakra-ui/react';
 import { useLocation } from 'react-router';
+import { Link } from 'react-router';
 
 import { ROUTES } from '~/constants/routes';
 
@@ -9,9 +10,9 @@ import iconButton from './../../assets/actionBar/IconButton.svg';
 import peopleFill from './../../assets/actionBar/PeopleFill.svg';
 
 const socialPanel = [
-    { count: 185, icon: bookmarkHeart },
-    { count: 589, icon: peopleFill },
-    { count: 587, icon: emojiHeartEyes },
+    { id: 1, count: 185, icon: bookmarkHeart },
+    { id: 2, count: 589, icon: peopleFill },
+    { id: 3, count: 587, icon: emojiHeartEyes },
 ];
 export const AsideBar = () => {
     const pathname = useLocation().pathname;
@@ -45,8 +46,8 @@ export const AsideBar = () => {
                 lineHeight='150%'
                 color='var(--lime-600)'
             >
-                {socialPanel.map((item, index) => (
-                    <Flex gap='8px' key={index}>
+                {socialPanel.map((item) => (
+                    <Flex gap='8px' key={item.id}>
                         <Image
                             src={item.icon}
                             w={{ base: '10px', md: '16px' }}
@@ -74,19 +75,19 @@ export const AsideBar = () => {
                 h='208px'
                 background='radial-gradient(50% 50% at 50% 50%, rgba(196, 255, 97, 0.6) 0%, rgba(255, 255, 255, 0) 100%)'
             >
-                <Link
-                    data-test-id='add-recipe-button'
-                    href={ROUTES.NEW_RECIPE}
-                    display='flex'
-                    flexDirection='column'
-                    alignItems='center'
-                    gap='12px'
-                    p='0px 12px'
-                >
-                    <Image src={iconButton} w='48px' h='48px' />
-                    <Text fontWeight='400' fontSize='12px' lineHeight='133%'>
-                        Записать рецепт
-                    </Text>
+                <Link data-test-id='add-recipe-button' to={ROUTES.NEW_RECIPE}>
+                    <Box
+                        display='flex'
+                        flexDirection='column'
+                        alignItems='center'
+                        gap='12px'
+                        p='0px 12px'
+                    >
+                        <Image src={iconButton} w='48px' h='48px' />
+                        <Text fontWeight='400' fontSize='12px' lineHeight='133%'>
+                            Записать рецепт
+                        </Text>
+                    </Box>
                 </Link>
             </Flex>
         </Flex>

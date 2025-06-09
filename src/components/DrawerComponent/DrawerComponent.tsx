@@ -22,7 +22,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router';
 
 import { TEST_IDS } from '~/constants/testIds';
-import { Category } from '~/query/services/category-api.type';
+import { Category } from '~/query/services/category-api/category-api.type';
 
 import { CustomSelect } from '../CustomSelect/CustomSelect';
 import drawerClose from './../../assets/drawerClose.svg';
