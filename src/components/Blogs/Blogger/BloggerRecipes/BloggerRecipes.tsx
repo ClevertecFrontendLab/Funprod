@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 
 import BookmarkHeart from '~/assets/actionBar/BookmarkHeart.svg';
-import emojiHeartEyes from '~/assets/actionBar/emojiHeartEyes.svg';
+import emojiHeartEyes from '~/assets/actionBar/EmojiHeartEyes.svg';
 import { CategoryTags } from '~/components/CategoryPage/TabComponent/CategoryTags/CategoryTags';
 import { GetRecipeByUserId } from '~/query/services/recipe-api/recipe-api.type';
 import { categoriesSelector } from '~/store/app-slice';
