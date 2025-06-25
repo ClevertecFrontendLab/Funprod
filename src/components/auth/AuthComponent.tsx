@@ -25,7 +25,7 @@ import { Login } from './Login/Login';
 import { ModalComponent } from './Registration/ModalComponent';
 import { FormData, Registration } from './Registration/Registration';
 
-export const Auth = () => {
+export const AuthComponent = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const queryParams = new URLSearchParams(location.search);

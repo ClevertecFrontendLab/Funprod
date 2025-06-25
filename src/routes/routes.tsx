@@ -1,6 +1,6 @@
 import { RouteObject } from 'react-router';
 
-import { Auth } from '~/components/Auth/Auth';
+import { AuthComponent } from '~/components/Auth/AuthComponent';
 import { Login } from '~/components/Auth/Login/Login';
 import { Registration } from '~/components/Auth/Registration/Registration';
 import { Blogger } from '~/components/Blogs/Blogger/Blogger';
@@ -79,7 +79,7 @@ export const routes: RouteObject[] = [
     { path: ROUTES.NOT_FOUND, element: <NotFound /> },
     {
         path: ROUTES.AUTH,
-        element: <Auth />,
+        element: <AuthComponent />,
         children: [
             { index: true, element: <Login /> },
             {
@@ -88,5 +88,5 @@ export const routes: RouteObject[] = [
             },
         ],
     },
-    { path: ROUTES.VERIFICATION, element: <Auth /> },
+    { path: ROUTES.VERIFICATION, element: <AuthComponent /> },
 ];
