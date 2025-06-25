@@ -1,8 +1,8 @@
 import { RouteObject } from 'react-router';
 
-import { Auth } from '~/components/Auth/Auth';
-import { Login } from '~/components/Auth/Login/Login';
-import { Registration } from '~/components/Auth/Registration/Registration';
+import { AuthPage } from '~/components/AuthPage/AuthPage';
+import { Login } from '~/components/AuthPage/Login/Login';
+import { Registration } from '~/components/AuthPage/Registration/Registration';
 import { Blogger } from '~/components/Blogs/Blogger/Blogger';
 import { Blogs } from '~/components/Blogs/Blogs';
 import { CategoryPage } from '~/components/CategoryPage/CategoryPage';
@@ -79,7 +79,7 @@ export const routes: RouteObject[] = [
     { path: ROUTES.NOT_FOUND, element: <NotFound /> },
     {
         path: ROUTES.AUTH,
-        element: <Auth />,
+        element: <AuthPage />,
         children: [
             { index: true, element: <Login /> },
             {
@@ -88,5 +88,5 @@ export const routes: RouteObject[] = [
             },
         ],
     },
-    { path: ROUTES.VERIFICATION, element: <Auth /> },
+    { path: ROUTES.VERIFICATION, element: <AuthPage /> },
 ];
