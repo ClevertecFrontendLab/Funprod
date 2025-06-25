@@ -51,7 +51,7 @@ export const BloggerRecipes = ({ data }: BloggerRecipesProps) => {
                         maxWidth=''
                         maxW={{
                             lg: '668px',
-                            md: '860px',
+                            md: '880px',
                             sm: 'calc(50% - 12px)',
                             base: '328px',
                         }}

@@ -51,9 +51,9 @@ export const BloggersCards = ({ blogger, fromUserId, isOtherBlock }: BloggersCar
 
     return (
         <Flex data-test-id='blogger-user-other-blogs-grid' mb='24px'>
-            {loadingId === blogger._id && <Loader />}
             <Flex
                 direction='column'
+                justify='space-between'
                 gap='28px'
                 position='relative'
                 borderRadius='8px'
@@ -67,6 +67,7 @@ export const BloggersCards = ({ blogger, fromUserId, isOtherBlock }: BloggersCar
                 minH='224px'
                 bg='#fff'
             >
+                {loadingId === blogger._id && <Loader />}
                 <Flex>
                     <Avatar name={blogger.firstName + ' ' + blogger.lastName} />
                     <Flex direction='column' ml='12px'>

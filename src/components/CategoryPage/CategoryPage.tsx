@@ -1,6 +1,5 @@
 import { Flex, Tab, TabList, TabPanel, TabPanels, Tabs, Text } from '@chakra-ui/react';
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router';
 
 import { useFilterCheck } from '~/hooks/useFilterCheck';
@@ -9,7 +8,6 @@ import { useResetFiltersOnCategoryChange } from '~/hooks/useResetFiltersOnCatego
 import { useTabIndex } from '~/hooks/useTabIndex';
 import { useValidateCategory } from '~/hooks/useValidateCategory';
 import { Category } from '~/query/services/category-api/category-api.type';
-import { categoriesSelector } from '~/store/app-slice';
 import { useCategoriesWithSubcategories } from '~/utils/getCategoriesWithSubcategories';
 
 import { PageHeader } from '../PageHeader/PageHeader';
@@ -21,23 +19,16 @@ export const CategoryPage = () => {
 
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
+    const [searchResultsCount, setSearchResultsCount] = useState<number>(0);
 
-    const categoryDataRedux = useSelector(categoriesSelector);
-    const localDataString = localStorage.getItem('cachedCategories');
-    const categoryDataLocal = localDataString ? JSON.parse(localDataString) : [];
-
-    const categoryData =
-        categoryDataRedux && categoryDataRedux.length > 0 ? categoryDataRedux : categoryDataLocal;
-    const filterCategory = useCategoriesWithSubcategories();
-
+    const categoryData = useCategoriesWithSubcategories();
     const foundCategory = categoryData?.find((cat: Category) => cat.category === category);
 
-    useValidateCategory({ categoryData, category, subcategory });
+    useValidateCategory({ foundCategory, category, subcategory });
 
     const { tabIndex, setTabIndex } = useTabIndex(foundCategory?.subCategories);
 
     const {
-        filteredRecipes,
         excludedIngredients,
         setExcludedIngredients,
         selectedCategory,
@@ -85,16 +76,7 @@ export const CategoryPage = () => {
     };
 
     return (
-        <Flex
-            w={{
-                base: '328px',
-                sm: '728px',
-                md: '880px',
-                lg: '1360px',
-            }}
-            direction='column'
-            m={{ base: '64px 16px 100px 16px', sm: '64px 16px 100px 24px', md: '80px 72px 0 24px' }}
-        >
+        <Flex w='100%' direction='column'>
             <PageHeader
                 title={foundCategory?.title}
                 description={foundCategory?.description}
@@ -104,20 +86,20 @@ export const CategoryPage = () => {
                 setSelectedSide={setSelectedSide}
                 setSelectedMeat={setSelectedMeat}
                 selectedCategory={selectedCategory}
-                filteredData={filteredRecipes}
                 selectedMeat={selectedMeat}
                 selectedSide={selectedSide}
                 setSearchQuery={setSearchQuery}
                 searchQuery={searchQuery}
                 categoriesIds={categoriesIds}
                 setCategoriesIds={setCategoriesIds}
-                filterCategory={filterCategory}
+                filterCategory={categoryData}
                 isLoading={isLoading}
+                searchResultsCount={searchResultsCount}
             />
 
             {isFilterApplied && (
                 <SearchFilter
-                    filteredData={filterCategory}
+                    filteredData={categoryData}
                     categoryData={categoryData!}
                     searchQuery={searchQuery}
                     categoriesIds={categoriesIds}
@@ -125,6 +107,7 @@ export const CategoryPage = () => {
                     meat={meat}
                     garnish={side}
                     onLoadingChange={(val) => setIsLoading(val)}
+                    setSearchResultsCount={setSearchResultsCount}
                 />
             )}
 

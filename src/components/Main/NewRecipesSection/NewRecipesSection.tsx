@@ -27,7 +27,7 @@ export const NewRecipesSection = () => {
     const localDataString = localStorage.getItem('cachedCategories');
     const categoryDataLocal = JSON.parse(localDataString!);
 
-    const categoryData1 =
+    const categoryData =
         categoryDataRedux && categoryDataRedux.length > 0 ? categoryDataRedux : categoryDataLocal;
 
     const [swiperInstance, setSwiperInstance] = useState<SwiperType | null>(null);
@@ -52,14 +52,12 @@ export const NewRecipesSection = () => {
 
     const fallback = useLocalFallback('cachedRecipeCategory', isError, data);
 
-    if (!categoryData1 || categoryData1.length === 0) return;
-
-    const safeCategoryData = Array.isArray(categoryData1) ? categoryData1 : [];
+    if (!categoryData) return null;
 
     const handleGetRecipe = (recipeId: string, categoriesIds: string[]) => {
         const { condition, matchedCategory, matchedSubcategory } = checkAndNavigate({
             categoriesIds,
-            categoryData: safeCategoryData,
+            categoryData: categoryData,
         });
         if (condition) {
             navigate(ROUTES.NOT_FOUND);

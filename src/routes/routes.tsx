@@ -1,14 +1,17 @@
 import { RouteObject } from 'react-router';
 
-import { Auth } from '~/components/auth/Auth';
-import { Login } from '~/components/auth/Login/Login';
-import { Registration } from '~/components/auth/Registration/Registration';
+import { Auth } from '~/components/Auth/Auth';
+import { Login } from '~/components/Auth/Login/Login';
+import { Registration } from '~/components/Auth/Registration/Registration';
 import { Blogger } from '~/components/Blogs/Blogger/Blogger';
 import { Blogs } from '~/components/Blogs/Blogs';
 import { CategoryPage } from '~/components/CategoryPage/CategoryPage';
 import { TabComponent } from '~/components/CategoryPage/TabComponent/TabComponent';
+import { EditRecipe } from '~/components/EditRecipe/EditRecipe';
 import { Juiciest } from '~/components/Juiciest/Juiciest';
 import { Main } from '~/components/Main/Main';
+import { MyProfile } from '~/components/MyProfile/MyProfile';
+import { ProfileSettings } from '~/components/MyProfile/ProfileSettings/ProfileSettings';
 import { NewRecipe } from '~/components/NewRecipe/NewRecipe';
 import { NotFound } from '~/components/NotFound/NotFound';
 import { RecipePage } from '~/components/RecipesPage/RecipesPage';
@@ -49,7 +52,11 @@ export const routes: RouteObject[] = [
             },
             {
                 path: `${ROUTES.EDIT_RECIPE}/${ROUTES.CATEGORY}/${ROUTES.SUBCATEGORY}/${ROUTES.RECIPE_ID}`,
-                element: <RecipePage />,
+                element: <EditRecipe />,
+            },
+            {
+                path: `${ROUTES.EDIT_DRAFT}/${ROUTES.DRAFT_ID}`,
+                element: <EditRecipe />,
             },
             {
                 path: ROUTES.BLOGS,
@@ -58,6 +65,14 @@ export const routes: RouteObject[] = [
             {
                 path: `${ROUTES.BLOGS}/${ROUTES.USER_ID}`,
                 element: <Blogger />,
+            },
+            {
+                path: `${ROUTES.PROFILE}`,
+                element: <MyProfile />,
+            },
+            {
+                path: `${ROUTES.PROFILE}${ROUTES.SETTINGS}`,
+                element: <ProfileSettings />,
             },
         ],
     },

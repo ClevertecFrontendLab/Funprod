@@ -20,11 +20,11 @@ export const useFormNavigationBlocker = ({ watch, onOpen }: UseFormNavigationBlo
             !!watchValues.image ||
             !!watchValues.portions ||
             !!watchValues.time ||
-            watchValues.categoriesIds.length > 0 ||
-            watchValues.ingredients.some(
+            watchValues.categoriesIds?.length > 0 ||
+            watchValues.ingredients?.some(
                 (i) => i.title?.trim() || i.count != null || i.measureUnit?.trim(),
             ) ||
-            watchValues.steps.some((s) => s.description?.trim() || s.image),
+            watchValues.steps?.some((s) => s.description?.trim() || s.image),
         [watchValues],
     );
 

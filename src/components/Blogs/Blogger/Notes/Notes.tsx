@@ -19,7 +19,10 @@ export const Notes = ({ notes }: NotesProps) => {
 
     useEffect(() => {
         if (location.hash === '#notes' && notesRef.current) {
-            notesRef.current.scrollIntoView({ behavior: 'smooth' });
+            const yOffset = -420;
+            const y = notesRef.current.getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+            window.scrollTo({ top: y, behavior: 'smooth' });
         }
     }, [location.hash]);
 

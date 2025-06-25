@@ -6,16 +6,24 @@ type CheckAndNavigateProps = {
 };
 
 export const checkAndNavigate = ({ categoryData, categoriesIds }: CheckAndNavigateProps) => {
-    const dataCategories = categoryData.filter((item: Category) => item.subCategories);
+    let matchedCategory: Category | undefined;
+    let matchedSubcategory: { _id: string; category: string } | undefined;
 
-    const dataSubCategories = categoryData.filter((item) => !item.subCategories);
-    const matchedSubcategory = dataSubCategories?.find((sub) => categoriesIds.includes(sub._id));
-    const matchedCategory = dataCategories?.find(
-        (cat: Category) => cat._id === matchedSubcategory?.rootCategoryId,
-    );
+    for (const category of categoryData) {
+        if (!category.subCategories) continue;
 
-    const condition =
-        !dataSubCategories || !dataCategories || !matchedSubcategory || !matchedCategory;
+        for (const sub of category.subCategories) {
+            if (categoriesIds.includes(sub._id)) {
+                matchedCategory = category;
+                matchedSubcategory = sub;
+                break;
+            }
+        }
 
-    return { condition, matchedSubcategory, matchedCategory };
+        if (matchedSubcategory) break;
+    }
+
+    const condition = !matchedCategory || !matchedSubcategory;
+
+    return { condition, matchedCategory, matchedSubcategory };
 };

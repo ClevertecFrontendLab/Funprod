@@ -19,19 +19,14 @@ import { SaveButton } from './SaveButton/SaveButton';
 
 type RecipeHeaderProps = {
     data: RecipeData;
-    setEditMode: (editMode: boolean) => void;
 };
 
-export const RecipeHeader = ({ data, setEditMode }: RecipeHeaderProps) => {
+export const RecipeHeader = ({ data }: RecipeHeaderProps) => {
     const categoryDataRedux = useSelector(categoriesSelector);
     const categoryFilter = useCategoriesWithSubcategories(categoryDataRedux);
     const userId = getUserIdFromToken();
     return (
-        <Flex
-            p={{ sm: '56px 0px 32px 0px', base: '0' }}
-            w='100%'
-            direction={{ sm: 'row', base: 'column' }}
-        >
+        <Flex w='100%' direction={{ sm: 'row', base: 'column' }}>
             <Image
                 src={data ? getFullMediaUrl(data.image) : ''}
                 alt={data.title}
@@ -44,7 +39,7 @@ export const RecipeHeader = ({ data, setEditMode }: RecipeHeaderProps) => {
             <Flex
                 direction='column'
                 ml={{ md: '24px', sm: '16px', base: '0' }}
-                w='100%'
+                w={{ md: '100%', sm: '480px', base: '328px' }}
                 mt={{ sm: '0', base: '16px' }}
             >
                 <Flex justify='space-between'>
@@ -115,7 +110,12 @@ export const RecipeHeader = ({ data, setEditMode }: RecipeHeaderProps) => {
                         </Flex>
                     </Flex>
                 </Flex>
-                <Flex direction='column' gap={{ md: '24px', base: '16px' }} mt='32px'>
+                <Flex
+                    direction='column'
+                    gap={{ md: '24px', base: '16px' }}
+                    mt='32px'
+                    w={{ md: '528px', base: '100%' }}
+                >
                     <Text
                         fontWeight='700'
                         fontSize={{ md: '48px', base: '24px' }}
@@ -152,7 +152,7 @@ export const RecipeHeader = ({ data, setEditMode }: RecipeHeaderProps) => {
                         {userId === data?.authorId ? (
                             <>
                                 <DeleteButton id={data._id} />
-                                <EditRecipeButton setEditMode={setEditMode} />
+                                <EditRecipeButton />
                             </>
                         ) : (
                             <>

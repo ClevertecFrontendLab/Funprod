@@ -17,6 +17,7 @@ export type RecipeData = {
     steps: Step[];
     nutritionValue: NutritionValue;
     ingredients: Ingredient[];
+    recommendedByUserId: string[];
     likes: number;
     views: number;
     bookmarks: number;
@@ -91,6 +92,7 @@ export type MeasureUnitsResponse = {
 };
 export type GetRecipeByUserId = {
     recipes: RecipeByUserId[];
+    myBookmarks: RecipeByUserId[];
     totalBookmarks: number;
     totalSubscribers: number;
     userId: string;

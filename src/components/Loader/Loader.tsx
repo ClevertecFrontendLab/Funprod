@@ -7,6 +7,7 @@ export const Loader = () => (
         justify='center'
         position='absolute'
         w='calc(100% - 48px)'
+        zIndex='10'
     >
         <Flex
             w='134px'

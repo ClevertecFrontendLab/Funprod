@@ -2,33 +2,46 @@ import { Box, Flex, Image, Text } from '@chakra-ui/react';
 import { useLocation } from 'react-router';
 import { Link } from 'react-router';
 
+import fingerUpBlack from '~/assets/fingerUpBlack.svg';
 import { ROUTES } from '~/constants/routes';
+import { getStatisticsResponse } from '~/query/services/statistics-api/statistics-api.type';
+import { GetMeResponse } from '~/query/services/users-api/users-api.type';
 
+import { ActionIcon } from '../Header/ActionIcon/ActionIcon';
 import bookmarkHeart from './../../assets/actionBar/BookmarkHeart.svg';
 import emojiHeartEyes from './../../assets/actionBar/EmojiHeartEyes.svg';
 import iconButton from './../../assets/actionBar/IconButton.svg';
 import peopleFill from './../../assets/actionBar/PeopleFill.svg';
 
-const socialPanel = [
-    { id: 1, count: 185, icon: bookmarkHeart },
-    { id: 2, count: 589, icon: peopleFill },
-    { id: 3, count: 587, icon: emojiHeartEyes },
-];
-export const AsideBar = () => {
+type AsideBarProps = {
+    profileData: GetMeResponse;
+    statistic: getStatisticsResponse;
+};
+
+export const AsideBar = ({ profileData, statistic }: AsideBarProps) => {
     const pathname = useLocation().pathname;
 
     if (pathname === ROUTES.NEW_RECIPE || pathname.startsWith(ROUTES.EDIT_RECIPE)) {
         return null;
     }
 
+    const likesData = statistic.likes;
+    const bookmarksData = statistic.bookmarks;
+
+    const countLikes = likesData.reduce((acc, item) => acc + item.count, 0);
+    const countBookmarks = bookmarksData.reduce((acc, item) => acc + item.count, 0);
+
+    const canRecommendRecipes = profileData.subscribers.length >= 100 && countBookmarks >= 200;
+
     return (
         <Flex
             display={{ base: 'none', md: 'flex' }}
+            data-test-id='user-stats-block'
             direction='column'
             justifyContent='space-between'
             mt={{ md: '80px', base: '0' }}
             zIndex='1'
-            w={{ md: '208px', base: '0' }}
+            w={{ md: '190px', base: '0' }}
             position='relative'
         >
             <Flex
@@ -46,23 +59,12 @@ export const AsideBar = () => {
                 lineHeight='150%'
                 color='var(--lime-600)'
             >
-                {socialPanel.map((item) => (
-                    <Flex gap='8px' key={item.id}>
-                        <Image
-                            src={item.icon}
-                            w={{ base: '10px', md: '16px' }}
-                            h={{ base: '12px', md: '16px' }}
-                        />
-                        <Text
-                            fontWeight='600'
-                            fontSize={{ base: '12px', md: '16px' }}
-                            lineHeight='133%'
-                            color='var(--lime-600)'
-                        >
-                            {item.count}
-                        </Text>
-                    </Flex>
-                ))}
+                {canRecommendRecipes && (
+                    <ActionIcon image={fingerUpBlack} count={statistic.recommendationsCount} />
+                )}
+                <ActionIcon image={bookmarkHeart} count={countBookmarks} />
+                <ActionIcon image={peopleFill} count={profileData.subscribers.length} />
+                <ActionIcon image={emojiHeartEyes} count={countLikes} />
             </Flex>
             <Flex
                 position='fixed'

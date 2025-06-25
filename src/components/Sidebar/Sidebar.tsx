@@ -32,23 +32,21 @@ export const Sidebar = ({ openBurger, onClose }: SidebarProps) => {
 
     return (
         <Flex
-            data-test-id='nav'
             display={{ base: openBurger ? 'flex' : 'none', md: 'flex' }}
             p={openBurger ? '0' : '14px 4px 0 0'}
-            zIndex='100'
+            w={{ md: '256px', base: 'unset' }}
         >
             <Box
+                data-test-id='nav'
                 borderRadius={{ base: '0 0 12px 12px', md: 'none' }}
                 background='#fff'
-                position='fixed'
-                left={{ md: '0', lg: 'unset' }}
+                position={{ md: 'sticky', base: 'fixed' }}
                 top={{ md: '80px', base: '64px' }}
-                right={openBurger ? '5px' : 'unset'}
-                h={{ md: '100vh', sm: '868px', base: '652px' }}
-                w={{ md: '256px', sm: '344px', base: '336px' }}
+                right={{ base: '5px', md: 'unset' }}
+                h={{ md: 'calc(100vh - 80px)', sm: '878px', base: '652px' }}
                 boxShadow={{
                     md: '0 2px 1px -1px rgba(0, 0, 0, 0.2),0 1px 1px 0 rgba(0, 0, 0, 0.14),0 1px 3px 0 rgba(0, 0, 0, 0.12)',
-                    base: '0 4px 6px -2px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.1)background: #fff',
+                    base: '0 4px 6px -2px rgba(0, 0, 0, 0.05), 0 10px 15px -3px rgba(0, 0, 0, 0.1) background: #fff',
                 }}
                 overflowY={{ sm: 'hidden', base: 'auto' }}
                 overflowX='hidden'
@@ -70,20 +68,18 @@ export const Sidebar = ({ openBurger, onClose }: SidebarProps) => {
                         background: 'rgba(0, 0, 0, 0.2)',
                     },
                 }}
-                zIndex='1'
+                zIndex='10'
             >
                 {openBurger && <Breadcrumbs onClose={onClose} />}
                 <Flex
                     direction='column'
-                    height={{ md: 'calc(100vh - 64px)', sm: '868px', base: '652px' }}
+                    height={{ md: 'calc(100vh - 64px)', sm: '868px', base: '642px' }}
                 >
                     <Flex
                         flex='1'
                         borderRadius='12px'
                         p='10px 16px 10px 10px'
                         mt={{ sm: '24px', base: '12px' }}
-                        minHeight={{ md: '644px', sm: '660px', base: 'auto' }}
-                        maxHeight={{ md: '872px', sm: '660px', base: 'none' }}
                         overflowY={{ sm: 'auto' }}
                         overflowX={{ sm: 'hidden' }}
                         sx={{

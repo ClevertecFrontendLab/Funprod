@@ -7,4 +7,5 @@ export const ENDPOINTS = {
     RECIPE_LIKE: (id: string) => `recipe/${id}/like`,
     RECIPE_BOOKMARK: (id: string) => `recipe/${id}/bookmark`,
     RECIPE_BY_USER_ID: (id: string) => `recipe/user/${id}`,
+    RECIPE_RECOMMEND_BY_ID: (id: string) => `recipe/recommend/${id}`,
 };

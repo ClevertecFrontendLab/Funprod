@@ -1,7 +1,4 @@
 import {
-    Alert,
-    AlertIcon,
-    CloseButton,
     Flex,
     Image,
     Tab,
@@ -13,14 +10,16 @@ import {
     useDisclosure,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router';
 
 import Rectangle from '~/assets/auth/Rectangle.jpg';
 import logo from '~/assets/header/logo.svg';
 import { ROUTES } from '~/constants/routes';
+import { setAppSuccess, userSuccessSelector } from '~/store/app-slice';
 import { ApplicationState } from '~/store/configure-store';
 
+import { ErrorNotification } from '../ErrorNotification/ErrorNotification';
 import { FullPageLoader } from '../FullPageLoader/FullPageLoader';
 import { Login } from './Login/Login';
 import { ModalComponent } from './Registration/ModalComponent';
@@ -33,15 +32,23 @@ export const Auth = () => {
     const isLoading = useSelector((state: ApplicationState) => state.app.isLoading);
     const emailVerified = queryParams.get('emailVerified');
     const [success, setSuccess] = useState<'email' | 'reset' | null>(null);
+    const globalSuccess = useSelector(userSuccessSelector);
     const [authModal, setAuthModal] = useState<'sendEmail' | 'notSuccess' | 'health'>('sendEmail');
     const [tabIndex, setTabIndex] = useState(0);
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [repeatLogin, setRepeatLogin] = useState<boolean>(false);
     const [formData, setFormData] = useState<Partial<FormData>>({});
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if (emailVerified === 'true') {
             setSuccess('email');
+            dispatch(
+                setAppSuccess({
+                    title: '',
+                    message: 'Верификация прошла успешно',
+                }),
+            );
         }
 
         if (emailVerified === 'false') {
@@ -49,7 +56,7 @@ export const Auth = () => {
             setAuthModal('notSuccess');
             onOpen();
         }
-    }, [emailVerified, navigate, onOpen]);
+    }, [dispatch, emailVerified, navigate, onOpen]);
 
     useEffect(() => {
         const timeout = setTimeout(() => {
@@ -72,8 +79,6 @@ export const Auth = () => {
         else if (index === 1) navigate(ROUTES.REGISTRATION);
     };
 
-    const successText =
-        success === 'email' ? 'Верификация прошла успешно' : 'Восстановление данных успешно';
     return (
         <Flex w='100%' h='100vh'>
             {isLoading && <FullPageLoader />}
@@ -156,31 +161,12 @@ export const Auth = () => {
                             </TabPanel>
                         </TabPanels>
                     </Tabs>
-                    {success && (
-                        <Flex justify='center'>
-                            <Alert status='success' bg='#38a169' data-test-id='error-notification'>
-                                <AlertIcon color='#fff' />
-                                <Text
-                                    fontWeight='700'
-                                    fontSize='16px'
-                                    lineHeight='150%'
-                                    color='#fff'
-                                    w={{ md: '332px', base: '240px' }}
-                                >
-                                    {successText}
-                                </Text>
-                                <CloseButton
-                                    data-test-id='close-alert-button'
-                                    color='#fff'
-                                    w='8px'
-                                    h='8px'
-                                    position='absolute'
-                                    right='16px'
-                                    top='16px'
-                                    onClick={() => setSuccess(null)}
-                                />
-                            </Alert>
-                        </Flex>
+                    {globalSuccess && (
+                        <ErrorNotification
+                            isAuthPage
+                            success={globalSuccess}
+                            message={globalSuccess.message}
+                        />
                     )}
                     <ModalComponent
                         formData={formData}

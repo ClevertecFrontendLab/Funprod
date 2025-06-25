@@ -12,18 +12,22 @@ const buttonList = [
     {
         icon: main,
         title: 'Главная',
+        path: ROUTES.HOME,
     },
     {
         icon: search,
         title: 'Поиск',
+        path: ROUTES.HOME,
     },
     {
         icon: write,
         title: 'Записать',
+        path: ROUTES.NEW_RECIPE,
     },
     {
         icon: profile,
         title: 'Мой профиль',
+        path: ROUTES.PROFILE,
     },
 ];
 
@@ -34,8 +38,8 @@ type FooterMobileProps = {
 export const FooterMobile = ({ openBurger }: FooterMobileProps) => {
     const navigate = useNavigate();
 
-    const handleButton = () => {
-        navigate(ROUTES.NEW_RECIPE);
+    const handleButton = (path: string) => {
+        navigate(path);
     };
 
     return (
@@ -44,15 +48,17 @@ export const FooterMobile = ({ openBurger }: FooterMobileProps) => {
             filter={openBurger ? 'blur(4px)' : 'none'}
             transition='filter 0.2s ease-out'
             data-test-id='footer'
-            position='fixed'
+            position='sticky'
             bottom='0'
             h='84px'
             w='100%'
             bgColor='var(--lime-50)'
+            zIndex='5'
         >
             {buttonList.map((item, index) => (
                 <Button
-                    onClick={item.title === 'Записать' ? handleButton : undefined}
+                    data-test-id={item.title === 'Мой профиль' ? 'footer-profile-button' : ''}
+                    onClick={() => handleButton(item.path)}
                     key={item.title}
                     w='100%'
                     h='100%'

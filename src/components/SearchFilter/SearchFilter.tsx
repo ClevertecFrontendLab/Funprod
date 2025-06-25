@@ -4,7 +4,10 @@ import { useNavigate, useParams } from 'react-router';
 
 import { ROUTES } from '~/constants/routes';
 import { Category } from '~/query/services/category-api/category-api.type';
-import { useGetRecipesQuery } from '~/query/services/recipe-api/recipe-api';
+import {
+    useBookmarkRecipeMutation,
+    useGetRecipesQuery,
+} from '~/query/services/recipe-api/recipe-api';
 import { checkAndNavigate } from '~/utils/checkAndNavigate';
 import { getFullMediaUrl } from '~/utils/getFullMediaUrl';
 import { highlightText } from '~/utils/highlightText';
@@ -21,7 +24,8 @@ type SearchFilterProps = {
     meat: string[];
     garnish: string[];
     onLoadingChange: (val: boolean) => void;
-    filteredData?: Category[];
+    setSearchResultsCount: (val: number) => void;
+    filteredData: Category[];
 };
 
 export const SearchFilter = ({
@@ -33,10 +37,12 @@ export const SearchFilter = ({
     garnish,
     onLoadingChange,
     categoryData,
+    setSearchResultsCount,
 }: SearchFilterProps) => {
     const { category } = useParams();
     const navigate = useNavigate();
     const [localCategoriesIds, setLocalCategoriesIds] = useState<string[]>([]);
+    const [bookmarkRecipe] = useBookmarkRecipeMutation();
     useEffect(() => {
         if (categoriesIds.length === 0) {
             const matchedCategory = filteredData?.find((cat) => cat.category === category);
@@ -79,6 +85,14 @@ export const SearchFilter = ({
         }
     }, [isError, error]);
 
+    useEffect(() => {
+        setSearchResultsCount(data?.data?.length ?? 0);
+    }, [data?.data?.length, setSearchResultsCount]);
+
+    const handleBookmark = (id: string) => {
+        bookmarkRecipe({ id });
+    };
+
     return (
         <Flex direction='column' align='center' gap='16px' mt='42px'>
             <Flex wrap='wrap' gap={{ md: '24px', base: '16px' }} justify='space-between'>
@@ -90,35 +104,34 @@ export const SearchFilter = ({
                             key={card._id}
                             borderRadius='8px'
                             border='1px solid rgba(0, 0, 0, 0.08)'
-                            maxWidth=''
                             maxW={{
-                                lg: '664px',
+                                lg: '668px',
                                 md: '860px',
                                 sm: 'calc(50% - 12px)',
                                 base: '356px',
                             }}
                             w='100%'
-                            h={{ lg: '324px', md: '400px', base: '128px' }}
+                            h={{ lg: '324px', md: '300px', base: '148px' }}
                         >
-                            <Flex flex='1'>
-                                <Image
-                                    src={getFullMediaUrl(card.image)}
-                                    maxW={{ lg: '346px', md: '400px', base: '158px' }}
-                                    borderRadius='4px 0 0 4px'
-                                />
-                            </Flex>
+                            <Image
+                                src={getFullMediaUrl(card.image)}
+                                maxW={{ md: '346px', base: '158px' }}
+                                w='100%'
+                                borderRadius='4px 0 0 4px'
+                            />
                             <Flex
-                                flex='1'
                                 p={{ md: '20px 24px', base: '0' }}
                                 m={{ md: '0', base: '8px 8px 4px 8px' }}
                                 direction='column'
                                 gap={{ md: '24px', base: '0' }}
-                                maxW={{ base: '154px', sm: '182px', md: '334px' }}
-                                w='100%'
+                                w={{ base: '154px', sm: '182px', md: '100%' }}
                                 justify='space-between'
                             >
                                 <Flex direction='column'>
-                                    <Flex justify={{ md: 'space-between', base: 'flex-start' }}>
+                                    <Flex
+                                        justify={{ md: 'space-between', base: 'flex-start' }}
+                                        mr='10px'
+                                    >
                                         <CategoryTags tagsId={card.categoriesIds} />
                                         <Flex
                                             ml={{ md: '36px', base: '0' }}
@@ -189,12 +202,7 @@ export const SearchFilter = ({
                                         </Box>
                                     </Box>
                                 </Flex>
-                                <Flex
-                                    justify='flex-end'
-                                    gap='8px'
-                                    mt='auto'
-                                    mr={{ base: '4px', md: '0' }}
-                                >
+                                <Flex justify='flex-end' gap='8px' mr='10px' mb='6px'>
                                     <Button
                                         border='1px solid rgba(0, 0, 0, 0.48)'
                                         borderRadius='6px'
@@ -204,6 +212,7 @@ export const SearchFilter = ({
                                         h={{ md: '32px', base: '24px' }}
                                         backgroundColor='rgba(255, 255, 255, 0.06)'
                                         _hover={{ backgroundColor: 'rgba(0, 0, 0, 0.06)' }}
+                                        onClick={() => handleBookmark(card._id)}
                                     >
                                         <Image
                                             src={bookmarkHeart}
@@ -223,6 +232,7 @@ export const SearchFilter = ({
                                         </Box>
                                     </Button>
                                     <Button
+                                        data-test-id={`card-link-${i}`}
                                         border='1px solid rgba(0, 0, 0, 0.08)'
                                         borderRadius='6px'
                                         p={{ md: '0 12px', base: '0 6px' }}
