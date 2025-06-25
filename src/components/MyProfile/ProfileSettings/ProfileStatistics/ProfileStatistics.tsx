@@ -2,6 +2,7 @@ import { Avatar, Box, Button, Flex, Image, Text, useMediaQuery } from '@chakra-u
 import { useState } from 'react';
 
 import PeopleFill from '~/assets/actionBar/PeopleFill.svg';
+import { useCanRecommendRecipes } from '~/hooks/useCanRecommendRecipes';
 import { useGetStatisticQuery } from '~/query/services/statistics-api/statistics-api';
 import { useGetAllUsersQuery } from '~/query/services/users-api/users-api';
 import { GetMeResponse } from '~/query/services/users-api/users-api.type';
@@ -18,6 +19,7 @@ export const ProfileStatistics = ({ profileData }: ProfileStatisticsProps) => {
     const { data: allUsersData } = useGetAllUsersQuery();
     const { data: statistic } = useGetStatisticQuery();
     const [showAll, setShowAll] = useState(false);
+    const { canRecommend } = useCanRecommendRecipes();
 
     const [isLg] = useMediaQuery(`(min-width: 1441px)`);
 
@@ -26,9 +28,6 @@ export const ProfileStatistics = ({ profileData }: ProfileStatisticsProps) => {
     const subscribers = allUsersData.filter((user) => profileData.subscribers.includes(user.id));
     const likesData = statistic.likes;
     const bookmarksData = statistic.bookmarks;
-    const countBookmarks = bookmarksData.reduce((acc, item) => acc + item.count, 0);
-
-    const canRecommendRecipes = profileData.subscribers.length >= 100 && countBookmarks >= 200;
 
     return (
         <Flex direction='column' w='100%' gap='16px'>
@@ -119,7 +118,7 @@ export const ProfileStatistics = ({ profileData }: ProfileStatisticsProps) => {
             </Flex>
             <ProfileChart chartData={bookmarksData} isBookmarks />
             <ProfileChart chartData={likesData} />
-            {canRecommendRecipes && (
+            {canRecommend && (
                 <RecommendUnlockBanner
                     allUsersData={allUsersData}
                     totalSubscribers={profileData.subscribers.length}

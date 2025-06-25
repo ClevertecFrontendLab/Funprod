@@ -11,7 +11,6 @@ import { FullPageLoader } from '~/components/FullPageLoader/FullPageLoader';
 import { Header } from '~/components/Header/Header';
 import { Sidebar } from '~/components/Sidebar/Sidebar';
 import { useGetCategoriesQuery } from '~/query/services/category-api/category-api';
-import { useGetStatisticQuery } from '~/query/services/statistics-api/statistics-api';
 import { useGetMeQuery } from '~/query/services/users-api/users-api';
 import {
     setAppError,
@@ -28,7 +27,6 @@ export default function RootLayout() {
     const success = useSelector(userSuccessSelector);
     const { data } = useGetCategoriesQuery();
     const { data: profileData } = useGetMeQuery();
-    const { data: statistic } = useGetStatisticQuery();
     const dispatch = useDispatch();
     const location = useLocation();
 
@@ -55,7 +53,7 @@ export default function RootLayout() {
         window.scrollTo(0, 0);
     }, [location]);
 
-    if (!profileData || !statistic) return <FullPageLoader />;
+    if (!profileData) return <FullPageLoader />;
 
     return (
         <Flex direction='column' align='center'>
@@ -71,7 +69,6 @@ export default function RootLayout() {
                 openBurger={openBurger}
                 onToggle={onToggle}
                 profileData={profileData}
-                statistic={statistic}
                 isDesktop={isDesktop}
             />
             <Flex
@@ -107,7 +104,7 @@ export default function RootLayout() {
                     <Outlet />
                     <Footer />
                 </Flex>
-                {isDesktop && <AsideBar profileData={profileData} statistic={statistic} />}
+                {isDesktop && <AsideBar />}
             </Flex>
             <FooterMobile openBurger={openBurger} />
         </Flex>

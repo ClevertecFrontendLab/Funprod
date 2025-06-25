@@ -4,7 +4,7 @@ import { Link } from 'react-router';
 
 import fingerUpBlack from '~/assets/fingerUpBlack.svg';
 import { ROUTES } from '~/constants/routes';
-import { getStatisticsResponse } from '~/query/services/statistics-api/statistics-api.type';
+import { useCanRecommendRecipes } from '~/hooks/useCanRecommendRecipes';
 import { GetMeResponse } from '~/query/services/users-api/users-api.type';
 import { getFullMediaUrl } from '~/utils/getFullMediaUrl';
 
@@ -20,24 +20,12 @@ type HeaderProps = {
     openBurger: boolean;
     onToggle: () => void;
     profileData: GetMeResponse;
-    statistic: getStatisticsResponse;
     isDesktop: boolean;
 };
 
-export const Header = ({
-    openBurger,
-    onToggle,
-    profileData,
-    statistic,
-    isDesktop,
-}: HeaderProps) => {
-    const likesData = statistic.likes;
-    const bookmarksData = statistic.bookmarks;
-
-    const countLikes = likesData.reduce((acc, item) => acc + item.count, 0);
-    const countBookmarks = bookmarksData.reduce((acc, item) => acc + item.count, 0);
-
-    const canRecommendRecipes = profileData.subscribers.length >= 100 && countBookmarks >= 200;
+export const Header = ({ openBurger, onToggle, profileData, isDesktop }: HeaderProps) => {
+    const { canRecommend, countLikes, countBookmarks, subscriberCount, recommendationsCount } =
+        useCanRecommendRecipes();
 
     return (
         <Flex
@@ -127,14 +115,11 @@ export const Header = ({
                             lineHeight='150%'
                             color='var(--lime-600)'
                         >
-                            {canRecommendRecipes && (
-                                <ActionIcon
-                                    image={fingerUpBlack}
-                                    count={statistic.recommendationsCount}
-                                />
+                            {canRecommend && (
+                                <ActionIcon image={fingerUpBlack} count={recommendationsCount} />
                             )}
                             <ActionIcon image={bookmarkHeart} count={countBookmarks} />
-                            <ActionIcon image={peopleFill} count={profileData.subscribers.length} />
+                            <ActionIcon image={peopleFill} count={subscriberCount} />
                             <ActionIcon image={emojiHeartEyes} count={countLikes} />
                         </Flex>
                     )}

@@ -12,7 +12,7 @@ import {
 
 import BookmarkHeartBlackFill from '~/assets/BookmarkHeartBlackFill.svg';
 import EmojiHeartEyesBlackFill from '~/assets/EmojiHeartEyesBlackFill.svg';
-import { groupByWeek, StatPoint } from '~/utils/groupByWeek';
+import { groupByWeek } from '~/utils/groupByWeek';
 
 type ProfileChartProps = {
     chartData: {
@@ -22,68 +22,9 @@ type ProfileChartProps = {
     isBookmarks?: boolean;
 };
 
-const testChart: StatPoint[] = [
-    {
-        date: '2023-05-01',
-        count: 20,
-    },
-    {
-        date: '2023-05-09',
-        count: 30,
-    },
-    {
-        date: '2023-05-16',
-        count: 40,
-    },
-    {
-        date: '2023-05-24',
-        count: 50,
-    },
-    {
-        date: '2023-05-31',
-        count: 60,
-    },
-    {
-        date: '2023-06-02',
-        count: 44,
-    },
-    {
-        date: '2023-06-08',
-        count: 23,
-    },
-    {
-        date: '2023-06-16',
-        count: 46,
-    },
-    {
-        date: '2023-06-22',
-        count: 78,
-    },
-    {
-        date: '2023-06-29',
-        count: 15,
-    },
-    {
-        date: '2023-07-01',
-        count: 3,
-    },
-    {
-        date: '2023-07-09',
-        count: 34,
-    },
-    {
-        date: '2023-07-16',
-        count: 15,
-    },
-    {
-        date: '2023-07-26',
-        count: 25,
-    },
-];
-
 export const ProfileChart = ({ chartData, isBookmarks }: ProfileChartProps) => {
     const countChartData = chartData.reduce((acc, item) => acc + item.count, 0);
-    const groupedChartData = groupByWeek(testChart);
+    const groupedChartData = groupByWeek(chartData);
 
     const tick = [0, 20, 40, 60, 80, 100, 120];
 

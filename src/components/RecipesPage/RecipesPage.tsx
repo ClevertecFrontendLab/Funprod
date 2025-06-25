@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router';
 
+import { useCanRecommendRecipes } from '~/hooks/useCanRecommendRecipes';
 import { useGetRecipeByIdQuery } from '~/query/services/recipe-api/recipe-api';
 import { recipeIdSelector } from '~/store/app-slice';
 
@@ -24,6 +25,8 @@ export const RecipePage = () => {
         id === recipeId ? skipToken : { id: id! },
     );
 
+    const { canRecommend } = useCanRecommendRecipes();
+
     useEffect(() => {
         if (isError && error) {
             sessionStorage.setItem('error', 'Попробуйте немного позже');
@@ -43,7 +46,12 @@ export const RecipePage = () => {
                     <IngredientsTable data={data} />
                     <CookingSteps data={data} />
                     <Author bloggerId={data.authorId} />
-                    <ButtonRecommend id={data._id} recommendedByUserId={data.recommendedByUserId} />
+                    {canRecommend && (
+                        <ButtonRecommend
+                            id={data._id}
+                            recommendedByUserId={data.recommendedByUserId}
+                        />
+                    )}
                     <NewRecipesSection />
                 </Flex>
             )}

@@ -91,7 +91,7 @@ export const JuiciestSection = ({ categoryData }: JuiciestSectionProps) => {
                 )}
             </Flex>
             <Flex wrap='wrap' gap={{ md: '24px', base: '16px' }}>
-                {data.data.map((card, i) => {
+                {data.data?.map((card, i) => {
                     const userRecommend = allUsersData.find((user) =>
                         card.recommendedByUserId?.includes(user.id),
                     );

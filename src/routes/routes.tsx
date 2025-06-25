@@ -1,6 +1,6 @@
 import { RouteObject } from 'react-router';
 
-import { AuthPage } from '~/components/AuthPage/AuthPage';
+import { AuthPage } from '~/components/AuthPage/Auth';
 import { Login } from '~/components/AuthPage/Login/Login';
 import { Registration } from '~/components/AuthPage/Registration/Registration';
 import { Blogger } from '~/components/Blogs/Blogger/Blogger';
