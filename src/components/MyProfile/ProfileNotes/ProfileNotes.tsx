@@ -94,7 +94,6 @@ export const ProfileNotes = ({ notes, refetch }: ProfileNotesProps) => {
                             key={note._id}
                             maxW={{ lg: '426px', md: '266px', sm: '224px', base: '296px' }}
                             w='100%'
-                            h={{ lg: '164px', md: '204px', sm: '244px' }}
                             maxH={{ base: '204px', sm: '100%' }}
                             borderRadius='8px'
                             border='1px solid rgba(0, 0, 0, 0.08)'

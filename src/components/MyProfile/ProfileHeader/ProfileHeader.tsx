@@ -37,6 +37,7 @@ export const ProfileHeader = ({ profileData }: ProfileHeaderProps) => {
                         name={`${profileData.firstName} ${profileData.lastName}`}
                         w={{ md: '128px', base: '96px' }}
                         h={{ md: '128px', base: '96px' }}
+                        ml={{ sm: '0', base: '12px' }}
                         borderRadius='full'
                     />
                     <Box ml={{ md: '24px', base: '12px' }}>

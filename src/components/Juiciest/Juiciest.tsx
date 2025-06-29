@@ -170,11 +170,11 @@ export const Juiciest = () => {
                                         base: '356px',
                                     }}
                                     w='100%'
-                                    h={{ lg: '324px', md: '300px', base: '148px' }}
+                                    h={{ md: '264px', base: '148px' }}
                                 >
                                     <Image
                                         src={getFullMediaUrl(card.image)}
-                                        maxW={{ md: '346px', base: '158px' }}
+                                        minW={{ md: '346px', base: '158px' }}
                                         w='100%'
                                         borderRadius='4px 0 0 4px'
                                     />

@@ -113,7 +113,7 @@ export const JuiciestSection = ({ categoryData }: JuiciestSectionProps) => {
                         >
                             <Image
                                 src={getFullMediaUrl(card.image)}
-                                maxW={{ md: '346px', base: '158px' }}
+                                minW={{ md: '346px', base: '158px' }}
                                 w='100%'
                                 borderRadius='4px 0 0 4px'
                             />

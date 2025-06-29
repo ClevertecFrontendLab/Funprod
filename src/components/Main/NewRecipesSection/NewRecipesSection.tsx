@@ -69,13 +69,7 @@ export const NewRecipesSection = () => {
     const sortedRecipes = data?.data || fallback?.data || [];
 
     return (
-        <Flex
-            direction='column'
-            w='100%'
-            minHeight={{ lg: '550', md: '414px', base: '220px' }}
-            mt='32px'
-            position='relative'
-        >
+        <Flex direction='column' w='100%' mt='32px' position='relative'>
             <>
                 <Text
                     fontWeight='500'
@@ -131,7 +125,7 @@ export const NewRecipesSection = () => {
                                     onClick={() => handleGetRecipe(card._id, card.categoriesIds)}
                                     flex='0 0 auto'
                                     w={{ lg: '322px', md: '277px', base: '158px' }}
-                                    h={{ lg: '475px', md: '460px', base: '220px' }}
+                                    h={{ md: '440px', base: '220px' }}
                                     borderRadius='8px'
                                     border='1px solid rgba(0, 0, 0, 0.08);'
                                     cursor='pointer'
@@ -184,7 +178,7 @@ export const NewRecipesSection = () => {
                                         </Flex>
                                         <Flex
                                             justify='space-between'
-                                            mt={{ md: '24px', base: '8px' }}
+                                            mb={{ md: '14px', base: '8px' }}
                                         >
                                             <CategoryTags tagsId={card.categoriesIds} />
                                             <Flex gap='8px' align='flex-end'>
