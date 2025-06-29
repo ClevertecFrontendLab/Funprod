@@ -34,17 +34,7 @@ export const Blogger = () => {
     const notes = data?.notes || [];
 
     return (
-        <Flex
-            w={{
-                base: '328px',
-                sm: '728px',
-                md: '880px',
-                lg: '1360px',
-            }}
-            direction='column'
-            m={{ base: '64px 16px 100px 16px', sm: '64px 16px 100px 24px', md: '80px 72px 0 24px' }}
-            minH='100vh'
-        >
+        <Flex w='100%' direction='column' minH='100vh'>
             <BloggerInfo bloggerId={bloggerId} />
             <BloggerRecipes data={data} />
             <Notes notes={notes} />

@@ -71,7 +71,7 @@ export const ErrorNotification = ({
                     fontWeight='400'
                     fontSize='16px'
                     color='#fff'
-                    w='240px'
+                    w='300px'
                 >
                     {message}
                 </Text>

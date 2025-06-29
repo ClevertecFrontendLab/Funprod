@@ -1,21 +1,31 @@
 import { ROUTES } from '~/constants/routes';
 import { Category } from '~/query/services/category-api/category-api.type';
+import { GetMeResponse } from '~/query/services/users-api/users-api.type';
 
 import { generatePageTitles } from './generatePageTitles';
 
 type BreadcrumbItem = { label: string; to: string };
+
+type getBreadcrumbProps = {
+    categoryData?: Category[];
+    pathnames?: string[];
+    id?: string;
+    recipeData?: { _id: string; title: string };
+    profileData?: GetMeResponse;
+    draftId?: string;
+};
 
 export function getBreadcrumb({
     categoryData,
     pathnames,
     id,
     recipeData,
-}: {
-    categoryData?: Category[];
-    pathnames?: string[];
-    id?: string;
-    recipeData?: { _id: string; title: string };
-}): { breadcrumbItems?: BreadcrumbItem[]; pageTitles: Record<string, string> } {
+    profileData,
+    draftId,
+}: getBreadcrumbProps): {
+    breadcrumbItems?: BreadcrumbItem[];
+    pageTitles: Record<string, string>;
+} {
     const dataCategories = Array.isArray(categoryData)
         ? categoryData.filter((item: Category) => item.subCategories)
         : [];
@@ -38,16 +48,25 @@ export function getBreadcrumb({
             acc.push({ label: 'Новый рецепт', to: fullPath });
             return acc;
         }
-        if (fullPath.startsWith(ROUTES.EDIT_RECIPE)) {
-            if (acc.length > 0 && acc[acc.length - 1].label === 'Новый рецепт') {
-                return acc;
-            }
-            acc.push({ label: 'Новый рецепт', to: fullPath });
-            return acc;
-        }
 
         if (fullPath === ROUTES.BLOGS) {
             acc.push({ label: 'Блоги', to: fullPath });
+            return acc;
+        }
+        if (fullPath === ROUTES.PROFILE) {
+            acc.push({ label: 'Мой профиль', to: fullPath });
+            return acc;
+        }
+        if (fullPath === `${ROUTES.PROFILE}${ROUTES.SETTINGS}`) {
+            acc.push({ label: 'Настройки', to: fullPath });
+            return acc;
+        }
+        if (fullPath.startsWith(ROUTES.EDIT_DRAFT)) {
+            const title = profileData?.drafts.find((item) => item._id === draftId)?.title;
+            if (acc.length > 0 && acc[acc.length - 1].label === title) {
+                return acc;
+            }
+            acc.push({ label: title!, to: fullPath });
             return acc;
         }
 

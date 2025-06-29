@@ -1,48 +1,57 @@
 import { Box, Button, Flex, Image, Text } from '@chakra-ui/react';
 import { memo } from 'react';
-import { useLocation } from 'react-router';
+import { matchPath, useLocation } from 'react-router';
 
 import { ROUTES } from '~/constants/routes';
 import { useRandomCategory } from '~/hooks/useRandomCategory';
-import { Category } from '~/query/services/category-api/category-api.type';
+import { useGetCategoriesQuery } from '~/query/services/category-api/category-api';
 import { useGetRecipesCategoryQuery } from '~/query/services/recipe-api/recipe-api';
+import { useCategoriesWithSubcategories } from '~/utils/getCategoriesWithSubcategories';
 
 import { CategoryTags } from '../CategoryPage/TabComponent/CategoryTags/CategoryTags';
 import bookmarkHeart from './../../assets/actionBar/BookmarkHeart.svg';
 import emojiHeartEyes from './../../assets/actionBar/EmojiHeartEyes.svg';
 
-type FooterProps = {
-    footerData: Category[];
-    footerCategoryId?: string;
-};
-
-export const Footer = memo(({ footerData }: FooterProps) => {
+export const Footer = memo(() => {
     const location = useLocation();
-
+    const { data } = useGetCategoriesQuery();
+    const footerData = useCategoriesWithSubcategories(data);
     const randomCategory = useRandomCategory(footerData);
     const footerSubCategoryId = randomCategory?.subCategories[0]._id;
-    const { data } = useGetRecipesCategoryQuery(
+    const { data: categoryData } = useGetRecipesCategoryQuery(
         {
             id: footerSubCategoryId!,
             limit: 5,
         },
         { skip: !footerSubCategoryId },
     );
-    const firstFooterCategory = Array.isArray(data?.data) && data.data.slice(0, 2);
-    const secondFooterCategory = Array.isArray(data?.data) && data.data.slice(2, 5);
+    const firstFooterCategory = Array.isArray(categoryData?.data) && categoryData.data.slice(0, 2);
+    const secondFooterCategory = Array.isArray(categoryData?.data) && categoryData.data.slice(2, 5);
 
-    if (location.pathname === ROUTES.NEW_RECIPE || location.pathname.startsWith(ROUTES.BLOGS))
+    const isRecipePage = matchPath(
+        `/${ROUTES.CATEGORY}/${ROUTES.SUBCATEGORY}/${ROUTES.RECIPE_ID}`,
+        location.pathname,
+    );
+
+    if (
+        location.pathname === ROUTES.NEW_RECIPE ||
+        location.pathname.startsWith(ROUTES.BLOGS) ||
+        location.pathname.startsWith(ROUTES.PROFILE) ||
+        location.pathname.startsWith(ROUTES.EDIT_DRAFT) ||
+        isRecipePage
+    )
         return null;
+
+    if (!data) return null;
+
     return (
         <Flex
             direction='column'
-            maxWidth='1340px'
+            maxWidth='1360px'
             w={{ md: '100%', sm: '728px' }}
-            mt={{ md: '40px', base: '0' }}
+            mt={{ md: '40px', base: '24px' }}
             gap='24px'
             borderTop='1px solid rgba(0, 0, 0, 0.08)'
-            ml='24px'
-            mb={{ md: '0', base: '94px' }}
         >
             <Flex
                 justify='space-between'
@@ -85,6 +94,7 @@ export const Footer = memo(({ footerData }: FooterProps) => {
                             w={{ lg: '322px', md: '282px', sm: '232px', base: '328px' }}
                             h={{ lg: '192px', md: '180px', base: '168px' }}
                             p={{ lg: '24px', base: '16px' }}
+                            justify='space-between'
                         >
                             <Flex
                                 direction='column'

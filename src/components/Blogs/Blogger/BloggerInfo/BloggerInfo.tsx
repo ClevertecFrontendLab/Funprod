@@ -60,14 +60,9 @@ export const BloggerInfo = ({ bloggerId }: BloggerInfoProps) => {
         <Flex
             data-test-id='blogger-user-info-box'
             position='sticky'
-            top='80px'
+            top={{ md: '80px', base: '64px' }}
             zIndex='1'
-            w={{
-                base: '328px',
-                sm: '728px',
-                md: '880px',
-                lg: '1360px',
-            }}
+            minW='100%'
             justify='center'
             direction={{ sm: 'row', base: 'column' }}
             align={{ sm: 'flex-start', base: 'center' }}

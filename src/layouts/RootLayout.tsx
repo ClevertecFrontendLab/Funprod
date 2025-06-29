@@ -1,7 +1,7 @@
 import { Flex, useDisclosure, useMediaQuery } from '@chakra-ui/react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Outlet } from 'react-router';
+import { Outlet, useLocation } from 'react-router';
 
 import { AsideBar } from '~/components/AsideBar/AsideBar';
 import { ErrorNotification } from '~/components/ErrorNotification/ErrorNotification';
@@ -11,13 +11,13 @@ import { FullPageLoader } from '~/components/FullPageLoader/FullPageLoader';
 import { Header } from '~/components/Header/Header';
 import { Sidebar } from '~/components/Sidebar/Sidebar';
 import { useGetCategoriesQuery } from '~/query/services/category-api/category-api';
+import { useGetMeQuery } from '~/query/services/users-api/users-api';
 import {
     setAppError,
     userErrorSelector,
     userLoadingSelector,
     userSuccessSelector,
 } from '~/store/app-slice';
-import { useCategoriesWithSubcategories } from '~/utils/getCategoriesWithSubcategories';
 
 export default function RootLayout() {
     const { isOpen: openBurger, onToggle, onClose } = useDisclosure();
@@ -25,9 +25,10 @@ export default function RootLayout() {
     const isLoading = useSelector(userLoadingSelector);
     const error = useSelector(userErrorSelector);
     const success = useSelector(userSuccessSelector);
-    const dispatch = useDispatch();
     const { data } = useGetCategoriesQuery();
-    const filterCategory = useCategoriesWithSubcategories(data);
+    const { data: profileData } = useGetMeQuery();
+    const dispatch = useDispatch();
+    const location = useLocation();
 
     useEffect(() => {
         if (data && data.length > 0) {
@@ -48,8 +49,14 @@ export default function RootLayout() {
         }
     }, [dispatch]);
 
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [location]);
+
+    if (!profileData) return <FullPageLoader />;
+
     return (
-        <Flex direction='column' align='center' w='100%'>
+        <Flex direction='column' align='center'>
             {isLoading && <FullPageLoader />}
             {(error || success) && (
                 <ErrorNotification
@@ -58,39 +65,48 @@ export default function RootLayout() {
                     success={success}
                 />
             )}
-            <Header openBurger={openBurger} onToggle={onToggle} />
+            <Header
+                openBurger={openBurger}
+                onToggle={onToggle}
+                profileData={profileData}
+                isDesktop={isDesktop}
+            />
             <Flex
                 filter={isLoading ? 'blur(2px)' : 'none'}
+                overflowX='clip'
                 transition='filter 0.2s ease-out'
+                position='relative'
                 maxW='1920px'
                 w='100%'
-                position='relative'
-                minH='100vh'
+                justify={{ base: 'center', md: 'flex-start' }}
             >
                 {isDesktop ? (
                     <Sidebar />
                 ) : (
                     openBurger && <Sidebar openBurger={openBurger} onClose={onClose} />
                 )}
-                {data && (
-                    <Flex
-                        direction='column'
-                        align={{ sm: 'center', md: 'flex-start' }}
-                        flex='1'
-                        filter={openBurger ? 'blur(4px)' : 'none'}
-                        transition='filter 0.2s ease-out'
-                        bg={openBurger ? 'rgba(0,0,0,0.1)' : 'transparent'}
-                        position='relative'
-                        onClick={() => onClose()}
-                        ml={{ base: 0, md: '256px' }}
-                    >
-                        <Outlet />
-                        <Footer footerData={filterCategory} />
-                    </Flex>
-                )}
-                <AsideBar />
+                <Flex
+                    direction='column'
+                    align={{ base: 'center', md: 'flex-start' }}
+                    filter={openBurger ? 'blur(4px)' : 'none'}
+                    transition='filter 0.2s ease-out'
+                    position='relative'
+                    onClick={() => onClose()}
+                    w={{
+                        base: '328px',
+                        sm: '728px',
+                        md: '880px',
+                        lg: '1360px',
+                    }}
+                    m={{ md: '80px 72px 32px 24px', base: '64px 16px 32px 16px' }}
+                    minH='calc(100vh - 80px)'
+                >
+                    <Outlet />
+                    <Footer />
+                </Flex>
+                {isDesktop && <AsideBar />}
             </Flex>
-            <FooterMobile openBurger={openBurger} />
+            <FooterMobile openBurger={openBurger} profileData={profileData} />
         </Flex>
     );
 }

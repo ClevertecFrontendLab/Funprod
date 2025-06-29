@@ -2,17 +2,14 @@ import { Button, Image, Text } from '@chakra-ui/react';
 import { useLocation, useNavigate } from 'react-router';
 
 import draft from '~/assets/newRecipe/draft.svg';
+import { ROUTES } from '~/constants/routes';
 
-type EditRecipeButtonProps = {
-    setEditMode: (editMode: boolean) => void;
-};
-export const EditRecipeButton = ({ setEditMode }: EditRecipeButtonProps) => {
+export const EditRecipeButton = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
     const handleClick = () => {
-        setEditMode(true);
-        navigate(`/edit-recipe${location.pathname}`);
+        navigate(`${ROUTES.EDIT_RECIPE}${location.pathname}`);
     };
 
     return (

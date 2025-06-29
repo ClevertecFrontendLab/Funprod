@@ -14,7 +14,6 @@ import { NewRecipesSection } from './NewRecipesSection/NewRecipesSection';
 
 export const Main = () => {
     const {
-        filteredRecipes,
         excludedIngredients,
         setExcludedIngredients,
         selectedCategory,
@@ -33,6 +32,7 @@ export const Main = () => {
     } = useRecipeFilters();
 
     const [isFilterApplied, setIsFilterApplied] = useState<string | boolean>(false);
+    const [searchResultsCount, setSearchResultsCount] = useState<number>(0);
     const categoryDataRedux = useSelector(categoriesSelector);
     const localDataString = localStorage.getItem('cachedCategories');
     const categoryDataLocal = JSON.parse(localDataString!);
@@ -54,17 +54,7 @@ export const Main = () => {
     }, [excludedIngredients, selectedCategory, selectedMeat, selectedSide, searchQuery]);
 
     return (
-        <Flex
-            maxW={{
-                base: '328px',
-                sm: '728px',
-                md: '880px',
-                lg: '1360px',
-            }}
-            w={{ base: '100%', md: 'auto' }}
-            direction='column'
-            m={{ base: '64px 16px 100px 16px', sm: '64px 16px 100px 24px', md: '80px 62px 0 24px' }}
-        >
+        <Flex w='100%' direction='column'>
             <PageHeader
                 title='Приятного аппетита!'
                 selectedOptions={excludedIngredients}
@@ -73,7 +63,6 @@ export const Main = () => {
                 setSelectedSide={setSelectedSide}
                 setSelectedMeat={setSelectedMeat}
                 selectedCategory={selectedCategory}
-                filteredData={filteredRecipes}
                 selectedMeat={selectedMeat}
                 selectedSide={selectedSide}
                 searchQuery={searchQuery}
@@ -82,6 +71,7 @@ export const Main = () => {
                 categoriesIds={categoriesIds}
                 setCategoriesIds={setCategoriesIds}
                 isLoading={isLoading}
+                searchResultsCount={searchResultsCount}
             />
             {isFilterApplied ? (
                 <SearchFilter
@@ -93,11 +83,14 @@ export const Main = () => {
                     meat={meat}
                     garnish={side}
                     onLoadingChange={(val) => setIsLoading(val)}
+                    setSearchResultsCount={setSearchResultsCount}
                 />
             ) : (
-                <NewRecipesSection />
+                <>
+                    <NewRecipesSection />
+                    <JuiciestSection categoryData={categoryData} />
+                </>
             )}
-            <JuiciestSection categoryData={categoryData} />
             <CookingBlogsSection />
         </Flex>
     );

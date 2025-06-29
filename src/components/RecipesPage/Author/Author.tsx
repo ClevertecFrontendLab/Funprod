@@ -31,14 +31,15 @@ export const Author = ({ bloggerId }: { bloggerId: string }) => {
                 h={{ sm: '144px', base: '120px' }}
                 bg='#c4ff61'
                 position={{ base: 'relative', sm: 'static' }}
+                borderRadius='8px'
             >
                 <Flex>
                     <Avatar
                         name={data.bloggerInfo.firstName + ' ' + data?.bloggerInfo.lastName}
                         w='96px'
                         h='96px'
-                        mt='24px'
-                        ml='24px'
+                        mt={{ base: '12px', sm: '24px' }}
+                        ml={{ base: '12px', sm: '24px' }}
                     />
                     <Flex
                         direction='column'
@@ -48,7 +49,7 @@ export const Author = ({ bloggerId }: { bloggerId: string }) => {
                         <Flex direction='column'>
                             <Text
                                 fontWeight='700'
-                                fontSize={{ md: '24px', base: '18px' }}
+                                fontSize={{ md: '24px', base: '16px' }}
                                 lineHeight='133%'
                             >
                                 {data.bloggerInfo.firstName} {data.bloggerInfo.lastName}

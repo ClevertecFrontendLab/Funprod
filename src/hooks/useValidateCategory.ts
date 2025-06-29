@@ -5,20 +5,19 @@ import { ROUTES } from '~/constants/routes';
 import { Category } from '~/query/services/category-api/category-api.type';
 
 type UseValidateCategoryProps = {
-    categoryData?: Category[];
+    foundCategory?: Category;
     category?: string;
     subcategory?: string;
 };
 
 export const useValidateCategory = ({
-    categoryData,
+    foundCategory,
     category,
     subcategory,
 }: UseValidateCategoryProps) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const foundCategory = categoryData?.find((cat) => cat.category === category);
         const isCategoryValid = Boolean(foundCategory);
 
         const isSubcategoryValid = subcategory
@@ -28,5 +27,5 @@ export const useValidateCategory = ({
         if (!isCategoryValid || !isSubcategoryValid) {
             navigate(ROUTES.NOT_FOUND, { replace: true });
         }
-    }, [categoryData, category, subcategory, navigate]);
+    }, [foundCategory, category, subcategory, navigate]);
 };

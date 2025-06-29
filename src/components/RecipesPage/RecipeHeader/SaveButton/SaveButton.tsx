@@ -14,7 +14,7 @@ export const SaveButton = ({ id }: SaveButtonProps) => {
     const [bookmarkRecipe, { error }] = useBookmarkRecipeMutation();
     const dispatch = useDispatch();
     const handleOnClick = () => {
-        bookmarkRecipe(id);
+        bookmarkRecipe({ id });
     };
 
     useEffect(() => {

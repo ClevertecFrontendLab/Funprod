@@ -39,6 +39,8 @@ export const Ingredients = ({ register, errors, watch, control }: IngredientsPro
 
     const handleAddIngredient = () => append({ title: '', count: null, measureUnit: '' });
 
+    if (!Array.isArray(data)) return null;
+
     return (
         <Flex w='100%' justify='center'>
             <Flex direction='column' gap='16px' w={{ md: '668px', sm: '604px', base: '328px' }}>
@@ -168,9 +170,7 @@ export const Ingredients = ({ register, errors, watch, control }: IngredientsPro
                                         {...register(`ingredients.${index}.measureUnit`, {
                                             required: 'Выберите единицу измерения',
                                         })}
-                                        value={
-                                            watch(`ingredients.${index}.measureUnit`) || undefined
-                                        }
+                                        value={watch(`ingredients.${index}.measureUnit`) || ''}
                                         fontWeight='400'
                                         fontSize='18px'
                                         lineHeight='150%'
@@ -186,7 +186,7 @@ export const Ingredients = ({ register, errors, watch, control }: IngredientsPro
                                             maxW: '100%',
                                         }}
                                     >
-                                        {data?.map((item) => (
+                                        {data.map((item) => (
                                             <option key={item._id} value={item.name}>
                                                 {item.name}
                                             </option>

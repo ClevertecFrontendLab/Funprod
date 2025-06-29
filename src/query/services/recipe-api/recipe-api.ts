@@ -1,7 +1,7 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 
 import { baseQueryWithAuth } from '../../baseQueryWithAuth';
-import { ENDPOINTS } from '../../constants/endpoints';
+import { ENDPOINTS } from '../../constants/endpoints/endpoints-recipe';
 import { Tags } from '../../constants/tags';
 import {
     CreateRecipe,
@@ -17,7 +17,7 @@ import {
 export const recipeApi = createApi({
     reducerPath: 'recipeApi',
     baseQuery: baseQueryWithAuth,
-    tagTypes: [Tags.RECIPE],
+    tagTypes: [Tags.RECIPE, Tags.RECIPE_BY_USER],
     endpoints: (builder) => ({
         getRecipes: builder.query<Recipe, Partial<GetRecipesQueryArgs>>({
             query: (params) => ({
@@ -87,12 +87,15 @@ export const recipeApi = createApi({
             }),
             invalidatesTags: [{ type: Tags.RECIPE }],
         }),
-        bookmarkRecipe: builder.mutation<RecipeData, string>({
-            query: (id) => ({
+        bookmarkRecipe: builder.mutation<RecipeData, { id: string; userId?: string }>({
+            query: ({ id }) => ({
                 url: ENDPOINTS.RECIPE_BOOKMARK(id),
                 method: 'POST',
             }),
-            invalidatesTags: [{ type: Tags.RECIPE }],
+            invalidatesTags: (_result, _error, { userId }) => [
+                { type: Tags.RECIPE },
+                { type: Tags.RECIPE_BY_USER, id: userId },
+            ],
         }),
         editRecipe: builder.mutation<RecipeData, { id: string; body: CreateRecipe }>({
             query: ({ id, body }) => ({
@@ -116,6 +119,14 @@ export const recipeApi = createApi({
                 url: ENDPOINTS.RECIPE_BY_USER_ID(id),
                 method: 'GET',
             }),
+            providesTags: (result, _error, id) =>
+                result ? [{ type: Tags.RECIPE_BY_USER, id }] : [],
+        }),
+        recommendRecipe: builder.mutation<void, string>({
+            query: (id) => ({
+                url: ENDPOINTS.RECIPE_RECOMMEND_BY_ID(id),
+                method: 'POST',
+            }),
         }),
     }),
 });
@@ -132,4 +143,5 @@ export const {
     useEditRecipeMutation,
     useDeleteRecipeMutation,
     useGetRecipeByUserIdQuery,
+    useRecommendRecipeMutation,
 } = recipeApi;

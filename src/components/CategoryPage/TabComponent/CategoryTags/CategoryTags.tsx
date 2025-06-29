@@ -1,4 +1,4 @@
-import { Flex, Image, Text } from '@chakra-ui/react';
+import { Flex, Text } from '@chakra-ui/react';
 import { Link } from 'react-router';
 
 import { ROUTES } from '~/constants/routes';
@@ -22,7 +22,7 @@ export const CategoryTags = ({ tagsId }: CategoryTagsProps) => {
                 base: 'absolute',
             }}
         >
-            {tagsId?.map((id) => {
+            {tagsId?.slice(0, 2).map((id) => {
                 const filterId = categoryFilter?.filter((item) => item._id === id);
                 return filterId?.map((item) => (
                     <Link to={ROUTES.HOME} key={item._id}>
@@ -37,7 +37,6 @@ export const CategoryTags = ({ tagsId }: CategoryTagsProps) => {
                             background='var(--lime-150)'
                             gap={{ md: '8px', base: '2px' }}
                         >
-                            <Image src={item.icon} />
                             <Text
                                 fontFamily='var(--font-family)'
                                 fontWeight='400'
