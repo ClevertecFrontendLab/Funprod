@@ -1,7 +1,9 @@
-import { Button, Flex, Image, Text } from '@chakra-ui/react';
+import { Avatar, Button, Flex, Text } from '@chakra-ui/react';
 import { useNavigate } from 'react-router';
 
 import { ROUTES } from '~/constants/routes';
+import { GetMeResponse } from '~/query/services/users-api/users-api.type';
+import { getFullMediaUrl } from '~/utils/getFullMediaUrl';
 
 import main from './../../assets/footerMobile/main.svg';
 import profile from './../../assets/footerMobile/profile.svg';
@@ -33,9 +35,10 @@ const buttonList = [
 
 type FooterMobileProps = {
     openBurger?: boolean;
+    profileData: GetMeResponse;
 };
 
-export const FooterMobile = ({ openBurger }: FooterMobileProps) => {
+export const FooterMobile = ({ openBurger, profileData }: FooterMobileProps) => {
     const navigate = useNavigate();
 
     const handleButton = (path: string) => {
@@ -69,7 +72,17 @@ export const FooterMobile = ({ openBurger }: FooterMobileProps) => {
                     }
                 >
                     <Flex direction='column' align='center'>
-                        <Image src={item.icon} alt={item.title} w='40px' h='40px' />
+                        <Avatar
+                            src={
+                                item.title === 'Мой профиль'
+                                    ? getFullMediaUrl(profileData.photoLink)
+                                    : item.icon
+                            }
+                            name={`${profileData.firstName} ${profileData.lastName}`}
+                            width='40px'
+                            height='40px'
+                            borderRadius='full'
+                        />
                         <Text fontWeight='500' fontSize='12px' lineHeight='133%' textAlign='center'>
                             {item.title}
                         </Text>

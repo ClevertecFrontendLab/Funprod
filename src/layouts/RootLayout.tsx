@@ -106,7 +106,7 @@ export default function RootLayout() {
                 </Flex>
                 {isDesktop && <AsideBar />}
             </Flex>
-            <FooterMobile openBurger={openBurger} />
+            <FooterMobile openBurger={openBurger} profileData={profileData} />
         </Flex>
     );
 }
