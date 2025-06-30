@@ -12,4 +12,8 @@ export const ROUTES = {
     VERIFICATION: '/verification',
     BLOGS: '/blogs',
     USER_ID: ':userId',
+    PROFILE: '/profile',
+    EDIT_DRAFT: '/edit-draft',
+    DRAFT_ID: ':draftId',
+    SETTINGS: '/settings',
 };

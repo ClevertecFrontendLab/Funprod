@@ -36,13 +36,13 @@ export type FormData = {
 };
 
 type NewRecipeProps = {
-    dataForEditing?: RecipeData;
+    dataForEditing?: Partial<RecipeData>;
     editMode?: boolean;
-    setEditMode?: (editMode: boolean) => void;
     id?: string;
+    draftId?: string;
 };
 
-export const NewRecipe = ({ dataForEditing, editMode, setEditMode, id }: NewRecipeProps) => {
+export const NewRecipe = ({ dataForEditing, editMode, id, draftId }: NewRecipeProps) => {
     const {
         register,
         watch,
@@ -111,10 +111,13 @@ export const NewRecipe = ({ dataForEditing, editMode, setEditMode, id }: NewReci
         if (!isValid) return;
         allowNextNavigation();
         if (editMode && id) {
+            if (draftId) {
+                createRecipe(data);
+                return;
+            }
             editRecipe({ id, body: data });
             const newPath = location.pathname.replace(/^\/edit-recipe/, '');
             navigate(newPath);
-            setEditMode?.(false);
         } else {
             createRecipe(data);
         }
@@ -160,24 +163,10 @@ export const NewRecipe = ({ dataForEditing, editMode, setEditMode, id }: NewReci
     };
 
     return (
-        <Flex
-            maxW={{
-                base: '328px',
-                sm: '728px',
-                md: '860px',
-                lg: '1340px',
-            }}
-            w='100%'
-            m={{
-                base: '64px 16px 100px 16px',
-                sm: '64px 20px 100px 20px',
-                md: '80px 72px 32px 24px',
-            }}
-        >
+        <Flex w='100%' pt={{ md: '32px', base: '16px' }}>
             <form data-test-id='recipe-form'>
                 <Flex gap={{ md: '40px', base: '32px' }} direction='column'>
                     <Flex
-                        mt={{ md: '56px', base: '16px' }}
                         gap={{ md: '24px', base: '16px' }}
                         direction={{ base: 'column', sm: 'row' }}
                     >

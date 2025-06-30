@@ -3,8 +3,10 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { authApi } from '~/query/services/auth-api/auth-api';
 import { bloggersApi } from '~/query/services/bloggers-api/bloggers-api';
 import { Category } from '~/query/services/category-api/category-api.type';
+import { profileApi } from '~/query/services/profile-api/profile-api';
 import { recipeApi } from '~/query/services/recipe-api/recipe-api';
 import { uploadFileApi } from '~/query/services/uploadFile-api/uploadFile-api';
+import { usersApi } from '~/query/services/users-api/users-api';
 
 import { categoryApi } from '../query/services/category-api/category-api';
 import { ApplicationState } from './configure-store';
@@ -23,17 +25,17 @@ export const appSlice = createSlice({
     name: 'app',
     initialState,
     reducers: {
-        setAppError(
-            state,
-            { payload: error }: PayloadAction<{ title: string; message: string } | null>,
-        ) {
-            state.error = error;
+        setAppError(state, { payload }: PayloadAction<{ title: string; message: string } | null>) {
+            state.success = null;
+            state.error = payload;
         },
+
         setAppSuccess(
             state,
-            { payload: success }: PayloadAction<{ title: string; message: string } | null>,
+            { payload }: PayloadAction<{ title: string; message: string } | null>,
         ) {
-            state.success = success;
+            state.error = null;
+            state.success = payload;
         },
         setAppLoader(state, { payload: isLoading }: PayloadAction<boolean>) {
             state.isLoading = isLoading;
@@ -69,15 +71,6 @@ export const appSlice = createSlice({
             .addMatcher(categoryApi.endpoints.getCategories.matchRejected, (state) => {
                 state.isLoading = false;
             })
-            .addMatcher(recipeApi.endpoints.getRecipesCategory.matchPending, (state) => {
-                state.isLoading = true;
-            })
-            .addMatcher(recipeApi.endpoints.getRecipesCategory.matchFulfilled, (state) => {
-                state.isLoading = false;
-            })
-            .addMatcher(recipeApi.endpoints.getRecipesCategory.matchRejected, (state) => {
-                state.isLoading = false;
-            })
             .addMatcher(recipeApi.endpoints.getRecipes.matchPending, (state) => {
                 state.isLoading = true;
             })
@@ -95,6 +88,21 @@ export const appSlice = createSlice({
             })
             .addMatcher(authApi.endpoints.login.matchRejected, (state) => {
                 state.isLoading = false;
+            })
+            .addMatcher(recipeApi.endpoints.bookmarkRecipe.matchPending, (state) => {
+                state.isLoading = true;
+            })
+            .addMatcher(recipeApi.endpoints.bookmarkRecipe.matchFulfilled, (state) => {
+                state.isLoading = false;
+            })
+            .addMatcher(recipeApi.endpoints.bookmarkRecipe.matchRejected, (state) => {
+                state.isLoading = false;
+            })
+            .addMatcher(authApi.endpoints.resetPassword.matchPending, (state) => {
+                state.success = {
+                    title: '',
+                    message: 'Восстановление данных успешно',
+                };
             })
             .addMatcher(recipeApi.endpoints.createDraftRecipe.matchRejected, (state, action) => {
                 if (action.payload?.status === 409) {
@@ -188,6 +196,94 @@ export const appSlice = createSlice({
             })
             .addMatcher(bloggersApi.endpoints.getBloggerById.matchRejected, (state) => {
                 state.isLoading = false;
+            })
+            .addMatcher(usersApi.endpoints.createNote.matchFulfilled, (state) => {
+                state.success = {
+                    title: '',
+                    message: 'Заметка опубликована',
+                };
+            })
+            .addMatcher(usersApi.endpoints.createNote.matchRejected, (state) => {
+                state.error = {
+                    title: 'Ошибка сервера',
+                    message: 'Попробуйте позже.',
+                };
+            })
+            .addMatcher(usersApi.endpoints.deleteNoteById.matchFulfilled, (state) => {
+                state.success = {
+                    title: '',
+                    message: 'Заметка удалена',
+                };
+            })
+            .addMatcher(usersApi.endpoints.deleteNoteById.matchRejected, (state) => {
+                state.error = {
+                    title: 'Ошибка сервера',
+                    message: 'Попробуйте позже',
+                };
+            })
+            .addMatcher(usersApi.endpoints.updateInfo.matchFulfilled, (state) => {
+                state.success = {
+                    title: '',
+                    message: 'Изменения сохранены',
+                };
+            })
+            .addMatcher(usersApi.endpoints.updateInfo.matchRejected, (state) => {
+                state.error = {
+                    title: 'Ошибка сервера',
+                    message: 'Попробуйте позже',
+                };
+            })
+            .addMatcher(usersApi.endpoints.updatePassword.matchRejected, (state, action) => {
+                const message = (action.payload?.data as { message?: string })?.message;
+                if (action.payload?.status === 400) {
+                    state.error = {
+                        title: message || '',
+                        message: 'Попробуйте снова',
+                    };
+                }
+                if (action.payload?.status === 500) {
+                    state.error = {
+                        title: 'Ошибка сервера',
+                        message: 'Попробуйте немного позже',
+                    };
+                }
+            })
+            .addMatcher(usersApi.endpoints.updatePassword.matchFulfilled, (state) => {
+                state.success = {
+                    title: '',
+                    message: 'Пароль успешно изменен',
+                };
+            })
+            .addMatcher(usersApi.endpoints.updatePassword.matchPending, (state) => {
+                state.isLoading = true;
+            })
+            .addMatcher(usersApi.endpoints.updatePassword.matchFulfilled, (state) => {
+                state.isLoading = false;
+            })
+            .addMatcher(usersApi.endpoints.updatePassword.matchRejected, (state) => {
+                state.isLoading = false;
+            })
+            .addMatcher(profileApi.endpoints.deleteProfile.matchPending, (state) => {
+                state.isLoading = true;
+            })
+            .addMatcher(profileApi.endpoints.deleteProfile.matchFulfilled, (state) => {
+                state.isLoading = false;
+            })
+            .addMatcher(profileApi.endpoints.deleteProfile.matchRejected, (state) => {
+                state.isLoading = false;
+            })
+            .addMatcher(profileApi.endpoints.deleteProfile.matchFulfilled, (state) => {
+                localStorage.removeItem('accessToken');
+                state.success = {
+                    title: '',
+                    message: 'Аккаунт удален',
+                };
+            })
+            .addMatcher(profileApi.endpoints.deleteProfile.matchRejected, (state) => {
+                state.error = {
+                    title: 'Ошибка сервера',
+                    message: 'Попробуйте позже',
+                };
             });
     },
 });

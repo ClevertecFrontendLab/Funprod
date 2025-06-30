@@ -15,7 +15,7 @@ import {
     useBreakpointValue,
     useDisclosure,
 } from '@chakra-ui/react';
-import { useState } from 'react';
+import { ChangeEvent, KeyboardEvent, useEffect, useState } from 'react';
 
 import { Category } from '~/query/services/category-api/category-api.type';
 
@@ -24,24 +24,23 @@ import { DrawerComponent } from '../DrawerComponent/DrawerComponent';
 import filterIcon from './../../assets/main/icon/filter.svg';
 
 type PageHeaderProps = {
-    title?: string;
+    searchResultsCount: number;
+    title: string;
+    selectedOptions: string[];
+    onChange: (val: string[]) => void;
+    setSelectedCategory: (val: string) => void;
+    setSelectedSide: (val: string[]) => void;
+    setSelectedMeat: (val: string[]) => void;
+    selectedCategory: string;
+    selectedMeat: string[];
+    selectedSide: string[];
+    setSearchQuery: (val: string) => void;
+    searchQuery: string;
+    isLoading: boolean;
+    categoriesIds: string[];
+    setCategoriesIds: (val: string[]) => void;
+    filterCategory: Category[];
     description?: string;
-    selectedOptions?: string[];
-    onChange?: (val: string[]) => void;
-    setSelectedCategory?: (val: string) => void;
-    setSelectedSide?: (val: string[]) => void;
-    setSelectedMeat?: (val: string[]) => void;
-    applyFilters?: () => void;
-    selectedCategory?: string;
-    filteredData?: Category[];
-    selectedMeat?: string[];
-    selectedSide?: string[];
-    setSearchQuery?: (val: string) => void;
-    searchQuery?: string;
-    filterCategory?: Category[];
-    categoriesIds?: string[];
-    setCategoriesIds?: (val: string[]) => void;
-    isLoading?: boolean;
 };
 
 export const PageHeader = ({
@@ -56,11 +55,12 @@ export const PageHeader = ({
     selectedMeat = [],
     selectedSide = [],
     setSearchQuery,
-    filteredData,
     filterCategory,
     categoriesIds,
     setCategoriesIds,
     isLoading,
+    searchQuery,
+    searchResultsCount,
 }: PageHeaderProps) => {
     const [text, setText] = useState('');
     const [isActive, setIsActive] = useState(true);
@@ -69,11 +69,6 @@ export const PageHeader = ({
     const [allergens, setAllergens] = useState<string[]>([]);
     const handleSearch = () => {
         setSearchQuery?.(text);
-
-        const resultFound = filteredData?.some((item) =>
-            item.title.toLowerCase().includes(text.toLowerCase()),
-        );
-        setIsFound(resultFound || text === '');
         onChange?.(allergens);
     };
 
@@ -90,6 +85,26 @@ export const PageHeader = ({
         setAllergens([]);
     };
 
+    useEffect(() => {
+        if (!searchQuery) {
+            setIsFound(null);
+            return;
+        }
+        setIsFound(searchResultsCount! > 0);
+    }, [searchResultsCount, searchQuery]);
+
+    const handleOnChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setText(e.target.value);
+        setIsFound(null);
+    };
+    const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === 'Enter') {
+            if (text.length >= 3 || allergens.length > 0) {
+                handleSearch();
+            }
+        }
+    };
+
     const isLargerThanMd = useBreakpointValue({ base: false, sm: true });
 
     return (
@@ -97,7 +112,6 @@ export const PageHeader = ({
             direction='column'
             width='100%'
             align={{ sm: 'center', base: 'stretch' }}
-            height='100%'
             pt={{ md: '32px', base: '16px' }}
             zIndex='10'
             bg='#fff'
@@ -161,7 +175,8 @@ export const PageHeader = ({
                                     value={text}
                                     w='100%'
                                     h='100%'
-                                    onChange={(e) => setText(e.target.value)}
+                                    onChange={handleOnChange}
+                                    onKeyDown={handleKeyDown}
                                     border={`1px solid ${isFound === null ? 'rgba(0, 0, 0, 0.48)' : isFound ? 'green' : 'red'}`}
                                     borderRadius='6px'
                                     fontSize={{ base: '14px', md: '18px' }}

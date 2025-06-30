@@ -28,16 +28,7 @@ export const Blogs = () => {
     if (!data || !data.others) return null;
 
     return (
-        <Flex
-            w={{
-                base: '328px',
-                sm: '728px',
-                md: '880px',
-                lg: '1360px',
-            }}
-            direction='column'
-            m={{ base: '64px 16px 100px 16px', sm: '64px 16px 100px 24px', md: '80px 72px 0 24px' }}
-        >
+        <Flex w='100%' direction='column'>
             <Text
                 fontWeight='700'
                 fontSize={{ md: '48px', base: '24px' }}

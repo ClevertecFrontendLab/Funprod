@@ -3,13 +3,6 @@ import { useSelector } from 'react-redux';
 
 import { categoriesSelector } from '~/store/app-slice';
 
-export const allergenKeywords: Record<string, string[]> = {
-    'Томат (помидор)': ['томат', 'томатный', 'помидор'],
-    Гриб: ['гриб', 'грибы'],
-    'Молочные продукты': ['молоко', 'сыр', 'сливки', 'кефир', 'творог'],
-    лук: ['лук', 'луковый', 'луковицы'],
-};
-
 const useRecipeFilters = () => {
     const [excludedIngredients, setExcludedIngredients] = useState<string[]>([]);
     const [selectedCategory, setSelectedCategory] = useState('');
